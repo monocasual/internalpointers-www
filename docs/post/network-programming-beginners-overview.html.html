@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Network programming for beginners: introduction to sockets " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/network-programming-beginners-overview" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/network-programming-beginners-introduction-socket.png" />
+<meta property="og:image" content="/img/2021/09/network6/network-programming-beginners-introduction-socket.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/network-programming-beginners-overview" />
 <meta name="twitter:title" content="Network programming for beginners: introduction to sockets " />
 <meta name="twitter:description" content="A theoretical look at one of the most popular programming tools for exchanging data over computer networks. " />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/network-programming-beginners-introduction-socket.png" />
+<meta name="twitter:image" content="/img/2021/09/network6/network-programming-beginners-introduction-socket.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -246,7 +246,7 @@ socket.close()
 <p>What you can define in the <code>...address...</code> part actually varies between the protocol in use. For example in a TCP connection you also have to specify the <a href="https://internalpointers.com/post/introduction-tcp-transmission-control-protocol#client-server-model">port</a> a client can connect to, and if you don't pass any IP address in it your server will accept connections from any client.</p>
 <p>The socket is then instructed to <em>listen</em> (2), to make it accept incoming connection requests from clients. Finally, the program waits for new clients to come in with the <code>accept()</code> function (3). From this point on, the server has established a connection with a client and can send data to it. The picture below shows the API calls involved in a typical scenario of a client and a server talking to eachother.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/client-server-calls.png" alt="Client-server workflow">
+<img src="/img/2021/09/network6/client-server-calls.png" alt="Client-server workflow">
 <div class="caption">1. A client-server conversation and the API calls involved.</div>
 </div><h2>Blocking versus non-blocking sockets</h2>
 <p>The <code>accept()</code> function in the server pseudo-code above is <strong>blocking</strong>: the <code>while</code> loop doesn't make any progress until a new client arrives. In other words: your program is stuck waiting for new connections.</p>

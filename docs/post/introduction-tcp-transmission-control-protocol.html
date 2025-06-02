@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Introduction to TCP: Transmission Control Protocol" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/introduction-tcp-transmission-control-protocol" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/07/network5/tcp-protocol.png" />
+<meta property="og:image" content="/img/2021/07/network5/tcp-protocol.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-tcp-transmission-control-protocol" />
 <meta name="twitter:title" content="Introduction to TCP: Transmission Control Protocol" />
 <meta name="twitter:description" content="One of the most important, high-level protocols in the Internet Protocol Suite. " />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/07/network5/tcp-protocol.png" />
+<meta name="twitter:image" content="/img/2021/07/network5/tcp-protocol.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -182,7 +182,7 @@
 <p>This way of exchanging data is essential for the Internet to work correctly, but it's too limited for a practical communication: will the recipient receive the data? What if it gets corrupted or lost along the way? In case of multiple datagrams, how to make sure they are received in the correct order? The <strong>Transmission Control Protocol (TCP)</strong> exists to answer all those questions — and much more.</p>
 <p>The Transmission Control Protocol belongs to the Transport layer (#3) in the Internet Protocol Suite and it's one of the most important protocols in the entire stack. It makes use of the Internet Protocol as a foundation and adds many features on top of it.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/07/network5/tcp-protocol-in-stack.png" alt="TCP in TCP/IP stack">
+<img src="/img/2021/07/network5/tcp-protocol-in-stack.png" alt="TCP in TCP/IP stack">
 <div class="caption">1. The Transmission Control Protocol belongs to layer 3 of the TCP/IP protocol stack.</div>
 </div><p>TCP has been designed by the <strong>Internet Engineering Task Force (IETF)</strong> and you can find the original specification <a href="https://datatracker.ietf.org/doc/html/rfc793">here</a>, along with additional updates (<a href="https://datatracker.ietf.org/doc/html/rfc1122">1</a>, <a href="https://datatracker.ietf.org/doc/html/rfc3168">2</a>, <a href="https://datatracker.ietf.org/doc/html/rfc6093">3</a>, <a href="https://datatracker.ietf.org/doc/html/rfc6528">4</a>).</p>
 <h2>TCP main properties: an overview</h2>
@@ -223,7 +223,7 @@
 <li>the <strong>data section</strong> — a portion of the message to be sent. </li>
 </ul>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/07/network5/tcp-segment.png" alt="A TCP segment">
+<img src="/img/2021/07/network5/tcp-segment.png" alt="A TCP segment">
 <div class="caption">2. TCP makes use of IP for the delivery by putting each TCP segment into an IP datagram's body.</div>
 </div><p>The whole TCP segment is then <em>fitted into</em> an IP datagram's body, as seen in the picture above. Since TCP is based on IP, it uses IP datagrams to carry data around the Internet according to the IP routing mechanisms seen in <a href="https://internalpointers.com/post/introduction-ip-internet-protocol">the previous episode</a>.</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"

@@ -142,11 +142,11 @@ document.addEventListener("DOMContentLoaded", function() {
 </ol>
 <p>For example, here is a selection from the first part of <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf">a C standard</a> where the anatomy of the <code>main</code> function is defined:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2018/01/main-implementation-c-standard.png" alt="Main function definition in a C standard document">
+<img src="/img/2018/01/main-implementation-c-standard.png" alt="Main function definition in a C standard document">
 <div class="caption">1. Definition of <code>main</code>, the function called at program startup.</div>
 </div><p>This is another excerpt from the same standard describing a member of the C API — the <code>fmin</code> function:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2018/01/fmin-function-c-standard.png" alt="min function definition in a C standard document">
+<img src="/img/2018/01/fmin-function-c-standard.png" alt="min function definition in a C standard document">
 <div class="caption">2. Definition of <code>min</code> function from the <code>math.h</code> header.</div>
 </div><p>As you can see, almost no code is involved. Someone has to read the standard and transform it into something a computer can digest. This is what people working on compilers and implementations do: the former crafts a tool that can read and process C and C++ source files, the latter turns the Standard Library into code. Let's take a deeper look at it.</p>
 <h3>C Standard library</h3>

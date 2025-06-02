@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Introduction to computer networks  " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/introduction-computer-networks" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/introduction-computer-networks.png" />
+<meta property="og:image" content="/img/2021/01/computer-networks/introduction-computer-networks.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-computer-networks" />
 <meta name="twitter:title" content="Introduction to computer networks  " />
 <meta name="twitter:description" content="A bird's-eye view on the art of resource sharing from one computer to another. " />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/introduction-computer-networks.png" />
+<meta name="twitter:image" content="/img/2021/01/computer-networks/introduction-computer-networks.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2>What is a computer network?</h2>
 <p>A computer network is a bunch of devices connected together to exchange information — emails, documents, audio/video data — or to share a resource — printers, storages and other physical devices. Typically, computers in a network are called <strong>hosts</strong>, while <strong>links</strong> are the elements that connect them. The picture below displays a very primitive form of network where two hosts are linked together through a physical cable.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/computers-connected-cable.png" alt="Two computers connected via cable">
+<img src="/img/2021/01/computer-networks/computers-connected-cable.png" alt="Two computers connected via cable">
 <div class="caption">1. Two computers connected together via cable. This is the simplest form of computer network.</div>
 </div><p>The network seen above works, at least theoretically: the computer on the left is able to send data to the one on the right through the connecting cable and vice versa. Things are obviously way more complex in the real world, where multiple devices are linked across the globe, often without physical cables, data can be sent anywhere and the transmission is orchestrated by various hardware and software components. How is it possible to achieve all that magic on a global scale? Also, how exactly the transmission takes place? What kind of technology allows to get a text document, squeeze it through a cable and deliver it on someone else's computer? This series will try to find the right answers to those questions.</p>
 <p>The first step in our research is to acknowledge that computer networks are complex creatures that can be studied in multiple ways: from how to lay down network cables in the ocean to complex mathematical models that explain the data flow. Let's dig deeper.</p>
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2>Computer networks by shape</h2>
 <p>Computer networks can be classified according to their shape, also known as <strong>topology</strong>. The picture below shows a sample of possible shapes that you can find out there:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/network-topologies.png" alt="Different network topologies">
+<img src="/img/2021/01/computer-networks/network-topologies.png" alt="Different network topologies">
 <div class="caption">2. Different network topologies, where each dot is a host. Courtesy of <a href="https://en.wikipedia.org/wiki/Network_topology#/media/File:NetworkTopologies.svg">Wikipedia</a>.</div>
 </div><p>Our first example in picture 1. can be seen as a very simple line network. On the other hand my computer, my phone and my tablet currently are all part of a star network, located in my apartment. They are all connected to a central node — also known as the <strong>hub</strong> — and can't talk to each other directly. We will dig into this type of home networks in future chapters.</p>
 <p>Each network shape has pros and cons: choosing the right one really depends on what requirements the network has to meet. Also, topology can be <em>physical</em> — the actual placement of network components or <em>logical</em> — how the data flows inside a network. Analyzing networks by shape may also involve a lot of <a href="https://en.wikipedia.org/wiki/Graph_theory"><strong>graph theory</strong></a>, a branch of mathematics concerned with objects connected together.</p>
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h2>Computer networks by size</h2>
 <p>Computer networks range from very small to very large. Few hosts connected together over a limited area form the so-called <strong>Local Area Network (LAN)</strong>. This is the typical network size you find inside houses, schools or offices. A larger network that extends across a city is called <strong>Metropolitan Area Network (MAN)</strong> and can be conceptually seen as many smaller LANs connected together. Finally a <strong>Wide Area Network (WAN)</strong> is even bigger than that, which connects multiple MANs or LANs together and can span the whole globe. Engineers are also working on a type of <a href="https://en.wikipedia.org/wiki/Interplanetary_Internet">interplanetary computer network</a> that connects satellites, planetary rovers and the Earth.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/lan-man-wan.png" alt="LAN, MAN, WAN networks">
+<img src="/img/2021/01/computer-networks/lan-man-wan.png" alt="LAN, MAN, WAN networks">
 <div class="caption">3. Example of three network sizes, from home LANs to world-wide WANs.</div>
 </div><p>Different network sizes often require different technologies. For example a LAN is designed to serve few computers connected together and can't scale up to a MAN or a WAN so easily: another kind of infrastructure is required. As networks grow bigger they may also raise political concerns, especially when multiple countries are involved. The <a href="https://en.wikipedia.org/wiki/Net_neutrality"><strong>net neutrality</strong></a> is the principle that people should be free to control what they see and do in a public global network, without filters or censorship applied by the local network providers.</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

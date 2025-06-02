@@ -160,7 +160,7 @@
 <p>For example, it is likely that your media player runs multiple threads: one for rendering the interface — this is usually the main thread, another one for playing the music and so on.</p>
 <p>You can think of the operating system as a container that holds multiple processes, where each process is a container that holds multiple threads. In this article I will focus on threads only, but the whole topic is fascinating and deserves more in-depth analysis in the future.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/processes-threads.png" alt="Processes vs Threads">
+<img src="/img/2019/02/processes-threads.png" alt="Processes vs Threads">
 <div class="caption">1. Operating systems can be seen as a box that contains processes, which in turn contain one or more threads.</div>
 </div><h3>The differences between processes and threads</h3>
 <p>Each process has its own chunk of memory assigned by the operating system. By default that memory cannot be shared with other processes: your browser has no access to the memory assigned to your media player and vice versa. The same thing happens if you run two <strong>instances</strong> of the same process, that is if you launch your browser twice. The operating system treats each instance as a new process with its own separate portion of memory assigned. So, by default, two or more processes have no way to share data, unless they perform advanced tricks — the so-called <strong><a href="https://en.wikipedia.org/wiki/Inter-process_communication">inter-process communication (IPC)</a></strong>.</p>
@@ -180,7 +180,7 @@
 </ol>
 <p>The last one is crucial: if your computer doesn't support multiple operations at the same time, the operating system has to fake them. We will see how in a minute. For now let's think of <strong>concurrency</strong> as the <em>perception</em> of having tasks that run at the same time, while <strong>true parallelism</strong> as tasks that literally run at the same time.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/concurrency-parallelism.png" alt="Concurrency vs Parallelism">
+<img src="/img/2019/02/concurrency-parallelism.png" alt="Concurrency vs Parallelism">
 <div class="caption">2. Parallelism is a subset of concurrency.</div>
 </div><h2>What makes concurrency and parallelism possible</h2>
 <p>The <strong>central processing unit (CPU)</strong> in your computer does the hard work of running programs. It is made of several parts, the main one being the so-called <strong>core</strong>: that's where computations are actually performed. A core is capable of running only one operation at a time.</p>

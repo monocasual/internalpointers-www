@@ -154,7 +154,7 @@
 <p>The cache is where the processor stores its most frequently used data, in order to avoid lethargic interactions with the main memory.  When the processor needs to read from or write to main memory, it first checks whether a copy of that data is available in its own cache. If so, the processor reads from or writes to the cache directly instead of waiting for the slower main memory response.</p>
 <p>Modern CPUs are made of multiple <strong>cores</strong> — the component that performs actual computations, and each core has its own chunk of cache that is in turn connected to the main memory, as pictured in the following image:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/12/cpu-cache-main-memory.png" alt="CPU, cache and main memory">
+<img src="/img/2019/12/cpu-cache-main-memory.png" alt="CPU, cache and main memory">
 <div class="caption">1. A simplified model of multiple cores connected to the main memory through cache. This is known as a <strong>shared memory system</strong>, because the main memory is accessed by multiple entities.</div>
 </div><p>All in all, cache makes computers run faster. Or better, it helps the processor not to waste precious time waiting for the main memory response by keeping it always busy and productive.</p>
 <h3>Memory reordering as an optimization trick</h3>

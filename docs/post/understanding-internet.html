@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Understanding the Internet " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/understanding-internet" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/understanding-internet/understanding-internet.png" />
+<meta property="og:image" content="/img/2021/03/understanding-internet/understanding-internet.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/understanding-internet" />
 <meta name="twitter:title" content="Understanding the Internet " />
 <meta name="twitter:description" content="“Is that thing still around?” — Homer Simpson" />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/understanding-internet/understanding-internet.png" />
+<meta name="twitter:image" content="/img/2021/03/understanding-internet/understanding-internet.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -186,13 +186,13 @@
 <h3>1. cables</h3>
 <p>The Internet is a huge ball of <strong>fiber-optic cables</strong> that connect multiple smaller networks together. Those cables carry information from one side to the other in the form of electric signals. The entire globe is covered by Internet cables, except for Antarctica: lots of them are placed underwater to cover huge distances. For example, the <a href="https://www.submarinecablemap.com/#/submarine-cable/atlantic-crossing-1-ac-1"><strong>Atlantic Crossing 1 (AC-1)</strong></a> is a very long cable — 14,000 km — that links the United States with Europe. Or the <a href="https://www.submarinecablemap.com/#/submarine-cable/pacific-light-cable-network-plcn"><strong>Pacific Light Cable Network (PLCN)</strong></a> connecting Hong Kong, Taiwan, the Philippines and the US owned by Google and Facebook. The picture below shows a map of all the Internet cables as of today.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/understanding-internet/itu-internet-map.jpg" alt="Map of internet cables">
+<img src="/img/2021/03/understanding-internet/itu-internet-map.jpg" alt="Map of internet cables">
 <div class="caption">1. A map of all Internet cables on Earth. Courtesy of <a href="https://www.itu.int/">International Telecommunication Union (ITU)</a>. See the interactive map <a href="https://www.itu.int/itu-d/tnd-map-public/">here</a>.</div>
 </div><h3>2. routers</h3>
 <p>Another important element of the Internet is the <strong>router</strong>, a special type of computer that forwards data between points. As sketched in the picture below, the Internet is a network made of links (cables) and nodes (routers). Routers are responsible for moving information from one point to another, so that a message sent from computer A reaches computer B as soon as possible and without errors.</p>
 <p>In the picture below you can also see there is more than one way to reach the destination. Routers are able to choose the best path when the network is overloaded — in case many other computers are trying to exchange data at the same time — or if the shortest path is blocked by a network malfunction. This is an important property of the Internet and other networks that follow the same principle, called <strong>redundancy</strong>: alternate paths for restoring the functionality in the event of unplanned outages.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/understanding-internet/devices-routers-nodes.png" alt="Two devices connected through multiple network nodes">
+<img src="/img/2021/03/understanding-internet/devices-routers-nodes.png" alt="Two devices connected through multiple network nodes">
 <div class="caption">2. Device A wants to send a message to device B: the picture shows two possible paths that reach the destination. Dots are routers, lines are cables.</div>
 </div><h3>3. networks<a name="networks"></a></h3>
 <p>Last but not least: the Internet is made of networks, of course. For example, my tablet and my laptop are both connected to a local network inside my house, also known as <strong>Local Area Network (LAN)</strong>. The tablet and the laptop can talk to eachother because they are part of the same network. However, I need the support of an <strong>Internet Service Provider (ISP)</strong> for the data to travel outside my house and communicate with other devices over the Internet. An ISP is a company that provides such Internet access and many other Internet-related services.</p>
@@ -202,7 +202,7 @@
 <p>Tier 2 ISPs are larger than Tier 3 ISPs and sometimes they also own cables and other network hardware. For example, Comcast in the United States and Vodafone in Europe are among the biggest Tier 2 ISPs in the world. Tier 2 ISPs usually talk to eachother in order to move data from one point to another — this is called <strong>peering</strong>.</p>
 <p>Tier 2 ISPs don't cover the entire globe, though: they still need a bigger network to allow a signal to reach any place on Earth. For this reason, Tier 2 ISPs buy services (transit) from <strong>Tier 1 ISPs</strong>, bigger Internet providers that own intercontinental cables (AT&amp;T, Deutsche Telekom Global Carrier to name a few). Generally speaking, Tier 1 ISPs sell services to Tier 2 ISPs, Tier 2 ISPs sell services to Tier 3 ISPs which sell connectivity to end users. Some Tier 2 ISPs may also sell directly to Internet customers.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/understanding-internet/tier1-tier2-isp.png" alt="Tier 1 ISP, Tier 2 ISP, Tier 3 ISP">
+<img src="/img/2021/03/understanding-internet/tier1-tier2-isp.png" alt="Tier 1 ISP, Tier 2 ISP, Tier 3 ISP">
 <div class="caption">3. Example of multiple ISPs connected together through peering or transit.</div>
 </div><p>The help of big Tier 1 ISPs is only required when data needs to travel long distances: if you want to connect two close cities, passing through a Tier 1 ISP would be a waste of money for the Tier 2 ISP and a waste of time for you, since the signal will take more time to be delivered. Peering is a way to shorten that distance and also cut the money required: peering is usually free between ISPs on the same tier.</p>
 <p>The peering shortcut is possible thanks to <strong>Internet Exchange Points (IXPs)</strong>: huge buildings filled with computers and routers that connect multiple ISPs together and help create shorter paths for Internet traffic. IXPs are located all around the world: there are roughly 240 IXPs across 180 different areas as of today. <a href="https://www.datacentermap.com/ixps.html">This page on datacentermap.com</a> lists all IXPs on our planet along with their location on the map.</p>

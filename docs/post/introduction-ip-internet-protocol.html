@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Introduction to IP: the Internet Protocol" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/introduction-ip-internet-protocol" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-internet-protocol.png" />
+<meta property="og:image" content="/img/2021/06/network4/ip-internet-protocol.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-ip-internet-protocol" />
 <meta name="twitter:title" content="Introduction to IP: the Internet Protocol" />
 <meta name="twitter:description" content="From routing to IP addressing, a look at the protocol that gives life to the Internet." />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-internet-protocol.png" />
+<meta name="twitter:image" content="/img/2021/06/network4/ip-internet-protocol.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -195,7 +195,7 @@
 <h2>The Internet Protocol: key ideas</h2>
 <p>The Internet Protocol is a set of rules that determine how data should travel across computers over a network and reach the correct destination. You can find the original document <a href="https://datatracker.ietf.org/doc/html/rfc791">here</a> published by the <strong>Internet Engineering Task Force (IETF)</strong>, along with additional corrections and fixes (<a href="https://datatracker.ietf.org/doc/html/rfc1349">here</a>, <a href="https://datatracker.ietf.org/doc/html/rfc2474">here</a> and <a href="https://datatracker.ietf.org/doc/html/rfc6864">here</a>). It is a low-level protocol, as it belongs to the Network layer in the TCP/IP protocol stack:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-protocol-in-stack.png" alt="Internet Protocol in TCP/IP stack">
+<img src="/img/2021/06/network4/ip-protocol-in-stack.png" alt="Internet Protocol in TCP/IP stack">
 <div class="caption">1. The Internet Protocol belongs to layer 2 of the TCP/IP protocol stack.</div>
 </div><p>The Internet Protocol introduces two important networking concepts:</p>
 <ul>
@@ -207,7 +207,7 @@
 <p>Routing is the ability of a computer network to dispatch messages around, say from computer A to computer B. As seen in <a href="https://internalpointers.com/post/understanding-internet">chapter #2</a> of this series, the Internet is a huge entity made by billions of computers connected together through cables: the Internet Protocol defines how a message should travel across those computers to reach its destination.</p>
 <p>More precisely, the Internet is a global network made of several smaller networks, which in turn contain hosts. <strong>Routers</strong> are special computers located on the edges of those networks, acting like gatekeepers for packages that enter or exit. Routers do the hard work of picking up the message you want to send and move it in the right direction. The message is passed from one router to another until the destination (i.e. the host) is reached.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/computers-networks.png" alt="Two computers over two different networks">
+<img src="/img/2021/06/network4/computers-networks.png" alt="Two computers over two different networks">
 <div class="caption">2. Two computers in different networks want to exchange information. White dots are routers. A message might need to traverse multiple networks (i.e. routers) in order to reach the destination.</div>
 </div><p>The physical path between computer A and computer B is filled with routers. A package that needs to traverse one or more networks will inevitably pass through all the networks' routers and get redirected by them, until the target host is reached. The Internet Protocol describes how routers should do such redirection job as efficiently as possible.</p>
 <h3>Routing tables</h3>
@@ -261,7 +261,7 @@
 <h3>Subnetting</h3>
 <p>The concept of network mask seen above exists to allow the creation of <strong>subnetworks</strong>, a practice known as <strong>subnetting</strong>. Subnetting is the process of splitting up a network into two or more networks. This is done physically by installing new routers to mark the boundaries of the new subnetworks, and logically on the IP address by using some bits from the host part as a new network prefix, as seen in the picture below:</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/subnetting.png" alt="Subnetting">
+<img src="/img/2021/06/network4/subnetting.png" alt="Subnetting">
 <div class="caption">3. Example of subnetting: the host identifier part is being used as a new subnetwork prefix + host identifier.</div>
 </div><p>Subnetting is done by network administrators to create new, smaller networks out of existing ones. The operation brings several benefits. For example, subnetting improves the network performances: when a network is subnetted, different devices communicate with different routers rather than having all devices connected to a central router, which might become busy. Subnetting also increases security and reliability: subnetworks are isolated, so a problem in a specific subnetwork won't propagate to others.</p>
 <p>Subnetting was also used back in the IPv4-only days to optimize the small number of addresses available, especially in enterprises networks. The huge amount of IP addresses available with IPv6 has fixed the problem for good.</p>

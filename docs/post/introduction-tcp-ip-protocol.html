@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Introduction to the TCP/IP protocol" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/introduction-tcp-ip-protocol" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/tcpip.png" />
+<meta property="og:image" content="/img/2021/03/tcpip/tcpip.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-tcp-ip-protocol" />
 <meta name="twitter:title" content="Introduction to the TCP/IP protocol" />
 <meta name="twitter:description" content="The official rules that allow computers to communicate over the Internet." />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/tcpip.png" />
+<meta name="twitter:image" content="/img/2021/03/tcpip/tcpip.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -199,14 +199,14 @@
 </li>
 </ol>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/tcp-ip-stack.png" alt="The TCP/IP protocol stack">
+<img src="/img/2021/03/tcpip/tcp-ip-stack.png" alt="The TCP/IP protocol stack">
 <div class="caption">1. The four layers of the TCP/IP protocol stack.</div>
 </div><p>The idea behind the TCP/IP protocol stack is to use layers to abstract away the underlying complexity. Two applications that want to exchange data over the Internet will both use protocols in the layer #4, then they rely on protocols from the layers below for the actual transmission or reception. The following example will help to better understand how the whole thing works in practice.</p>
 <h2>An example of the TCP/IP protocol stack in action</h2>
 <p>Consider a web browser, based on the HTTP protocol (Application layer #4) that talks to a web server. When I type the website address in the address bar, the browser asks the web server for the web page the address points to. More specifically, the browser sends <em>a piece of text</em> to the web server containing the website address and other technical information. This is how the HTTP protocol defines the communication between a browser and a web server.</p>
 <p>However, two machines over the Internet need more low-level work in order to talk to eachother: what does "sending a piece of text" actually mean from a computer's perspective? The HTTP protocol doesn't care about it: instead, it relies on services provided by the Transport layer (#3) below to establish a form of browser-web server connection, whatever that means.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/tcp-ip-end-to-end.png" alt="The TCP/IP flow">
+<img src="/img/2021/03/tcpip/tcp-ip-end-to-end.png" alt="The TCP/IP flow">
 <div class="caption">2. A message that flows between two computers across the layers of the TCP/IP protocol stack.</div>
 </div><p>Protocols in layer #3 solve the upper layer's problems, yet they are still far away from true machine-to-machine interaction. For example: how is the address of the web server determined? Again, the software that implements the layer #3 protocols doesn't care about it: it relies on the Network layer (#2) below to handle such details. The pattern repeats until the Link layer (#1) is reached, where the data is physically transmitted over Internet cables.</p>
 <p>At this point the message is flying across the Internet infrastructure. The information will eventually reach the web server: here the software that implements the HTTP protocol will rely on the underlying layers to transform the incoming data into something that the software can understand. Once done, the server can parse the data in the Application layer (#4) and react to the web browser's request. Notice how the data here goes through the layers in reverse order.</p>
@@ -223,7 +223,7 @@
 </script><h2>The power of layer abstraction</h2>
 <p>The layered approach described by the TCP/IP protocol stack offers another perspective on how information flows from one end to another: protocols on the same layer exchange data across two different machines as if they were directly connected through a <em>virtual pipe</em>. This is because the underlying mechanisms of communication are abstracted away by the lower layers (picture .3 below).</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/physical-vs-logical-transmission.png" alt="Physical versus logical transmission over the TCP/IP stack">
+<img src="/img/2021/03/tcpip/physical-vs-logical-transmission.png" alt="Physical versus logical transmission over the TCP/IP stack">
 <div class="caption">3. Physical vs. logical transmission over the TCP/IP stack.</div>
 </div><p>And also:</p>
 <ul>
@@ -263,7 +263,7 @@
 <h3>Packet encapsulation, or how to add headers to data</h3>
 <p>Packets are generated in the Application layer (#4) during an outgoing transmission. As they slide down the stack, the protocols at each layer wrap those packets with their headers. The process is known as <strong>encapsulation</strong> and works like the <a href="https://en.wikipedia.org/wiki/Matryoshka_doll">Russian dolls</a> where each doll contains another smaller doll inside of it. Data coming out the last layer contains all the headers added by the protocols above.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/03/tcpip/tcp-ip-encapsulation.png" alt="Packet encapsulation">
+<img src="/img/2021/03/tcpip/tcp-ip-encapsulation.png" alt="Packet encapsulation">
 <div class="caption">4. Packet encapsulation performed on the sender's side.</div>
 </div><p>As soon as the data approaches the destination machine, the inverse process known as <strong>decapsulation</strong> begins. The Link layer (#1) receives the data from the network, reads the instructions written in the packet header in order to perform its own duties and <em>peels</em> the header off of the packet. The peeled data is then passed to the upper layer: the pattern repeats until the naked data reaches the Application layer (#4) on the receiver side. Here the information is identical to what has been sent by the sender and can be processed by the receiver's application.</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

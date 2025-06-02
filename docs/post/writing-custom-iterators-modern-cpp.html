@@ -26,7 +26,7 @@
 		<meta property="og:title" content="Writing a custom iterator in modern C++" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
+<meta property="og:image" content="/img/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp" />
 <meta name="twitter:title" content="Writing a custom iterator in modern C++" />
 <meta name="twitter:description" content="An experimental Forward Iterator written from scratch to boost up hand-made containers." />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
+<meta name="twitter:image" content="/img/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -185,7 +185,7 @@ private:
 </table>
 <p>The six categories are hierarchical: a Bidirectional Iterator is also a Forward Iterator and a Random Access Iterator is both a Bidirectional and a Forward Iterator and so on. Normally, all iterators are Input Iterators (1) which makes them read-only, also known as <strong>constant iterators</strong>. Iterators that both support read and write operations are also Output Iterators (2) and are called <strong>mutable iterators</strong>.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/iterator-hierarchy.png" alt="Iterators hierarchy">
+<img src="/img/2020/12/iterators/iterator-hierarchy.png" alt="Iterators hierarchy">
 <div class="caption">1. Iterators hierarchy in C++. All iterators are Input Iterators, Output Iterators or both.</div>
 </div><p>Input and Output iterators are often used for low-level components such as input and output streams (the so-called <strong>single-pass algorithms</strong>) and thus have limitations. We want to do more with our custom container, so we will skip those two and jump straight to the mutable Forward Iterator.</p>
 <h2>Prepare the custom iterator</h2>

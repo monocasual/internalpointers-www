@@ -26,7 +26,7 @@
 		<meta property="og:title" content="An introduction to virtual memory" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.internalpointers.com/post/introduction-virtual-memory" />
-<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/introduction-virtual-memory.png" />
+<meta property="og:image" content="/img/2020/04/virtual-memory/introduction-virtual-memory.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="900" />
 <meta property="og:site_name" content="Internal Pointers" />
@@ -35,7 +35,7 @@
 <meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-virtual-memory" />
 <meta name="twitter:title" content="An introduction to virtual memory" />
 <meta name="twitter:description" content="...and the crucial role it plays in modern operating systems." />
-<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/introduction-virtual-memory.png" />
+<meta name="twitter:image" content="/img/2020/04/virtual-memory/introduction-virtual-memory.png" />
 
 		<link rel="icon" href="/img/favicon.ico">
 		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
@@ -127,7 +127,7 @@
 <p>Hard drives store huge amount of information, yet they are terribly <em>slow</em>. Way slower than the processor: a CPU that reads instructions from a hard drive directly would become a serious bottleneck for the whole system. For this reason, the program and its data are first copied to the <strong>main memory (a.k.a. Random Access Memory or RAM)</strong>, another storage hardware component smaller than a hard drive but much faster, so that the processor can read instructions from there without speed penalties.</p>
 <p>The main memory can be seen as a long list of <em>cells</em>, each one containing some binary data and marked with a number called the <strong>memory address</strong>. Memory addresses span from 0 to N, based on the amount of main memory available in the system. The range of addresses used by a program is called the <strong>address space</strong>.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/memory.png" alt="Physical memory">
+<img src="/img/2020/04/virtual-memory/memory.png" alt="Physical memory">
 <div class="caption">1. Two programs loaded in memory. Each cell is a memory address. Space between program A and program B might be used by other programs or data.</div>
 </div><h2>Usage of the main memory in early computers</h2>
 <p>In the beginning of the computer history (and also nowadays in <a href="https://en.wikipedia.org/wiki/Embedded_system">embedded systems</a>), programs had access to the <em>entire</em> main memory and its management was left to the programmer. Writing software for those machines was challenging: part of the developer's job was to devise a good way to manage RAM accesses and make sure that the whole program would not overflow the available memory.</p>
@@ -142,7 +142,7 @@
 <p>In virtual memory, a program does not have direct access to physical RAM. Instead, it interacts with an <em>illusory</em> address space called <strong>virtual address space</strong>. The operating system works together with the processor to provide such virtual address space and convert it, sooner or later, into the physical one.</p>
 <p>Every memory access is performed through a <strong>virtual address</strong> that does not refer to the actual physical location in memory. A program always reads or write the virtual address, and it's completely unaware of what is going on in the underlying hardware.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/virtual-memory.png" alt="Virtual to physical memory">
+<img src="/img/2020/04/virtual-memory/virtual-memory.png" alt="Virtual to physical memory">
 <div class="caption">2. Two processes with their own virtual address spaces. Notice how the physical memory is not contiguous for process 2.</div>
 </div><h3>Benefits of the virtual memory</h3>
 <p>In the picture above you can see an example of virtual to physical translation in action, which reveals two main benefits of the virtual memory:</p>
@@ -165,7 +165,7 @@
 <p>The virtual memory mechanism needs a place to store the mapping between virtual and physical addresses. That is, given a virtual address X, the system must be able to find the corresponding physical address Y. However, you can't save such information as a 1:1 relationship: it would require a database as big as the whole RAM!</p>
 <p>Modern virtual memory implementations overcome this problem (and many others) by interpreting the virtual and the physical memory as a long list of small, fixed-size chunks. The chunks of the virtual memory are called <strong>pages</strong> and the chunks of the physical one are called <strong>frames</strong>. The <strong>Memory Management Unit (MMU)</strong> is a hardware component in the CPU that stores the mapping information between pages and frames inside a special data structure called <strong>page table</strong>. A page table is like a database table where each row contains a page index and the frame index it corresponds to. Every running program has a page table in the MMU, as you can see in the picture below.</p>
 <div class="ip-img">
-<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/mmu-page-table-mapping.png" alt="MMU mapping in action">
+<img src="/img/2020/04/virtual-memory/mmu-page-table-mapping.png" alt="MMU mapping in action">
 <div class="caption">3. The MMU mapping in action. Each cell is a process page or a physical memory frame. Some pages may not have a corresponding frame mapped: we will see why in the next paragraphs.</div>
 </div><h3>Converting pages to frames</h3>
 <p>A virtual address is made up of two things:</p>
