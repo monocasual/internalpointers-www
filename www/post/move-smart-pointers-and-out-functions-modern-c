@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Move smart pointers in and out functions in modern C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Different options with different meanings.">
+		<meta name="keywords" content="C++11,C++,smart pointers">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Move smart pointers in and out functions in modern C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/move-smart-pointers-and-out-functions-modern-c" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Different options with different meanings." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/move-smart-pointers-and-out-functions-modern-c" />
+<meta name="twitter:title" content="Move smart pointers in and out functions in modern C++" />
+<meta name="twitter:description" content="Different options with different meanings." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on December 24, 2018 
+								• updated on January 19, 2019  
+								• ID 69 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Move smart pointers in and out functions in modern C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Different options with different meanings.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>In my previous article <a href="https://www.internalpointers.com/post/beginner-s-look-smart-pointers-modern-c">A beginner's look at smart pointers in modern C++</a> I took a trip to the convoluted land of C++ smart pointers. Now it's time to see how they behave in real world applications, along with common pitfalls and best practices.</p>
+<p>In this article I will show you how to pass and return smart pointers to/from functions, operations that require some planning. There are many ways of doing it and picking the right one is not always straightforward. Luckily for us C++ experts have guidelines that shed some light on this task.</p>
+<p>I also assume that you are kind of familiar with <strong>move semantics</strong>. <a href="https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners">I have written an article about it</a> if you aren't.</p>
+<h2>Pass smart pointers to functions</h2>
+<p>Smart pointers can be passed to functions in five or seven different ways:</p>
+<pre><code class="lang-c++">void f(std::unique_ptr&lt;Object&gt;);    // (1)
+void f(std::shared_ptr&lt;Object&gt;);    // (2)
+void f(std::weak_ptr&lt;Object&gt;);      // (3)
+void f(std::unique_ptr&lt;Object&gt;&amp;);   // (4)
+void f(std::shared_ptr&lt;Object&gt;&amp;);   // (5) also const &amp;
+void f(Object&amp;);                    // (6) also const &amp;
+void f(Object*);                    // (7) also const *
+</code></pre>
+<p>Yes, even (6) and (7) are an option. Which one to choose? According to the <a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#r30-take-smart-pointers-as-parameters-only-to-explicitly-express-lifetime-semantics">C++ Core Guidelines</a> a function should take a smart pointer as parameter <em>only if it examines/manipulates the smart pointer itself</em>.</p>
+<p>As you may know, a smart pointer is a class that provides several methods and features. For example you can count the references of a <code>std::shared_ptr</code> or increase them by making a copy; you can move data from a <code>std::unique_ptr</code> to another one (change of ownership); you can empty a smart pointer and so on. Your function should accept a smart pointer if you expect that it will do one of those things.</p>
+<p>Conversely, a function should accept raw pointers or references if it just needs to operate on the underlying object without altering the smart pointer. Let's dig deeper.</p>
+<h3>(1), (2), (3): pass by value to lend the ownership</h3>
+<p>Pass smart pointers <em>by value</em> to lend their ownership to the function, that is when the function wants its own copy of the smart pointer in order to operate on it. Different smart pointers require different strategies:</p>
+<ul>
+<li><p>A <code>std::unique_ptr</code> can't be passed by value because it can't be copied, so it is usually <em>moved</em> around with the special function <code>std::move</code> from the Standard Library. This is move semantics in action:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;Object&gt; up = std::make_unique&lt;Object&gt;();
+function(std::move(up)); // Usage of (1)
+</code></pre>
+<p>You have just moved the ownership of the dynamically-allocated <code>Object</code> from <code>up</code> to the function parameter. Remember that now <code>up</code> is a hollow object. This is known as a <strong>sink</strong>: the ownership of the dynamically-allocated resource flows down an imaginary sink from one point to another;</p>
+</li>
+<li><p>There's no need to move anything with <code>std::shared_ptr</code>: it can be passed by value (i.e. can be copied). Just remember that its reference count increases when you do it;</p>
+</li>
+<li><p><code>std::weak_ptr</code> can be passed by value as well. Do it when the function needs to create a new <code>std::shared_ptr</code> out of it, which would increase the reference count:</p>
+<pre><code class="lang-c++">void f(std::weak_ptr&lt;Object&gt; wp)
+{
+  if (std::shared_ptr&lt;Object&gt; sp = wp.lock())
+      sp-&gt;doSomething(); // I have a new shared_ptr that points to Object
+}
+</code></pre>
+</li>
+</ul>
+<h3>(4), (5): pass by reference to manipulate the ownership</h3>
+<p>Pass <em>by reference</em> when the function is supposed to modify the ownership of <em>existing</em> smart pointers. More specifically:</p>
+<ul>
+<li><p>pass a non-<code>const</code> reference to <code>std::unique_ptr</code> if the function might modify it, e.g. delete it, make it refer to a different object and so on. Don't pass it as <code>const</code> as the function can't do anything with it: see (6) and (7) instead;</p>
+</li>
+<li><p>the same applies to <code>std::shared_ptr</code>, but you can pass a <code>const</code> reference if the function will only read from it (e.g. get the number of references) or it will make a local copy out of it and share ownership;</p>
+</li>
+<li><p>I didn't find a real use case for passing <code>std::weak_ptr</code> by reference so far. Suggestions are welcome :)</p>
+</li>
+</ul>
+<h3>(6), (7): pass simple raw pointers/references</h3>
+<p>Go with a simpler raw pointer (can be null) or a reference (can't be null) when your function just needs to inspect the underlying object or do something with it without messing with the smart pointer. Both <code>std::unique_ptr</code> and <code>std::shared_ptr</code> have the <code>get()</code> member function that returns the stored pointer. For example:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;Object&gt; pu = std::make_unique&lt;Object&gt;();
+function(*pu.get());  // Usage of (6)
+function(pu.get());   // Usage of (7)
+</code></pre>
+<p>A <code>std::weak_ptr</code> must be converted to a <code>std::shared_ptr</code> first in order to take the stored pointer.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<h2>Return smart pointers from functions</h2>
+<p>You should follow the same logic above: return smart pointers if the caller wants to manipulate the smart pointer itself, return raw pointers/references if the caller just needs a handle to the underlying object.</p>
+<p>If you really need to return smart pointers from a function, take it easy and always return <em>by value</em>. That is:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;Object&gt; getUnique();
+std::shared_ptr&lt;Object&gt; getShared();
+std::weak_ptr&lt;Object&gt;   getWeak();
+</code></pre>
+<p>There are at least three good reasons for this:</p>
+<ol>
+<li>Once again, smart pointers are powered by move semantics: the dynamically-allocated resource they hold is moved around, not wastefully copied;</li>
+<li>modern compilers play the <strong>Return Value Optimization (RVO)</strong> trick. They are able to detect that you are returning an object by value, and they apply a sort of return shortcut to avoid useless copies. Starting from C++17, this is guaranteed by the standard. So even the smart pointer itself will be optimized out;</li>
+<li>returning <code>std::shared_ptr</code> by reference doesn't properly increment the reference count, which opens up the risk of deleting something at the wrong time.</li>
+</ol>
+<p><del>As always, a <code>std::unique_ptr</code> can't be copied. It has to be moved instead:</del></p>
+<p><del><code>c++
+std::unique_ptr&lt;Object&gt; getUnique() { return std::move(std::make_unique&lt;Object&gt;()); }</code></del></p>
+<p>Thanks to point 2. you don't need move anything when returning a <code>std::unique_ptr</code>:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;Object&gt; getUnique()
+{
+    std::unique_ptr&lt;Object&gt; p = std::make_unique&lt;Object&gt;();
+    return p; 
+    // also return std::make_unique&lt;Object&gt;();
+}
+</code></pre>
+<h2>Don't mess with pointers and references!</h2>
+<p>You should never do fancy tricks with pointers and references you <code>get()</code> from smart pointers: don't <code>delete</code> them, don't create new smart pointers out of them, or more generally: don't mess with their ownership. Whenever a function returns a raw pointer/reference or take it as parameter, you should consider it as owned by someone else, somewhere else in the code base. You can definitely operate on it but the ownership still belongs to the smart pointer that originally returned the raw pointer/reference to its dynamically-allocated resource.</p>
+<h2>Sources</h2>
+<p><a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">C++ Core Guidelines</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/8114276/how-do-i-pass-a-unique-ptr-argument-to-a-constructor-or-a-function">How do I pass a unique_ptr argument to a constructor or a function?</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/unique_ptr">std::unique_ptr</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Smart_pointer">Smart pointer</a><br>
+Rufflewind's Scratchpad - <a href="https://rufflewind.com/2016-03-05/unique-ptr">A basic introduction to unique_ptr</a><br>
+Sutter’s Mill - <a href="https://herbsutter.com/gotw/_102/">GotW #102: Exception-Safe Function Calls</a><br>
+Sutter’s Mill - <a href="https://herbsutter.com/2013/06/05/gotw-91-solution-smart-pointer-parameters/">GotW #91 Solution: Smart Pointer Parameters</a></p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c-11">C++11</a>
+				 • 								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/smart-pointers">smart pointers</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mike</span> on 
+							<span class="date">December 30, 2018 at 12:15</span>
+						</div> 
+						<div class="body">In the last example you don't need std::move as the temporary is an rvalue which can directly moved into the receiving unique_ptr.<br />
+You should never std::move a return value as this can prevent RVO.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 01, 2019 at 17:12</span>
+						</div> 
+						<div class="body">@Mike excellent point. Thanks for the clarification, I'm going to update the article.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">patatahooligan</span> on 
+							<span class="date">January 02, 2019 at 12:53</span>
+						</div> 
+						<div class="body">If I'm not mistaken, for older versions of the standard where RVO was allowed but not mandatory, you might get an error for returning a unique pointer by value because the copy constructor is required to exist.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andrew Haining</span> on 
+							<span class="date">January 18, 2019 at 00:57</span>
+						</div> 
+						<div class="body">a returning value has always been an xrvalue, it's never been a good idea to std::move it, it's nothing to do with RVO except that std::move forces move sematics even when a more efficient RVO would be possible otherwise.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Abel</span> on 
+							<span class="date">January 18, 2019 at 08:56</span>
+						</div> 
+						<div class="body">Just to be clear, there are some corner cases when moving is recommended for return value. (eg. ternary operator, returning a member of a local pair, struct... involving structured binding). But I agree with you @Mike that in general we should rely on RVO. (for cheap-to-copy objects copying over moving won't cause any/noticeable overhead if copy cannot be elided.)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">barteroff</span> on 
+							<span class="date">January 18, 2019 at 12:03</span>
+						</div> 
+						<div class="body">Hi! Thank for the nice article! Have you thought about creating an RSS feed for your blog? Would be awesome!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gerald</span> on 
+							<span class="date">January 21, 2019 at 23:24</span>
+						</div> 
+						<div class="body">You didn't mention the option of passing by rvalue reference, e.g. `void f(std::unique_ptr<Object>&&);`, was that intended? (As it could be the start of endless arguments!)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">KyleKnoepfel</span> on 
+							<span class="date">January 23, 2019 at 15:29</span>
+						</div> 
+						<div class="body">A quick clean-up is that 'function(*pu.get())' can simply be typed 'function(*pu)'.  Dereferencing a smart pointer exposes a reference to the underlying managed object.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 27, 2019 at 10:17</span>
+						</div> 
+						<div class="body">@barteroff good idea, why not! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 27, 2019 at 10:26</span>
+						</div> 
+						<div class="body">@Gerald that could really be the start of endless arguments! Some people advise against it: https://stackoverflow.com/a/8114913/3296421</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">SindhuPatil</span> on 
+							<span class="date">June 26, 2019 at 08:11</span>
+						</div> 
+						<div class="body">Thanks for the good article.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Icy</span> on 
+							<span class="date">August 26, 2021 at 09:35</span>
+						</div> 
+						<div class="body">Very useful, thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Icy</span> on 
+							<span class="date">August 26, 2021 at 09:36</span>
+						</div> 
+						<div class="body">Very useful, thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joel</span> on 
+							<span class="date">August 22, 2022 at 15:55</span>
+						</div> 
+						<div class="body">No mention of returning smart pointers as an "out" parameter which is info im looking for.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

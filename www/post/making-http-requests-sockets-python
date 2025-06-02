@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Making HTTP requests with sockets in Python  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. ">
+		<meta name="keywords" content="internet,network programming,socket,Python,http">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Making HTTP requests with sockets in Python " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/making-http-requests-sockets-python" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/01/network7/making-http-requests-sockets-python.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/making-http-requests-sockets-python" />
+<meta name="twitter:title" content="Making HTTP requests with sockets in Python " />
+<meta name="twitter:description" content="A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/01/network7/making-http-requests-sockets-python.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 01, 2022 
+								• updated on January 05, 2022  
+								• ID 94 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Making HTTP requests with sockets in Python </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. </p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-computer-networks">Introduction to computer networks  </a>
+							</span> —
+							<span class="intro">A bird's-eye view on the art of resource sharing from one computer to another. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-internet">Understanding the Internet </a>
+							</span> —
+							<span class="intro">“Is that thing still around?” — Homer Simpson</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>
+							</span> —
+							<span class="intro">The official rules that allow computers to communicate over the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-ip-internet-protocol">Introduction to IP: the Internet Protocol</a>
+							</span> —
+							<span class="intro">From routing to IP addressing, a look at the protocol that gives life to the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+							</span> —
+							<span class="intro">One of the most important, high-level protocols in the Internet Protocol Suite. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/network-programming-beginners-overview">Network programming for beginners: introduction to sockets </a>
+							</span> —
+							<span class="intro">A theoretical look at one of the most popular programming tools for exchanging data over computer networks. </span>
+						</p>
+					</li>
+																						</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Welcome to the 7th episode of the <a href="https://internalpointers.com/post-group/networking-101">Networking 101 series</a>! In the <a href="https://internalpointers.com/post/network-programming-beginners-overview">previous chapter</a> I spent some time digging into the concept of <strong>sockets</strong> and the <strong>Berkeley sockets interface</strong>. This time I want to explore the practical side of network programming by issuing an <strong>HTTP request</strong> through Python and its <a href="https://docs.python.org/3/library/socket.html"><code>socket</code> module</a>.</p>
+<h2>Sockets: a quick refresher</h2>
+<p>A socket is a software object that allows programs to exchange data. The most popular socket API is the Berkeley sockets interface, usually implemented by operating systems in low-level languages such as C. I will be using Python for this experiment as its <code>socket</code> module follows very closely the original C implementation, without the memory-related complexities imposed by the C language.</p>
+<p><strong>Hypertext Transfer Protocol (HTTP)</strong> is a protocol for fetching resources such as HTML documents and is the foundation of the <a href="https://internalpointers.com/post/understanding-internet#internet-applications">World Wide Web</a> as we know it today. The point of this experiment is to use sockets to send an HTTP request to a web server out there and read its response: in other words, I will write an ultra-primitive web browser.</p>
+<p>I haven't touched HTTP in this series yet, but don't worry: it's just a matter or sending and receiving text strings. I assume however you know how Python works and a bit of familiarity with the <a href="https://internalpointers.com/post/introduction-tcp-ip-protocol">TCP/IP protocol stack</a>. Let's get started!</p>
+<h2>Python's HTTP request: first attempts</h2>
+<p>As explained in the previous chapter, a socket must be created and configured first. Then you connect it to a host and start sending/receiving data. Finally you close the socket when you are done with it.</p>
+<h3>1. Configuring the socket</h3>
+<p>First thing import the <code>socket</code> module:</p>
+<pre><code class="lang-python">import socket
+</code></pre>
+<p>Now it's time to create a new socket object through the <a href="https://docs.python.org/3/library/socket.html#socket.socket"><code>socket()</code> constructor</a>. It expects two parameters: the <strong>socket family</strong> and the <strong>socket type</strong>, chosen from a set of constants that start with the <code>AF_</code> prefix for the family and the <code>SOCK_</code> prefix for the type. The full list is available <a href="https://docs.python.org/3/library/socket.html#constants">here</a>.</p>
+<p>What constants should we pick? HTTP is based on the <a href="https://internalpointers.com/post/introduction-tcp-transmission-control-protocol"><strong>Transmission Control Protocol (TCP)</strong></a>, which in turn is based on the <a href="https://internalpointers.com/post/introduction-ip-internet-protocol"><strong>Internet Protocol (IP)</strong></a>. This means that HTTP is <em>stream-oriented</em> (because of TCP) and wants an <em>IP address</em> to work (because of IP). Those requirements are fulfilled by picking:</p>
+<ol>
+<li><p>the <code>AF_INET</code> constant for the socket family. It stands for <em>In</em>tern<em>et</em> Protocol with IPv4 addresses;</p>
+</li>
+<li><p>the <code>SOCK_STREAM</code> for the socket type. We want a <em>stream</em>-based protocol because of TCP.</p>
+</li>
+</ol>
+<p>Those constants are passed to the <code>socket()</code> constructor:</p>
+<pre><code class="lang-python">sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+</code></pre>
+<p>We have now a working socket object <code>sock</code> configured for HTTP transmission. This type of socket is also known as <strong>stream socket</strong>.</p>
+<h3>2. Connecting the socket to a server</h3>
+<p>The next step is to choose a web address to connect to. I will be using <code>www.example.com</code> but you can pick whatever you like — just don't abuse it!</p>
+<p>In the <a href="https://internalpointers.com/post/introduction-tcp-transmission-control-protocol#client-server-model">5th episode of this series</a> I mentioned how TCP uses special numbers called <strong>ports</strong> to determine the type of service you want from the server. Web servers usually provide HTTP services on port 80, so I'll pick that too.</p>
+<p>The web address and the port number are then passed to the <a href="https://docs.python.org/3/library/socket.html#socket.socket.connect"><code>connect()</code></a> method as a tuple:</p>
+<pre><code class="lang-python">sock.connect((&quot;www.example.com&quot;, 80))
+</code></pre>
+<p>At this point our socket has established a connection to the web server that is responsible for serving web pages from <code>www.example.com</code> on port 80. Where's the IP address, anyway? The <code>connect()</code> method automatically translates the string <code>www.example.com</code> into the corresponding IP address by issuing a <a href="https://en.wikipedia.org/wiki/Domain_Name_System"><strong>DNS lookup</strong></a>. Don't worry about it for now; I will write an article on how the DNS mechanism works in the future.</p>
+<h3>3. Sending data to the server</h3>
+<p>Here comes the fun. An HTTP communication always starts with a <em>request</em> made by the client (i.e. us!) with the page we want to obtain, followed by some additional information. Such request is sent as a normal text string and looks like this:</p>
+<pre><code class="lang-nocode">GET / HTTP/1.1\r\nHost:www.example.com\r\n\r\n
+</code></pre>
+<p>In words: give me (<code>GET</code>) the index page (<code>/</code>) through <code>HTTP</code> version <code>1.1</code> (HTTP comes in multiple versions, <code>1.1</code> is OK for our purpose) from the host called <code>www.example.com</code>. Fields are separated by <code>\r\n</code> and the request ends with <code>\r\n\r\n</code>.</p>
+<p>It's now time to send this string to the web server, by calling the <a href="https://docs.python.org/3/library/socket.html#socket.socket.send"><code>send()</code></a> method on our socket. Normally, data is sent over the Internet in binary form, that is as a bunch of <code>0</code>s and <code>1</code>s packed together: this is why the <code>send()</code> method wants <em>bytes</em> in input. So our text string must be converted to binary first. In Python this is done by prepending a <code>b</code> to it:</p>
+<pre><code class="lang-python">b&quot;GET / HTTP/1.1\r\nHost:www.example.com\r\n\r\n&quot;
+</code></pre>
+<p>The string now has been turned into a <a href="https://docs.python.org/3/library/stdtypes.html#bytes">sequence of bytes</a>, ready for transmission:</p>
+<pre><code class="lang-python">sock.send(b&quot;GET / HTTP/1.1\r\nHost:www.example.com\r\n\r\n&quot;)
+</code></pre>
+<h3>4. Receiving data from the server</h3>
+<p>At this point the server should have received our request and is ready to reply back with some data, that is the page we asked for. The data is obtained by calling the <a href="https://docs.python.org/3/library/socket.html#socket.socket.recv"><code>recv()</code></a> method:</p>
+<pre><code class="lang-python">response = sock.recv(4096)
+</code></pre>
+<p>The <code>recv()</code> method wants the maximum amount of data to be received at once, in bytes: 4096 should be good enough for now. The method returns the data as a byte string, the same format we used for the request. So we can either print it as it is, or convert it into something meaningful by <em>decoding</em> it with the <a href="https://docs.python.org/3/library/stdtypes.html#bytes.decode"><code>decode()</code></a> method:</p>
+<pre><code class="lang-python">print(response)             # raw byte string
+print(response.decode())    # UTF-8-encoded string
+</code></pre>
+<p>Either way we should end up with a text string made of the <strong>response headers</strong> followed by the <strong>response body</strong>. The former are additional metadata, while the latter is the actual HTML code of the web page you have requested.</p>
+<h3>5. Closing the socket</h3>
+<p>Once the entire response has been received, <a href="https://docs.python.org/3/library/socket.html#socket.close"><code>close()</code></a> the socket:</p>
+<pre><code class="lang-python">sock.close()
+</code></pre>
+<p>A socket should always be closed properly once you're done with it. And now the code we have produced so far:</p>
+<pre><code class="lang-python">import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((&quot;www.example.com&quot;, 80))
+sock.send(b&quot;GET / HTTP/1.1\r\nHost:www.example.com\r\n\r\n&quot;)
+response = sock.recv(4096)
+sock.close()
+print(response.decode())
+</code></pre>
+<p>It's a good start, but we can do better: let's see how.</p>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Understanding network buffers</h2>
+<p>Two things can go wrong in the program above: 1) the request might be sent incompletely, 2) the response might be received incompletely. Let's introduce the concept of <strong>network buffers</strong> to understand why.</p>
+<p>When you move stuff through a socket, data is not transmitted right away through the network card one byte at a time. Instead, the operating system temporarily puts it inside a <strong>buffer</strong> — a chunk of memory used to hold data while it is being moved from one place to another.</p>
+<p>So when you <code>send()</code> something, the operating system copies a piece of your message into the buffer, then flushes it to the outside world when it's full. Receiving data works similarly, just the other way around. As bytes sent by the server arrive to your network card, the operating system collects them into another network buffer, waiting for your app to <code>recv()</code> it.</p>
+<p>You have no control over those buffers: they might be empty, partially filled, completely filled with more data to be sent/received and so on, for multiple reasons — slow network, busy operating system, servers down, ... . The only thing you can do is to keep <code>send()</code>ing and <code>recv()</code>ing <em>until there is data available</em>, if you want to be 100% sure you are not missing anything.</p>
+<h3>A better send</h3>
+<p>The <code>send()</code> method returns the number of bytes actually sent: since we know the length of the message we want to send, let's keep track of the total bytes sent on each <code>send()</code> call, compare that value to the length of the message and eventually send what's left. Something like this:</p>
+<pre><code class="lang-python">request = b&quot;GET / HTTP/1.1\r\nHost:www.example.com\r\n\r\n&quot;
+sent    = 0
+while sent &lt; len(request):
+    sent = sent + sock.send(request[sent:])    # Send a portion of &#39;request&#39;, starting from &#39;sent&#39; byte
+</code></pre>
+<p>Additionally, Python features the <a href="https://docs.python.org/3/library/socket.html#socket.socket.sendall"><code>sendall()</code></a> method that behaves exactly as the snippet above: use it if you don't want to be bothered by internals.</p>
+<h3>A better receive</h3>
+<p>The original code has an additional problem: 4096 bytes might not be enough to store the full response. We can fix that and the buffering issue by looping over <code>recv()</code> as we did above with <code>send()</code>. However things are trickier here, because we don't know exactly how long the incoming message will be beforehand. This is due to the stream-oriented nature of TCP, where data is seen as <em>an unlimited stream of bytes</em>, with no delimiters or other message boundaries.</p>
+<p>Not all hope is lost, though. The <code>recv()</code> method returns the number of bytes received, and <em>0 bytes are returned</em> when the server has terminated the connection. So we can loop over <code>recv()</code> until we get 0 bytes in return. Something like this:</p>
+<pre><code class="lang-python"># [...]
+response = b&quot;&quot;
+while True:
+    chunk = sock.recv(4096)
+    if len(chunk) == 0:     # No more data received, quitting
+        break
+    response = response + chunk;
+# [...]
+</code></pre>
+<p>The code should now be ready to handle messages of any length, or at least should be capable of receiving all the data sent by the server. However if you try to run it you will notice that the program gets stuck before printing the final response. Why?</p>
+<h2>HTTP connection mode versus blocking sockets</h2>
+<p>The first release of HTTP (version 1.0) uses one socket per transfer. You send a request, the server sends a reply, then it closes the connection. When the connection is closed your socket can be trashed: there's no way to use it again. Want to issue a new request? Just create a new socket and start over again. Over time this approach turned out to be very limited, so in HTTP version 1.1 — the version we are using! — new connection models were created. In HTTP 1.1 all connections are <strong>persistent</strong> unless declared otherwise: the server keeps the connection alive so that the socket can be reused for additional transmission.</p>
+<p>Unfortunately the persistent mode clashes a bit with sockets, which are <strong>blocking</strong> by default: they pause the program waiting for data to be sent or received. Or better, they block until some data — even a single byte — is available in the network buffers. Since the server never closes the connection in persistent mode, the socket just waits for more data to arrive. No more data will be sent by the server (unless we issue a new request), so the socket hangs forever.</p>
+<p>There are three ways to fix the problem in addition to revert back to HTTP/1.0: 1) disable the persistent HTTP connection, 2) set a <strong>timeout</strong> on the socket or 3) read the HTTP response headers to determine when to quit. Let's take a look.</p>
+<h3>1. Disable the persistent HTTP connection</h3>
+<p>The <code>Connection</code> header controls whether the connection with the server stays open after the transmission finishes. In HTTP/1.1 the default value is <code>keep-alive</code>. Change it to <code>close</code>
+in the HTTP request string to mimic the HTTP/1.0 default behavior:</p>
+<pre><code class="lang-python">sock.send(b&quot;GET / HTTP/1.1\r\nHost:www.example.com\r\nConnection: close\r\n\r\n&quot;)
+</code></pre>
+<p>This way the server will gracefully close the connection once all the data is sent. The socket detects it, <code>recv()</code> returns 0 and the code can make progress.</p>
+<h3>2. Set a <strong>timeout</strong> on the socket</h3>
+<p>You can decide how long the socket should block before giving up. This is done by calling <a href="https://docs.python.org/3/library/socket.html#socket.socket.settimeout"><code>settimeout()</code></a> on the socket object during configuration. Now all socket operations (<code>connect()</code>, <code>send()</code>, <code>recv()</code>, ...) will raise a <a href="https://docs.python.org/3/library/socket.html#socket.timeout"><code>socket.timeout</code></a> exception if they take more time than requested. You can catch that error while calling <code>recv()</code> in the <code>while</code> loop and interpret it as the end of data. For example:</p>
+<pre><code class="lang-python">import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.settimeout(10)  # In seconds. Choose a value that makes sense to you
+# [...]
+response = b&quot;&quot;
+try:
+    while True:
+        response = response + sock.recv(4096);
+except socket.timeout as e:
+    print(&quot;Time out!&quot;)
+# [...]
+</code></pre>
+<p>Note: in Python 3.10 and greater <code>socket.timeout</code> is just a deprecated alias for <a href="https://docs.python.org/3/library/exceptions.html#TimeoutError"><code>TimeoutError</code></a> exception.</p>
+<h3>3. Read the HTTP response headers to determine when to quit</h3>
+<p>The <code>Content-Length</code> response header indicates the size of the message body, in bytes, that the server is sending you back. The idea here is to keep checking the incoming data for the presence of that header and read its value when available. Then you can stop <code>recv()</code>ing data from the socket as soon as you got a number of bytes that matches the value reported by <code>Content-Length</code>.</p>
+<p>Parsing HTTP responses is a bit annoying but doable also without a library. Each header is separated by <code>\r\n</code> and the body (i.e. the actual HTML code) starts after <code>\r\n\r\n</code>. Obviously this approach only works with HTTP: other protocols might send the content length in a different format, or might not send it at all.</p>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Final notes</h2>
+<p>This article wants to be a practical introduction to Berkeley sockets over a stream-based protocol. I've just scratched the surface of the topic; the following is a list of cool things to keep in mind:</p>
+<ul>
+<li><p>All socket methods used along the way can throw other exceptions beyond <code>socket.timeout</code>. I didn't do it for brevity, but you should catch them and act accordingly;</p>
+</li>
+<li><p>A socket can be set to <strong>non-blocking</strong> mode. All socket operations (<code>connect()</code>, <code>send()</code>, <code>recv()</code>, ...) no longer wait in this mode: they <em>return immediately</em> as soon as you call them. This solves the problem of hanging sockets, however writing a correct program with non-blocking functions is quite tricky. I will try to rethink the code seen so far in a non-blocking way in one of the next articles;</p>
+</li>
+<li><p>Our socket was configured to run over IPv4. You can switch it to IPv6 by setting the socket family to <code>AF_INET6</code> during the configuration. The code changes a little bit though, especially the <code>connect()</code> part. <a href="https://docs.python.org/3/library/socket.html#example">This example in the official documentation</a> shows how to adapt it;</p>
+</li>
+<li><p>We issued an HTTP request, but nowadays everybody uses HTTPS — the secure, that is <em>encrypted</em> version of HTTP. The code doesn't change much, but you need to encrypt and decrypt the data. The Python's <code>ssl</code> module helps with that and I will probably write an article about it in the future.</p>
+</li>
+</ul>
+<h2>Sources</h2>
+<p><a href="https://docs.python.org/3/library/socket.html">Python docs — socket — Low-level networking interface</a><br>
+<a href="https://docs.python.org/3/howto/sockets.html">Python docs — Socket Programming HOWTO</a><br>
+<a href="https://beej.us/guide/bgnet/html">Beej's Guide to Network Programming</a><br>
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection">MDN Web Docs — Connection</a><br>
+<a href="https://www.scottklement.com/rpg/socktut/nonblocking.html">RPG IV Socket Tutorial — 6.5. Blocking vs. non-blocking sockets</a><br>
+<a href="https://stackoverflow.com/questions/34252273/what-is-the-difference-between-socket-send-and-socket-sendall/34252690">StackOverflow — What is the difference between socket.send() and socket.sendall()?</a><br>
+<a href="https://stackoverflow.com/questions/41382127/how-does-the-python-socket-recv-method-know-that-the-end-of-the-message-has-be">StackOverflow — How does the python socket.recv() method know that the end of the message has been reached?</a><br>
+<a href="https://stackoverflow.com/questions/2862071/how-large-should-my-recv-buffer-be-when-calling-recv-in-the-socket-library">StackOverflow — How large should my recv buffer be when calling recv in the socket library</a><br>
+<a href="https://stackoverflow.com/questions/2618736/why-is-it-assumed-that-send-may-return-with-less-than-requested-data-transmitted">StackOverflow — Why is it assumed that send may return with less than requested data transmitted on a blocking socket?</a><br>
+<a href="https://superuser.com/questions/1540053/do-socket-and-buffer-mean-the-same-thing">SuperUser — Do socket and buffer mean the same thing?</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/internet">internet</a>
+				 • 								<a class="ip-tag" href="/tag/network-programming">network programming</a>
+				 • 								<a class="ip-tag" href="/tag/socket">socket</a>
+				 • 								<a class="ip-tag" href="/tag/python">Python</a>
+				 • 								<a class="ip-tag" href="/tag/http">http</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/network-programming-beginners-overview">Network programming for beginners: introduction to sockets </a>
+					</div>
+				</div>
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">david</span> on 
+							<span class="date">March 03, 2022 at 21:55</span>
+						</div> 
+						<div class="body">it's better starting point.....you deserve some credits</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Maya</span> on 
+							<span class="date">May 17, 2022 at 16:45</span>
+						</div> 
+						<div class="body">This is by far the best networking course I've seen. I hope, you'll continue this great work!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">arvin</span> on 
+							<span class="date">May 28, 2022 at 04:18</span>
+						</div> 
+						<div class="body">very good </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">total idiot who cant code well</span> on 
+							<span class="date">July 18, 2022 at 12:40</span>
+						</div> 
+						<div class="body">good tutorial</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">a</span> on 
+							<span class="date">August 16, 2022 at 12:40</span>
+						</div> 
+						<div class="body">please just put in the full code at the end</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sleepytw</span> on 
+							<span class="date">August 20, 2022 at 13:23</span>
+						</div> 
+						<div class="body">bare sockets this is good asf got me into a big ass project like 2 weeks ago and its going pretty well rn, good looks :D<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alexey</span> on 
+							<span class="date">September 06, 2022 at 17:58</span>
+						</div> 
+						<div class="body">Please, continue this course!! It is the frst course, that has helped me understand all this difficult Internet things! Thank you very much)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alexey</span> on 
+							<span class="date">September 06, 2022 at 18:00</span>
+						</div> 
+						<div class="body">And what I really want are lessons about udp and about ssl. Hope I will be able to read them someday</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kenneth</span> on 
+							<span class="date">December 09, 2022 at 08:15</span>
+						</div> 
+						<div class="body">Waiting on more tutorials. You're very good at explaining every little step. Please keep up the good work.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Noah</span> on 
+							<span class="date">April 23, 2023 at 19:24</span>
+						</div> 
+						<div class="body">Awesome article, thanks for your clear explanations and great examples!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">czar</span> on 
+							<span class="date">May 07, 2023 at 19:30</span>
+						</div> 
+						<div class="body">Hey, thanks for this series , this is good, concise & well organized. better than many explanations from various other websites</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">jam</span> on 
+							<span class="date">August 23, 2023 at 17:44</span>
+						</div> 
+						<div class="body">thank you very much for this article</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

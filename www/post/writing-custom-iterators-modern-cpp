@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Writing a custom iterator in modern C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="An experimental Forward Iterator written from scratch to boost up hand-made containers.">
+		<meta name="keywords" content="C++,Iterator">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Writing a custom iterator in modern C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="An experimental Forward Iterator written from scratch to boost up hand-made containers." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp" />
+<meta name="twitter:title" content="Writing a custom iterator in modern C++" />
+<meta name="twitter:description" content="An experimental Forward Iterator written from scratch to boost up hand-made containers." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/writing-custom-iterator-modern-cpp.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on December 13, 2020 
+								• updated on December 19, 2020  
+								• ID 86 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Writing a custom iterator in modern C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>An experimental Forward Iterator written from scratch to boost up hand-made containers.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>An iterator is an object that points to an element inside a container. Like a pointer, an iterator can be used to access the element it points to and can be moved through the content of the container. Each container in the C++ Standard Library provides its own iterator, as well as some methods to retrieve it. Using iterators is quite easy: obtain an instance from a container, move it around where needed and then get the pointed element.</p>
+<p>Concretely, an iterator is a simple class that provides a bunch of operators: increment <code>++</code>, dereference <code>*</code> and few others which make it very similar to a pointer and the arithmetic operations you can perform on it. In fact, iterators are a generalization of pointers, which are often used as a foundation when writing the iterator itself.</p>
+<p>Iterators are one of the building blocks of the Standard Library containers, but they are also useful when you want to provide the ability to iterate over elements of a custom container that you wrote yourself: this is what I want to investigate in the present article. Adding iterators to your containers will make them compatible with the <a href="https://en.cppreference.com/w/cpp/language/range-for">range-based for loops</a> and the <a href="https://en.cppreference.com/w/cpp/algorithm">C++ Algorithms library</a>: a collection of functions for searching, sorting, counting and manipulating containers, based on iterators.</p>
+<h2>A dummy container for our experiments</h2>
+<p>Before digging deeper, let's define a silly custom container that we want to spice up with iterators:</p>
+<pre><code class="lang-c++">class Integers
+{
+private:
+    int m_data[200];
+};
+</code></pre>
+<p>The <code>Integers</code> class is a wrapper around a raw array of <code>int</code>s: we want to be able to access elements of that private array through an iterator, as well as to loop over it or pass it to any of the Standard Library algorithms. Let's start by making some design decisions.</p>
+<h2>Choose the nature of our iterator</h2>
+<p>The first step is to choose the type of iterator we want to implement. Modern C++ defines six types:</p>
+<table>
+<thead><tr>
+<th>#</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/InputIterator">Input Iterator</a></strong></td>
+<td>Can scan the container forward only once, can't change the value it points to (read-only);</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/OutputIterator">Output Iterator</a></strong></td>
+<td>Can scan the container forward only once, can't read the value it points to (write-only);</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/ForwardIterator">Forward Iterator</a></strong></td>
+<td>Can scan the container forward multiple times, can read and write the value it points to;</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/BidirectionalIterator">Bidirectional Iterator</a></strong></td>
+<td>Same as previous one but can scan the container back and forth;</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator">Random Access Iterator</a></strong></td>
+<td>Same as previous one but can access the container also non-sequentially (i.e. by jumping around);</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong><a href="https://en.cppreference.com/w/cpp/named_req/ContiguousIterator">Contiguous Iterator</a></strong></td>
+<td>Same as previous one, with the addition that logically adjacent elements are also physically adjacent in memory.</td>
+</tr>
+</tbody>
+</table>
+<p>The six categories are hierarchical: a Bidirectional Iterator is also a Forward Iterator and a Random Access Iterator is both a Bidirectional and a Forward Iterator and so on. Normally, all iterators are Input Iterators (1) which makes them read-only, also known as <strong>constant iterators</strong>. Iterators that both support read and write operations are also Output Iterators (2) and are called <strong>mutable iterators</strong>.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/12/iterators/iterator-hierarchy.png" alt="Iterators hierarchy">
+<div class="caption">1. Iterators hierarchy in C++. All iterators are Input Iterators, Output Iterators or both.</div>
+</div><p>Input and Output iterators are often used for low-level components such as input and output streams (the so-called <strong>single-pass algorithms</strong>) and thus have limitations. We want to do more with our custom container, so we will skip those two and jump straight to the mutable Forward Iterator.</p>
+<h2>Prepare the custom iterator</h2>
+<p>An iterator is usually declared inside the class it belongs to, for example:</p>
+<pre><code class="lang-c++">class Integers
+{
+public:
+    struct Iterator { /* ... */ };
+
+    // ...
+};
+</code></pre>
+<p>The first thing to do is to assign the iterator some properties. Until C++17 this is done by <em>tagging</em> it with the <a href="https://www.fluentcpp.com/2018/04/27/tag-dispatching/"><strong>tag dispatch</strong></a> mechanism, while C++20 uses <strong>concepts</strong>: in this article I will follow the traditional approach.</p>
+<p>C++ expects some properties from an iterator:</p>
+<ul>
+<li><code>iterator_category</code> — one of the six iterator categories we have seen above. The full list is available <a href="https://en.cppreference.com/w/cpp/iterator/iterator_tags">here</a>. The <code>std::forward_iterator_tag</code> tag is what we need;</li>
+<li><code>difference_type</code> — a signed integer type that can be used to identify distance between iterator steps. Our iterator is basically a wrapper around a pointer and leverages pointer arithmetic, so the default <a href="https://en.cppreference.com/w/cpp/types/ptrdiff_t"><code>std::ptrdiff_t</code></a> is a good choice;</li>
+<li><code>value_type</code> — the type the iterator iterates over. <code>int</code> in our case;</li>
+<li><code>pointer</code> — defines a pointer to the type iterated over. <code>int*</code> in our case;</li>
+<li><code>reference</code> — defines a reference to the type iterated over. <code>int&amp;</code> in our case;</li>
+</ul>
+<p>Translated into code:</p>
+<pre><code class="lang-c++">#include &lt;iterator&gt; // For std::forward_iterator_tag
+#include &lt;cstddef&gt;  // For std::ptrdiff_t
+
+struct Iterator 
+{
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = int;
+    using pointer           = int*;  // or also value_type*
+    using reference         = int&amp;;  // or also value_type&amp;
+};
+</code></pre>
+<h3>Why are tags useful?</h3>
+<p>Some of the tags above might seem useless at first. In fact, you will notice how they will never get mentioned during the definition of our iterator. Tags are used to select the most efficient algorithm if your container is passed to one of the Standard Library functions from the <code>&lt;algorithm&gt;</code> library. Wrong tags mean sub-optimal performance! The iterator category is also used to set algorithm requirements, for example: <a href="https://en.cppreference.com/w/cpp/algorithm/fill"><code>std::fill</code></a> wants a Forward Iterator, while <a href="https://en.cppreference.com/w/cpp/algorithm/reverse"><code>std::reverse</code></a> wants a Bidirectional Iterator. Passing the wrong iterator will result in a compilation error.</p>
+<h2>Define the iterator constructors</h2>
+<p>All iterators must be <em>constructible</em>, <em>copy-constructible</em>, <em>copy-assignable</em>, <em>destructible</em> and <em>swappable</em>. Let's translate those requirements into code for our iterator:</p>
+<pre><code class="lang-c++">struct Iterator 
+{
+    // Iterator tags here...
+
+    Iterator(pointer ptr) : m_ptr(ptr) {}
+
+private:
+
+    pointer m_ptr;
+};
+</code></pre>
+<p>Easy! We just need a custom constructor to initialize the private member variable <code>m_ptr</code>, which points to an element of the <code>Integers</code> container. The custom constructor satisfies the <em>constructible</em> requirement, while all others are covered by the implicitly-declared constructors and operators kindly provided by the compiler.</p>
+<h2>Implement operators</h2>
+<p>We are building a mutable Forward Iterator, which inherits properties from both Input and Output Iterators. The resulting iterator must support the following operations:</p>
+<ul>
+<li><code>*iterator</code> and <code>iterator-&gt;x</code> — dereferenceable, to get the value it points to;</li>
+<li><code>++iterator</code> and <code>iterator++</code> — incrementable, to move it one step forward, both prefix and postfix versions. The latter must return something dereferenceable;</li>
+<li><code>iterator_a == iterator_b</code> and <code>iterator_a != iterator_b</code> — comparable with another iterator;</li>
+</ul>
+<p>This is done by implementing some custom operators in the <code>Iterator</code> class, like this:</p>
+<pre><code class="lang-c++">struct Iterator 
+{
+    // Iterator tags here...
+
+    // Iterator constructors here...
+
+    reference operator*() const { return *m_ptr; }
+    pointer operator-&gt;() { return m_ptr; }
+
+    // Prefix increment
+    Iterator&amp; operator++() { m_ptr++; return *this; }  
+
+    // Postfix increment
+    Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+
+    friend bool operator== (const Iterator&amp; a, const Iterator&amp; b) { return a.m_ptr == b.m_ptr; };
+    friend bool operator!= (const Iterator&amp; a, const Iterator&amp; b) { return a.m_ptr != b.m_ptr; };     
+
+private:
+
+    pointer m_ptr;
+};
+</code></pre>
+<p>As you can see every operator involves the usage of the private pointer <code>m_ptr</code>. Also, notice the <code>friend</code> declaration for the two comparison operators: this is handy way to define the operators as non-member functions, yet being able to access private parts of the <code>Iterator</code> class (rationale  <a href="https://stackoverflow.com/questions/4421706/what-are-the-basic-rules-and-idioms-for-operator-overloading/4421729#4421729">here</a>).</p>
+<h2>Prepare the container</h2>
+<p>Our iterator is good to go. The last step is to give our custom container the ability to create <code>Iterator</code> objects. This is done by adding two public methods <code>begin()</code> and <code>end()</code> that return instances of the <code>Iterator</code> class, representing the first and the last element respectively:</p>
+<pre><code class="lang-c++">class Integers
+{
+public:
+
+    // Iterator definition here ...
+
+    Iterator begin() { return Iterator(&amp;m_data[0]); }
+    Iterator end()   { return Iterator(&amp;m_data[200]); } // 200 is out of bounds
+};
+</code></pre>
+<p>The <code>end()</code> method returns an iterator that refers to an <em>invalid</em> memory address, past the end of our raw array. Such iterator is just a placeholder used to determine when the boundary has been reached: it should never be accessed directly.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Time to test our iterator</h2>
+<p>Both the custom container and its iterator are now ready. Let's test them with the range-based for loop:</p>
+<pre><code class="lang-c++">Integers integers;
+for (auto i : integers)
+    std::cout &lt;&lt; i &lt;&lt; &quot;\n&quot;;
+</code></pre>
+<p>This code will magically print the value of each integer in the container. It works because the range-based for loop is just syntactic sugar created by the compiler for the following:</p>
+<pre><code class="lang-c++">for (auto it = integers.begin(), end = integers.end(); it != end; ++it) { 
+    const auto i = *it; 
+    std::cout &lt;&lt; i &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+<p>In words: two iterators <code>it</code> and <code>end</code> are created. The first one points to the beginning of the container, the other one points to the end. Then, on each loop, the <code>it</code> iterator is incremented until it's equal to <code>end</code>, that is until the end of the container has been reached. The actual value is obtained by dereferencing <code>it</code> in a local variable before being printed.</p>
+<p>Notice how the compiler makes use of all the operators and functions we have previously implemented: the <code>begin()</code> and <code>end()</code> methods in the custom container, the ability to compare the two iterators with the <code>!=</code> operator, the ability to increment <code>it</code> with the prefix syntax and finally the ability to dereference it to grab the actual value it points to.</p>
+<p>Let's now try a function from the Algorithm library, <a href="https://en.cppreference.com/w/cpp/algorithm/fill"><code>std::fill</code></a> for example:</p>
+<pre><code class="lang-c++">Integers integers;
+
+std::fill(integers.begin(), integers.end(), 3);
+</code></pre>
+<p>The function assigns all elements in the container the value <code>3</code>. It works because <code>std::fill</code> is usually implemented like this:</p>
+<pre><code class="lang-c++">template &lt;typename ForwardIterator, typename T&gt;
+void fill(ForwardIterator first, ForwardIterator last, const T&amp; value)
+{
+    for (; first != last; ++first)
+        *first = value;
+}
+</code></pre>
+<p>Note that our iterator doesn't work with all functions from the Algorithm library. For example, we can't pass it to <a href="https://en.cppreference.com/w/cpp/algorithm/reverse"><code>std::reverse</code></a> as it requires a Bidirectional Iterator. The hard part has been done so far, so extending the iterator is now just a matter of adding more operators to the class and choose the best tags to describe it.</p>
+<h2>Final notes</h2>
+<h3>Iterators behave like pointers: can't I just use them?</h3>
+<p>Our custom container is a wrapper around an old-school array, which can be navigated with pointer arithmetic. Indeed we could get rid of the whole <code>Iterator</code> class and just return a pointer to the first and last array element from the <code>Integers::begin()</code> and <code>Integers::end()</code> methods respectively. Range-based for loops and functions from the Algorithm library would still work fine. However, real-world containers are often based on more complex data structures than plain arrays — think of linked lists or maps to name a few, where pointers and their operations aren't just enough. Iterators abstract away all that complexity behind a handy object that behaves like a pointer and let you access a complex data structure with familiar operations.</p>
+<h3>My container already wraps a Standard Library container</h3>
+<p>In our example, the <code>Integers</code> class could have been a wrapper around a <code>std::array</code>. In this case you don't need to implement any custom iterator at all and just return the iterator that belongs to the Standard Library container in use. For example:</p>
+<pre><code class="lang-c++">class Integers
+{
+    using IntegersType = std::array&lt;int, 32&gt;;
+    // ... 
+
+    IntegersType::iterator begin() { return m_data.begin(); }
+    IntegersType::iterator end()   { return m_data.end() }    
+
+private:
+    IntegersType m_data;
+};
+</code></pre>
+<p>The code above works because all containers in the C++ Standard Library do what we have done with our <code>Integer</code> container: they all implement their iterators as class members. The <code>IntegersType</code> alias is used to simplify type names and is not mandatory. Also, returning <code>auto</code> as iterator type seems just fine in C++17.</p>
+<h3>Make our iterator immutable</h3>
+<p>By default, <code>Iterator</code> can alter the element it points to. If you want to make it immutable, the common trick is to add another iterator type to the custom container class — let's call it <code>ConstantIterator</code>. This new iterator type is almost identical to the original one, except for its dereference operator which now returns a <em>constant reference</em>:</p>
+<pre><code class="lang-c++">const reference operator*() const { return *m_ptr; }
+// ^---- notice the &#39;const&#39; here
+</code></pre>
+<p>The same thing applies to the <code>-&gt;</code> operator. Finally, the custom container must be able to return such new iterator type. This is done by adding two additional public methods <code>cbegin()</code> and <code>cend()</code> (where the leading <code>c</code> stands for <em>constant</em>) that return instances of the <code>ConstantIterator</code> class:</p>
+<pre><code class="lang-c++">ConstantIterator cbegin() const { return ConstantIterator(&amp;m_data[0]); }
+ConstantIterator cend()   const { return ConstantIterator(&amp;m_data[200]); }
+</code></pre>
+<p>Many Standard Library containers provide both the <code>begin()/end()</code> and the <code>cbegin()/cend()</code> pairs. The same pattern is applied for each iterator type. For example, <a href="https://en.cppreference.com/w/cpp/container/array"><code>std::array</code></a> also has <code>rbegin()/rend()</code>, where <code>r</code> stands for <em>reverse iterator</em> (yes, you can loop a Standard Library arrays in reverse, too).</p>
+<h3>How are iterators defined in C++20?</h3>
+<p>C++20 introduces <a href="https://en.cppreference.com/w/cpp/language/constraints">concepts</a>, a smart way to put constraints on the types a template function or class can take in. While iterator categories and properties remain the same, what changes is <em>how</em> you enforce them: with tags until C++17, with concepts since C++20. For example, instead of the <code>std::forward_iterator_tag</code> tag you would mark your iterator with the <a href="https://en.cppreference.com/w/cpp/iterator/forward_iterator"><code>std::forward_iterator</code></a> concept. The same thing applies to all iterator properties. For example, a Forward Iterator must be <a href="https://en.cppreference.com/w/cpp/iterator/incrementable"><code>std::incrementable</code></a>. This new mechanism helps in getting better iterator definitions and makes errors from the compiler much more readable. I will upgrade the article as soon as the concept implementation will become more widespread.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Full source code</h2>
+<pre><code class="lang-c++">#include &lt;iterator&gt;
+#include &lt;cstddef&gt;
+
+class Integers
+{
+public:
+    struct Iterator 
+    {
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = int;
+        using pointer           = int*;
+        using reference         = int&amp;;
+
+        Iterator(pointer ptr) : m_ptr(ptr) {}
+
+        reference operator*() const { return *m_ptr; }
+        pointer operator-&gt;() { return m_ptr; }
+        Iterator&amp; operator++() { m_ptr++; return *this; }  
+        Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+        friend bool operator== (const Iterator&amp; a, const Iterator&amp; b) { return a.m_ptr == b.m_ptr; };
+        friend bool operator!= (const Iterator&amp; a, const Iterator&amp; b) { return a.m_ptr != b.m_ptr; };  
+
+    private:
+        pointer m_ptr;
+    };
+
+    Iterator begin() { return Iterator(&amp;m_data[0]); }
+    Iterator end()   { return Iterator(&amp;m_data[200]); }
+
+private:
+    int m_data[200];
+};
+</code></pre>
+<h2>Sources</h2>
+<p><a href="https://www.learncpp.com/cpp-tutorial/introduction-to-iterators/">Learncpp.com — 6.17 — Introduction to iterators</a><br>
+<a href="https://www.learncpp.com/cpp-tutorial/16-3-stl-iterators-overview/">Learncpp.com — 16.3 — STL iterators overview</a><br>
+<a href="https://users.cs.northwestern.edu/~riesbeck/programming/c++/stl-iterator-define.html">Chris Riesbeck — Defining C++ Iterators</a><br>
+<a href="http://www.cplusplus.com/reference/iterator/">Cplusplus.com — Iterator</a><br>
+<a href="https://en.cppreference.com/w/cpp/language/range-for">Cppreference — Range-based for loop</a><br>
+<a href="https://en.cppreference.com/w/cpp/iterator">Cppreference — Iterator library</a><br>
+<a href="https://en.cppreference.com/w/cpp/iterator/iterator_tags">Cppreference — Iterator tags</a><br>
+<a href="https://stackoverflow.com/questions/12001410/what-is-the-reason-behind-cbegin-cend">StackOverflow — What is the reason behind cbegin/cend?</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/iterator">Iterator</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Duane</span> on 
+							<span class="date">December 21, 2020 at 19:23</span>
+						</div> 
+						<div class="body">https://www.boost.org/doc/libs/1_75_0/libs/iterator/doc/iterator_facade.html<br />
+Or<br />
+https://www.boost.org/doc/libs/1_75_0/libs/iterator/doc/html/iterator/generic/adaptor.html<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">darkelfe14728</span> on 
+							<span class="date">December 27, 2020 at 20:33</span>
+						</div> 
+						<div class="body">Great article.<br />
+May i suggest an exemple with disjoint elements (like std::vector<std::vector<int>>) ?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gangaraju</span> on 
+							<span class="date">January 03, 2021 at 19:30</span>
+						</div> 
+						<div class="body">Thanks for the detailed explanation of implementing an iterator. Minor correction required: In "Choose the nature of our iterator" output iterator is introduced as one which can be used to write but cannot be read. Whereas immediately following that output iterator is mentioned as one that can be used to read and write.<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Indi</span> on 
+							<span class="date">January 03, 2021 at 23:49</span>
+						</div> 
+						<div class="body">The first part of the section “Make our iterator immutable” is incorrect.<br />
+<br />
+You don’t turn `Iterator` into `ConstIterator` by simply sticking `const` in front of `reference` in the return type of `operator*` (“notice the const here”). If `reference` is `int&`, then `const reference` is… `int&`. Because that’s how references work. If `pointer` is `int*`, then `const pointer` is `int* const`… which is not the same as `int const*`. (East const 4 lyfe.)<br />
+<br />
+The correct way to turn `Iterator` into `ConstIterator` is to change the typedefs: `pointer` should be `int const*` and `reference` should be `int const&`. And don’t add `const` to the return types of `operator*` or `operator->`. (You’ll probably also want to add implicit conversions from `Iterator` to `ConstIterator`, but not vice versa.)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">beyeriii</span> on 
+							<span class="date">March 05, 2021 at 02:21</span>
+						</div> 
+						<div class="body">Please consider writing a companion article about implementing a STL Sequence Container which uses the Iterator class in this article.  For example a class similar to std::vector or a circular buffer. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dedrick Mason</span> on 
+							<span class="date">April 26, 2021 at 15:41</span>
+						</div> 
+						<div class="body">Great article. Helped me a lot. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Stelios</span> on 
+							<span class="date">August 18, 2021 at 14:07</span>
+						</div> 
+						<div class="body">Great article, and nice interface of your website, helps a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mario</span> on 
+							<span class="date">August 22, 2021 at 22:40</span>
+						</div> 
+						<div class="body">This article helped me a lot!! Thanks!! Got a question: in your example the value type is an int, but what if the value type itself is a pointer, as will happen when I have for instance an array of strings. What would be the pointer and the reference types in that case?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 27, 2021 at 10:59</span>
+						</div> 
+						<div class="body">@Mario glad you liked it! Good question: in the first case you would definitely get a pointer to a pointer. For the reference type, well, I'm not sure. I tend to avoid pointers-to-pointers / pointers-to-refs nightmares as much as possible (I'd turn it into an array of std::strings if possible). Let's see if some iterator expert chimes in... </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Skid</span> on 
+							<span class="date">November 06, 2021 at 07:59</span>
+						</div> 
+						<div class="body">Great article, I was having some trouble with this in cpp17 where I wasn't before upgrading my code.This article helped me solve it.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">imallett</span> on 
+							<span class="date">November 18, 2021 at 18:31</span>
+						</div> 
+						<div class="body">Minor suggestions: in the source code, there's trailing whitespace on some lines, and trailing semicolons on the operators. Also, maybe write the operators in the simpler member form (one argument).</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ans</span> on 
+							<span class="date">December 25, 2021 at 20:18</span>
+						</div> 
+						<div class="body">Best!!!Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Well-Wisher</span> on 
+							<span class="date">January 24, 2022 at 01:48</span>
+						</div> 
+						<div class="body">U forgot const modifier to method begin() and end().<br />
+Should be:<br />
+Iterator begin() CONST { return Iterator(&m_data[0]); }<br />
+Iterator end() CONST  { return Iterator(&m_data[200]); }</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">February 02, 2022 at 09:30</span>
+						</div> 
+						<div class="body">@Well-Wisher actually the const modifier should be added to "const" iterators (cbegin(), cend()), doesn't it?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Freelance</span> on 
+							<span class="date">April 21, 2022 at 16:22</span>
+						</div> 
+						<div class="body">Please, show how to implement iterator with C++ 20 concepts! It drives me mad.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Az</span> on 
+							<span class="date">May 14, 2022 at 14:00</span>
+						</div> 
+						<div class="body">Great work!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jak</span> on 
+							<span class="date">July 19, 2022 at 05:00</span>
+						</div> 
+						<div class="body">Nicely written.  Gives a clear explanation of how to create an iterator.  I had to create such an iterator 10 years ago. Now the code is getting a bit stale so needed to refresh myself on the topic.  Thanks </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Quentin</span> on 
+							<span class="date">August 08, 2022 at 19:24</span>
+						</div> 
+						<div class="body">Great introduction, thanks !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">wgwi</span> on 
+							<span class="date">October 02, 2022 at 04:39</span>
+						</div> 
+						<div class="body">Great work!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alex</span> on 
+							<span class="date">December 17, 2022 at 11:47</span>
+						</div> 
+						<div class="body">A lot of your readers are waiting for you to write the C++20 version using concepts instead of tags. Is this possible now, that concepts are being more relevant into the standard?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">JohnC</span> on 
+							<span class="date">December 19, 2022 at 23:55</span>
+						</div> 
+						<div class="body">Explained step-by-step in a systematic manner.<br />
+Brilliant.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Matthew</span> on 
+							<span class="date">March 05, 2023 at 14:51</span>
+						</div> 
+						<div class="body">Any chance you can show how to convert an Iterator to a ConstantIterator?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">crimastergogo</span> on 
+							<span class="date">April 05, 2023 at 05:22</span>
+						</div> 
+						<div class="body">Very nice introduction </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">BS</span> on 
+							<span class="date">May 27, 2023 at 01:29</span>
+						</div> 
+						<div class="body">This does not seem to work when m_data is empty</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">andreas_dr</span> on 
+							<span class="date">August 10, 2023 at 14:48</span>
+						</div> 
+						<div class="body">Wow. Very nice. Thank you! I used this here for a custom Iterator in our 3d engine #tdme2 for arrays/vectors with smart pointers.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mihai</span> on 
+							<span class="date">September 26, 2023 at 10:24</span>
+						</div> 
+						<div class="body">Thanks for the article. Is it a good idea to inherit the iterator from an STL container and modify it to fit other purposes?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Konstantin</span> on 
+							<span class="date">November 08, 2023 at 01:56</span>
+						</div> 
+						<div class="body">Maybe it's better to write like this?:<br />
+    Iterator& operator++() { ++m_ptr; return *this; }</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

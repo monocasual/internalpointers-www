@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The most important metrics for stock investments - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="What are the most famous stock metrics and how to translate them into something useful to humans.">
+		<meta name="keywords" content="stock,EDGAR,ticker symbol,stock exchange,market cap,enterprise value,volume,dividend,EPS,P/E ratio,PEG ratio,P/B ratio">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The most important metrics for stock investments" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/most-important-metrics-stock-investments" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="What are the most famous stock metrics and how to translate them into something useful to humans." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/most-important-metrics-stock-investments" />
+<meta name="twitter:title" content="The most important metrics for stock investments" />
+<meta name="twitter:description" content="What are the most famous stock metrics and how to translate them into something useful to humans." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 17, 2016 
+								• updated on November 06, 2016  
+								• ID 43 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The most important metrics for stock investments</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>What are the most famous stock metrics and how to translate them into something useful to humans.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/stock">What is a stock?</a>
+							</span> —
+							<span class="intro">Understanding how stocks work both from companies' and investors' point of view.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/buying-and-selling-stocks">Buying and selling stocks: how-to</a>
+							</span> —
+							<span class="intro">Let's disclose what happens behind that click on the "buy" button.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>Welcome to the second chapter of the "<a href="http://www.internalpointers.com/post-group/adventures-stock-market">Adventures in stock markets</a>" series! In the previous episode I had the chance to describe the <a href="http://www.internalpointers.com/post/stock">meaning of a stock</a> both as a company and a private investor; this time I will grab a random online prospectus and try to delve into it.</p>
+<p>The ability to deal with stock metrics is crucial when you want to actually invest in a company by buying its shares. You might be interested in a specific firm and have a strong feeling that it will perform well in the future, but without a precise analysis based on numbers you won't go anywhere.</p>
+<p>For the current experiment I've chosen IBM: a nationally recognized, well-established and financially sound company (i.e. a <em>blue chip</em>). Data and charts come from <a href="https://finance.yahoo.com/quote/ibm?ltr=1">Yahoo Finance</a>. On such services you may find a jungle of metrics and ratios about stocks. In this article I want to keep focus on the most important ones that any serious investor out there knows and evaluates. I will write more articles as my studies progess and new interesting measurements are found.</p>
+<h2>The data source</h2>
+<p>You might wonder where all those publicly available data come from, given the fact that it often reaches higher levels of detail (as seen <a href="https://finance.yahoo.com/quote/IBM/financials?p=IBM">here</a> for example). US-based public companies must follow strict rules imposed by the government and the SEC (Security and Exchange Commission). In particular, the SEC runs a fancy database system called <em><a href="https://www.sec.gov/edgar/searchedgar/webusers.htm">EDGAR</a></em> that hold all those required reports. According to their <a href="https://www.sec.gov/investor/pubs/edgarguide.htm">manual</a>:</p>
+<blockquote><p>The SEC’s EDGAR database provides free public access to corporate information, allowing you to quickly research a company’s financial information and operations by reviewing registration statements, prospectuses and periodic reports [...]</p>
+</blockquote>
+<p>EDGAR is the official place to which companies must first post their financial reports before releasing them to the general public. If you are looking for reliable data, EDGAR is the service to go. It is very likely that tools like Google Finance and Yahoo Finance fetch information from that database.</p>
+<p>Now that we know where numbers come from, we can start digging into the IBM stock metrics.</p>
+<h2>Summary and valuation measures</h2>
+<p>In this section I grouped the most essential values, such as the <strong>ticker symbol</strong> and the <strong>current stock price</strong> to name a few. They are not rocket science, but act as a foundation for many other parameters.</p>
+<h3>Name, ticker symbol, stock exchange</h3>
+<p>Any tradable security is unambiguously defined by a symbol made of a set of characters, usually letters, known as the <strong>ticker symbol</strong>. The ticker symbol for IBM is, well, IBM. It's very common to find the following pattern: <code>&lt;stock-exchange&gt;:&lt;ticker-symbol&gt;</code> like for example NYSE:IBM. This is just a way to say that the IBM stock is listed in the New York Stock Exchange. I will examine in depth the meaning of being listed in a stock exchange in the third chapter of this series, when I will deal with the actual stock trading operation.</p>
+<h3>Current stock price</h3>
+<p>This is the current valuation of the stock. A single share of IBM today costs $153.84, according to Yahoo Finance. You usually will find increments or decrements in <em>points</em> (dollars) and in <em>percentage</em> (ratio) according to the last close of the stock market. For stocks, one point equals one dollar; the percentage is just a ratio between the previous and the current value. For example, the current report says that IBM has lost -1.82 points/dollars, or -1.17% from the last close.</p>
+<h3>Number of shares</h3>
+<p>Also known as <strong>outstanding shares</strong>, is the number of shares available for being traded. At the moment, according to Google Finance IBM has 955,840,000 shares out there that people can trade.</p>
+<h2>Market cap</h2>
+<p>Also known as <strong>market capitalization</strong>, it's the value af all the company's shares. The formula is really straightforward: the single stock price multiplied by the number of shares available in the market (i.e. the outstanding shares). For example, with IBM:</p>
+<p>§
+$153.84 * 955,840,000 ~= $148,000,000,000 
+§</p>
+<p>To put it simply, that's the amount you have to pay if you wish to buy all the IBM shares in one go. It is common to use terms like <strong>small cap</strong>, <strong>mid cap</strong> or <strong>large cap</strong> to define companies based on the size of their market capitalization. IBM is definitely a large one. However there are no standard rules to define the company's size, also because they change over time. According to Investopedia these are the current, approximate definitions:</p>
+<blockquote><p>Mega Cap - Market cap of $200 billion and greater<br>
+Big Cap - $10 billion and greater<br>
+Mid Cap - $2 billion to $10 billion<br>
+Small Cap - $300 million to $2 billion<br>
+Micro Cap - $50 million to $300 million<br>
+Nano Cap - Under $50 million</p>
+</blockquote>
+<p>Large caps have been believed to have less risk than small ones. However this doesn't seem a good assumption to make.</p>
+<h2>Enterprise value</h2>
+<p>The market cap we have seen before is just the company's price, not the company's value. The <strong>Enterprise Value</strong> (<strong>EV</strong>) is what you want, if you are looking for a more comprehensive view. It takes into account also debts, owned cash and other company's investments, besides the market cap itself. Yahoo Finance computed it for IBM: $180,960,000,000.</p>
+<p>This is the amount of cash you have to pay if you want to buy the company itself, including debts. That's because when you take over the company, also debts are yours - and they have a cost, of course.</p>
+<p>The enterprise value is used in the sub-metric called <strong>Enterprise Value/Revenue (EV/R)</strong>.</p>
+<h3>Enterprise Value/Revenue (EV/R)</h3>
+<p>First of all, the <strong>revenue</strong> is how much the company earned in the last <em>n</em> months. Sometimes <em>n</em> is set to the last twelve months, called <strong>trailing twelve months</strong> (or <strong>ttm</strong>). So the EV/R is the ratio of the enterprise value to the company's earnings.</p>
+<p>This metrics compares the actual price you would pay for a company (Enterprise Value) with the money generated by that company. It answers the question: what is a company being valued per each dollar of revenues? The output is a single number, because it's a ratio. For example, with IBM:</p>
+<p>§
+"EV/R" = {$180,960,000,000} / {$80.260.000.000} ~= 2.26
+§</p>
+<p>A high EV/R means the company is potentially overvalued. That number alone is meaningless, though: you should compare it with other companies from the same industry to evaluate their relative value. For example, Apple and Microsoft have EV/R of 2.77 and 4.57 respectively: are they more overvalued than IBM?</p>
+<h2>Volumes</h2>
+<p><strong>Volume</strong> is defined as the number of shares traded (bought or sold) in a given period of time. Usually you will find the daily value: today people traded 6,098,095 of IBM stocks. Volume is a valuable information: it defines the likelihood of the stock price to change. The greater the volume, the greater the probability for the price to change, both up and down. Also, unusual volume's spikes tell you that something important is going on with the stock, and you should pay attention.</p>
+<p>The daily volume goes along with the <strong>Average Volume (Avg Vol)</strong>, that Yahoo Finance computes on a three months basis. In that time frame people traded an average of 3,498,359 IBM stocks.</p>
+<h2>Dividend &amp; Yield</h2>
+<p>As we know from the <a href="http://www.internalpointers.com/post/stock">previous episode</a>, a <strong>dividend</strong> is a portion of a company's earnings distributed to the shareholders. Dividends are expressed as a per-share amount. Sometimes you may find it expressed as the sum of all dividends in the current year: that's what Yahoo Finance does. According to it, this year IBM distributes a total of $5.60 of dividends per share. This is also called the <strong>forward annual dividends</strong>: the year is not yet over, so they take for granted that the dividend per share will not change until then. Other services (i.e. Google Finance) simply report the amount of the last dividend ($1.40).</p>
+<h3>Dividend yield</h3>
+<p>When you want to compare companies' dividend you may want to talk about the <strong>dividend yield</strong>, or simply <strong>yield</strong>. It's a percentage that measures how much cash flow you will get for each dollar invested. The formula:</p>
+<p>§
+"yield" = "annual dividends" / "stock price" * 100
+§</p>
+<p>For IBM:</p>
+<p>§
+"yield" = {$5.60} / {$153.84} * 100 ~= 3.6%
+§</p>
+<p>In other words: if I own a single IBM stock for which I've paid $153.84, my return on the investment this year is 3.6%. For example, Apple currently has a dividend yield of 2.10%: is IBM a better investment? You can't take it for granted. Suppose that IBM loses its Big Data platform and its price falls to $90. Wow, its dividend yield now skyrockets to 6.2%! Would you still invest in IBM just because its yield is now higher?</p>
+<h3>Payout ratio</h3>
+<p>The <strong>Payout Ratio</strong> is a valuable tool that helps when comparing dividend yields. It tells the percentage of the company's earnings given to shareholders. Today IBM has a payout ratio of 43.16%: ~43% of its earnings goes to investors, the rest is reinvested into its business. Some says that payout ratios above 75% are dangerous: it means that the company is unable to reinvest enough of its profits, or it's using dividends to entice investors who find little else to get excited about.</p>
+
+<p>The traditional formula of the payout ratio is:</p>
+
+<p>§"payout ratio" = "dividends" / "net income"§</p>
+
+<p>
+where dividends and net income are computed on an annual basis. The dividend payout ratio formula can also be restated on a "per share" basis:
+</p>
+
+<p>§"payout ratio" = "dividends per share" / "earnings per share"§</p>
+
+<p>I will get to <em>earnings per share</em> in a minute.</p>
+
+<h3>Dividend timings</h3>
+<p><a href="http://www.internalpointers.com/post/stock">Dividends are always declared each time</a>. There are three important dates to keep in mind:</p>
+<ul>
+<li><p><strong>Declaration date</strong> (aka <strong>Announcement date</strong>) — the day on which the board of directors announces that the company will pay its next dividend (not reported on Yahoo Finance, but for IBM it occurred on July 26, 2016). During that day emerge the two other important dates below;</p>
+</li>
+<li><p><strong>Payment date</strong> — when you will actually receive the payment. For IBM stocks this date is set to September 10, 2016;</p>
+</li>
+<li><p><strong>Ex-dividend date</strong> — the date when you must own stocks to get paid on the payment date. If you buy a stock before this date, everything is fine and you will receive the cash. If you buy it <em>before</em> or <em>on</em> the ex-dividend date, you will get nothing. The ex-dividend date for the next IBM dividend is set to August 8, 2016: any stock bought prior that date would pay me dividends on Semptember 10, 2016. I guess it's too late, now: I have to wait for the next declaration (yet to be defined).</p>
+</li>
+</ul>
+<p>For more in-depth information about dividend dates I use to take a look at <a href="http://www.nasdaq.com/symbol/ibm/dividend-history">Nasdaq's dividend history</a>.</p>
+<h2>Earnings per Share (EPS)</h2>
+<p><strong>Earnings per share</strong>, also known as <strong>EPS</strong> tells you how much money each <a href="http://www.internalpointers.com/post/stock">commond stock</a> (i.e. the most popular ones) earned. The formula:</p>
+<p>§
+EPS = {"net income" - "dividends from preferred stocks"} / "average outstanding shares"
+§</p>
+<p>Note how dividends from <a href="http://www.internalpointers.com/post/stock">preferred stocks</a> are stripped from the net income. That's because EPS refers to common stocks, so the formula takes into account only the net income available for common stockholders.</p>
+<p>In general, the higher the EPS the better. A high EPS means large earnings, strong financial position and therefore a reliable company to invest. Of course looking at the daily EPS doesn't mean much. You should take into account the EPS over a larger time frame and see how it evolves. A consistent raise of EPS value means a continuous improvement in the earning power of the company.</p>
+<h2>Price/Earning ratio</h2>
+<p>Mathematically the <strong>Price/Earning ratio (P/E Ratio)</strong> is the ratio of the share price to earnings per share (EPS). This is a very widespread tool used in valuing companies. The formula:</p>
+<p>§
+"P/E ratio" = "share price" / "EPS"
+§</p>
+<p>For example, today a single share of IBM is priced $153.84 and its EPS, according to Yahoo Finance is $12.3:</p>
+<p>§
+"P/E ratio" = {$153.84} / {$12.3} ~= 12.5
+§</p>
+<p>Well, what does that mean? First of all, looking at the formula, you can note that P/E uses the earnings of the company to value a single stock. So the P/E model works on a simple assumption: the stock price should be based on the company's profits. This is well accepted among investors; if a company earns $0 (or even a negative value), its shares should value nothing.</p>
+<p>In other words, the P/E ratio shows what the market is willing to pay for a stock based on its current earnings. This is why sometimes the P/E ratio is called <em>price multiple</em>: people are willing to pay the amount in dollars expressed by the P/E ratio for every dollar of the company's earnings. In our example investors want to pay $12.5 for every $1 that IBM generates. Think of the P/E ratio as the market's optimism revelator.</p>
+<p>As always, the ratio itself means nothing; it's better to check the company's P/E ratio history and see how it evolves with time. Or yet compare them among different companies in the same industry. Small and promising companies tend to have higher P/E ratios because they are growing at a faster pace and the market is expecting big things from them for the future. Once they become giants like IBM they can't mantain the same growth as before and the P/E ratio drops remarkably. This is something that happens regularly when young startups increase their reputations and become the so-called <em>blue chips</em>.</p>
+<p>Another use of the P/E: to check if a stock is overpriced. Something is wrong if a company shows a stagnant growth but has a colossal P/E ratio. It means that there's just too much fuss around it. On the other hand, a lower ratio can mean two things: the company is actually undervalued or the market believes it's headed for trouble in the future, driving the price down and then lowering the P/E ratio accordingly.</p>
+<p>The P/E ratio comes in two variants: <strong>forward P/E ratio</strong>, based on estimations made by the company on its future earnings and <strong>trailing P/E ratio</strong>, based on actual data from the past.</p>
+<h2>Price/Earnings to Growth ratio (PEG ratio)</h2>
+<p>The <strong>Price/Earnings to Growth ratio</strong> is a fine-tuned version of the P/E ratio. The formula takes into account the growth rate of the company's earnings over a specified time period (usually one year):</p>
+<p>§
+"PEG ratio" = "P/E ratio" / "earnings growth rate"
+§</p>
+<p>We know that the "vanilla" P/E ratio is higher for a company with a higher growth rate. Thus using just the P/E ratio would make high-growth companies appear overvalued relative to others. But that's not always true, because the company's value depends also on its earnings. So you might find that Company X doesn't have a high enough growth rate to justify its P/E ratio, compared to Company Y.</p>
+<p>The PEG ratio should iron out those differences; its output is better for comparing companies with different growth rates. The lower the PEG ratio, the more the company may be undervalued given its earnings performance.</p>
+<p>As for the P/E ratio, there are two variants of the PEG ratio:  <strong>forward PEG ratio</strong>, based on estimations made by the company on its future earnings and <strong>trailing PEG ratio</strong>, based on actual data from the past.</p>
+<h2>Price to Book ratio (P/B)</h2>
+<p>The <strong>price-to-book ratio (P/B)</strong> is another tool for finding undervalued companies. First of all, <strong>book</strong> is a contraction of <strong>book value</strong>: this is basically the value of a company's assets. Why <em>book</em> then? Because that's the value you may find in the company's financial statements (that are usually recorded on physical books). In other words it is the value computed by the firm itself, that might be different from the <strong>market value</strong>, which is the company's value according to the stock market.</p>
+<p>In this metric we compare the market value to the book value. The P/B ratio shows how the market perceives the value of a particular stock to be. The formula is usually based on values <em>per share</em>:</p>
+<p>§
+"P/B" = "market price per share" / "book value per share"
+§</p>
+<p>Let's try with IBM! According to Yahoo Finance the book value per share of IBM is of $16.46 (that value is said to be <strong>MRQ</strong> or from the <strong>Most Recent Quarter</strong>: it has been measured using data from the previous quarter). I know the current market price per share, so I can plug the numbers in:</p>
+<p>§
+"P/B" = {$153.84} / {$16.46} ~= 9.35
+§</p>
+<p>Ok, what does that number mean?</p>
+<ul>
+<li><span class="ip-inline">§"P/B ratio" > 1§</span>: the market is paying more than its "real" value, so the company is simply overvalued, or investors are very optimistic about the future growth potential of that stock;</li>
+<li><span class="ip-inline">§"P/B ratio" < 1§</span>: the stock is simply undervalued, or investors know there is something wrong with the fundamentals of that company, so they stay away from it.</li>
+</ul>
+<h3>Price/Book ratio and the ROE</h3>
+<p>As always, ratios like P/B mean everything and nothing at the same time. So it is useful to compare it to another metric called <strong>ROE</strong>, or <strong>Return On Equity</strong>. The ROE is a measure of the efficiency of a company. It calculates how many dollars of profit are generated given each dollar of stock owned by shareholders. High ROE means that the company is able to increase profit without needing as much capital from investors.</p>
+<p>The formula churns out a percentage, which is:</p>
+<p>§
+"ROE" = "net income" / "shareholder's equity" * 100
+§</p>
+<p><strong>Shareholder's equity</strong> is the amount that investors have put in the company by buying shares. A healthy company shouldn't show discrepancies between P/B ratio and the ROE. Overvalued growth stocks frequently show a combination of low ROE and high P/B ratios. If a company's ROE is growing, its P/B ratio should be doing the same.</p>
+<p>According to Yahoo Finance IBM has a ROE of 80.35%, so it's able to increase earnings with little help from investors. IBM has a high P/B ratio too but, given the ROE, it might mean that investors are willing to pay more because the company is able to generate good returns.</p>
+<h2>Sources</h2>
+<p>SEC - <em>Researching Public Companies Through EDGAR: A Guide for Investors</em> (<a href="https://www.sec.gov/investor/pubs/edgarguide.htm">link</a>)<br>
+Investopedia - <em>Market Capitalization Defined</em> (<a href="http://www.investopedia.com/articles/basics/03/031703.asp">link</a>)<br>
+Investopedia - <em>What does it mean when someone says that a stock went up X points?</em> (<a href="http://www.investopedia.com/ask/answers/04/043004.asp">link</a>)<br>
+Wikipedia - <em>Shares outstanding</em> (<a href="https://en.wikipedia.org/wiki/Shares_outstanding">link</a>)<br>
+Rule 1 Investing - <em>Market Capitalization Meaning: Why Price Doesn’t Always Equal Value</em> (<a href="http://www.ruleoneinvesting.com/blog/how-to-invest/market-capitalization-meaning-why-price-doesnt-always-equal-value/">link</a>)<br>
+Investopedia - <em>Enterprise Value (EV)</em> (<a href="http://www.investopedia.com/terms/e/enterprisevalue.asp">link</a>)<br>
+StockTrader.com - <em>Volume and its Meaning</em> (<a href="https://www.stocktrader.com/2006/03/21/volume-and-its-meaning/">link</a>)<br>
+Yahoo Finance - <em>Dividend/Yield</em> (<a href="https://biz.yahoo.com/edu/st/sm_st20.sm.html">link</a>)<br>
+Dividend.com - <em>Dividend Dates Explained: Ex-Dividend, Record, Payment &amp; Declaration Date</em> (<a href="http://www.dividend.com/dividend-investing-101/dividend-dates/">link</a>)<br>
+SEC - <em>Ex-Dividend Dates: When Are You Entitled to Dividends</em> (<a href="https://www.sec.gov/answers/dividen.htm">link</a>)<br>
+Nasdaq - <em>International Business Machines Corporation Dividend Date &amp; History</em> (<a href="http://www.nasdaq.com/symbol/ibm/dividend-history">link</a>)<br>
+Investopedia - <em>Earnings Per Share - EPS</em> (<a href="http://www.investopedia.com/terms/e/eps.asp">link</a>)<br>
+Accounting For Management - <em>Earnings per share (EPS) ratio</em> (<a href="http://www.accountingformanagement.org/earnings-per-share-eps-ratio/">link</a>)<br>
+The Motley Fool - <em>The P/E Ratio</em> (<a href="http://www.fool.com/school/theperatio.htm">link</a>)<br>
+Investopedia - <em>P/E Ratio: Using The P/E Ratio</em> (<a href="http://www.investopedia.com/university/peratio/peratio2.asp">link</a>)<br>
+Wikipedia - <em>PEG ratio</em> (<a href="https://en.wikipedia.org/wiki/PEG_ratio">link</a>)<br>
+Investopedia - <em>Price/Earnings To Growth - PEG Ratio</em> (<a href="http://www.investopedia.com/terms/p/pegratio.asp">link</a>)<br>
+My Accounting Course - <em>Price to Book Ratio</em> (<a href="http://www.myaccountingcourse.com/financial-ratios/price-to-book-ratio">link</a>)<br>
+Paul Asset - <em>What is Price to book ratio (P/B ratio)? Significance,Usage and its Limitations</em> (<a href="https://www.paulasset.com/articles/price-to-book-ratio-significance/">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/stock">stock</a>
+				 • 								<a class="ip-tag" href="/tag/edgar">EDGAR</a>
+				 • 								<a class="ip-tag" href="/tag/ticker-symbol">ticker symbol</a>
+				 • 								<a class="ip-tag" href="/tag/stock-exchange">stock exchange</a>
+				 • 								<a class="ip-tag" href="/tag/market-cap">market cap</a>
+				 • 								<a class="ip-tag" href="/tag/enterprise-value">enterprise value</a>
+				 • 								<a class="ip-tag" href="/tag/volume">volume</a>
+				 • 								<a class="ip-tag" href="/tag/dividend">dividend</a>
+				 • 								<a class="ip-tag" href="/tag/eps">EPS</a>
+				 • 								<a class="ip-tag" href="/tag/p-e-ratio">P/E ratio</a>
+				 • 								<a class="ip-tag" href="/tag/peg-ratio">PEG ratio</a>
+				 • 								<a class="ip-tag" href="/tag/p-b-ratio">P/B ratio</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/stock">What is a stock?</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/buying-and-selling-stocks">Buying and selling stocks: how-to</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gill</span> on 
+							<span class="date">March 09, 2018 at 09:11</span>
+						</div> 
+						<div class="body">Another useful metric to check the company's financial health: debt-to-equity ratio.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The right folder permissions for a website on a Linux server - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Say you have a website running on Linux. What are the correct permissions for the folder that contains the HTML, CSS, images, JavaScript files and so on?">
+		<meta name="keywords" content="web development">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The right folder permissions for a website on a Linux server" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/right-folder-permission-website" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Say you have a website running on Linux. What are the correct permissions for the folder that contains the HTML, CSS, images, JavaScript files and so on?" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/right-folder-permission-website" />
+<meta name="twitter:title" content="The right folder permissions for a website on a Linux server" />
+<meta name="twitter:description" content="Say you have a website running on Linux. What are the correct permissions for the folder that contains the HTML, CSS, images, JavaScript files and so on?" />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on November 09, 2019 
+								• updated on November 10, 2019  
+								• ID 76 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The right folder permissions for a website on a Linux server</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Say you have a website running on Linux. What are the correct permissions for the folder that contains the HTML, CSS, images, JavaScript files and so on?</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>This is something that has been bugging me since my day one of web development. In this article I want to sort it out for good.</p>
+<h2>Prerequisites</h2>
+<p>The website is stored in a Linux server like Ubuntu, and it is run by a web server like Apache or Nginx. You are the project owner and the sole user responsible for maintaining it.</p>
+<p>The site is made of static content like CSS, images, HTML pages as well as some dynamic content generated by the web server on the fly — for example, a PHP script that manages file upload. So the web server needs to read the static content in order to display it to the public, as well as write data into the site folder as instructed by the script files.</p>
+<p>Finally, let's pretend your user is called <code>john</code>, the website folder is located in <code>/var/www/my-website.com/</code> and the web server belongs to the <code>www-data</code> user group.</p>
+<h2>Set the folder permissions</h2>
+<p>Your user will be the owner of the website directory and will have full read, write and execute permissions. The web server will be the group owner and initially will have read and execute permissions, except for some folders where it will have write access. No one else will be allowed to mess around with the whole website directory.</p>
+<p>To get started, login into your server and run the four commands below.</p>
+<h3>1: set your user as the owner</h3>
+<pre><code>chown -R john /var/www/my-website.com/
+</code></pre>
+<p>This command sets <code>john</code> as the owner of every file and folder inside the directory (<code>-R</code> stands for recursive).</p>
+<h3>2: set the web server as the group owner</h3>
+<pre><code>chgrp -R www-data /var/www/my-website.com/
+</code></pre>
+<p>This command sets <code>www-data</code> as the group owner of every file and folder inside the directory. Recursive mode, as above.</p>
+<h3>3: 750 permissions for everything</h3>
+<pre><code>chmod -R 750 /var/www/my-website.com/
+</code></pre>
+<p>The third command sets the permissions: read, write and execute (7) for the owner (i.e. you), read and execute (5) for the group owner (i.e. the web server), zero permissions at all (0) for others. Once again this is done on every file and folder in the directory, recursively.</p>
+<h3>4: new files and folders inherit group ownership from the parent folder</h3>
+<pre><code>chmod g+s /var/www/my-website.com/
+</code></pre>
+<p>The last command makes all files/folders created within the directory to automatically take on the group ownership of the parent folder, that is your web server. The <code>s</code> flags is a special mode that represents the <a href="https://en.wikipedia.org/wiki/Chmod#Special_modes">setuid/setgid</a>. In simple words, new files and directories created by the web server will have the same group ownership of <code>my-website.com/</code> folder, which we set to <code>www-data</code> with the second command.</p>
+<h2>When the web server needs to write</h2>
+<p>If you have folders that need to be writable by the web server, you can just modify the permission values for the group owner so that <code>www-data</code> has write access. Run this command on each writable folder:</p>
+<pre><code>chmod g+w /var/www/my-website.com/&lt;writable-folder&gt;
+</code></pre>
+<p>For security reasons apply this only where necessary and not on the whole website directory.</p>
+<h2>Sources</h2>
+<p>Server Fault - <a href="https://serverfault.com/questions/357108/what-permissions-should-my-website-files-folders-have-on-a-linux-web server">What permissions should my website files/folders have on a Linux web server?</a><br>
+Unix &amp; Linux - <a href="https://unix.stackexchange.com/questions/182212/chmod-gs-command">'chmod g+s' command</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Chmod">chmod</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/web-development">web development</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Pedro</span> on 
+							<span class="date">November 24, 2019 at 14:54</span>
+						</div> 
+						<div class="body">This is exactly what I needed. Thank you <3</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mo</span> on 
+							<span class="date">December 20, 2019 at 22:14</span>
+						</div> 
+						<div class="body">Perfect straight to the point, nice work :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rabeya</span> on 
+							<span class="date">February 25, 2020 at 03:07</span>
+						</div> 
+						<div class="body">you saved my day.. :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jake</span> on 
+							<span class="date">April 21, 2020 at 06:54</span>
+						</div> 
+						<div class="body">Thanks a million, very succinct and helpful!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jochen</span> on 
+							<span class="date">May 05, 2020 at 19:14</span>
+						</div> 
+						<div class="body">And if you have SELinux enabled and need to write into some folders, then those need to get a special context:<br />
+sudo semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/my-website.com/<writable-folder>(/.*)?"<br />
+Note the "rw"part. the lat parameter is a regexp, so you'll need to handle the dots in the path.<br />
+After semanage, you always also need to do:<br />
+sudo restorecon -R /var/www/my-website.com/<writable-folder><br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ajay</span> on 
+							<span class="date">May 08, 2020 at 08:17</span>
+						</div> 
+						<div class="body">Hi, Thanks !<br />
+Thanks for a cool answer to a very important yet most confusing aspect of the server / application setup. I also have a question. What if the users of the app need to need to upload their pics as part of signup? Would it be safe to add them to the writable folder  at /var/www/my-website.com/<writable-folder>  ? Would it not be safer to save them into a folder above the docroot, say at /var/www/<writable-folder>/ ? This is believed to be most secure from what I have read but i do see security implications since the server can traverse above the document root and that could be dangerous with write access to the writable folder? I would be grateful for a clarification. Thank you.     </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">May 15, 2020 at 09:37</span>
+						</div> 
+						<div class="body">@Ajay that's a good question. I suppose that with the right privileges and folder permissions, uploading to /var/www/my-website/uploads should be safe. Don't take my words for granted, though. I'll update this post as soon as I gather additional information. Thanks :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thanks a lot </span> on 
+							<span class="date">May 26, 2020 at 19:55</span>
+						</div> 
+						<div class="body">Superb</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Karthik</span> on 
+							<span class="date">May 27, 2020 at 08:14</span>
+						</div> 
+						<div class="body">Thanks a lot, superb.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kuliphex</span> on 
+							<span class="date">August 10, 2020 at 01:45</span>
+						</div> 
+						<div class="body">Good article; however, since your goal here was clarity, it would be a good idea to clarify that the commands shown may need to be issued using via "sudo" prefix (or gods forbid, as #root).  Not all readers can figure this out from context.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rajesh</span> on 
+							<span class="date">September 20, 2020 at 15:06</span>
+						</div> 
+						<div class="body">Simply explained. Great</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">hoang</span> on 
+							<span class="date">September 22, 2020 at 08:22</span>
+						</div> 
+						<div class="body">Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Chinmay</span> on 
+							<span class="date">November 07, 2020 at 06:21</span>
+						</div> 
+						<div class="body">How to adjust this with php-fpm in picture?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 07, 2020 at 10:16</span>
+						</div> 
+						<div class="body">@Chinmay honestly I'm not familiar with php-fpm, any additional input is welcome :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jorge Gonzalez</span> on 
+							<span class="date">February 05, 2021 at 20:09</span>
+						</div> 
+						<div class="body">Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ulca</span> on 
+							<span class="date">March 31, 2021 at 20:00</span>
+						</div> 
+						<div class="body">Good article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sundaralakshmi A</span> on 
+							<span class="date">May 06, 2021 at 15:38</span>
+						</div> 
+						<div class="body">Exactly What I want. Thank you So  much !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">LM</span> on 
+							<span class="date">August 26, 2021 at 12:07</span>
+						</div> 
+						<div class="body">Thank you so much! It is people like you that make the web a much better place. Very helpful. Thanks again. :-)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Pat</span> on 
+							<span class="date">September 13, 2021 at 11:19</span>
+						</div> 
+						<div class="body">Thank you. Straight to the point and it works.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Selemani</span> on 
+							<span class="date">September 18, 2021 at 11:01</span>
+						</div> 
+						<div class="body">Nice article. Works like a charm</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mario</span> on 
+							<span class="date">October 14, 2021 at 20:24</span>
+						</div> 
+						<div class="body">Thanks! Today I can fix my loclahost following your article! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kevin</span> on 
+							<span class="date">January 26, 2022 at 13:45</span>
+						</div> 
+						<div class="body">Thanking you - I'm referencing this bi-weekly for production servers!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mica</span> on 
+							<span class="date">January 28, 2022 at 14:36</span>
+						</div> 
+						<div class="body">Best article! No fluff, straight to the point. Thank you!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">vik</span> on 
+							<span class="date">March 19, 2022 at 03:10</span>
+						</div> 
+						<div class="body">that's what I was looking for. Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jurgen</span> on 
+							<span class="date">May 18, 2022 at 10:34</span>
+						</div> 
+						<div class="body">Brilliant, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mike</span> on 
+							<span class="date">May 19, 2022 at 16:46</span>
+						</div> 
+						<div class="body">I know I am a bit late to the party here, but great article.  Very simple and straightforward.  As to @Chinmay's question about php-fpm, I believe that is "proxied" though the web server, so there shouldn't be any additional configuration needed.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">caterpillar</span> on 
+							<span class="date">September 03, 2022 at 09:00</span>
+						</div> 
+						<div class="body">Awesome. Exactly what I was searching for more than a day! Thank you so much for the article.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Leroy</span> on 
+							<span class="date">October 06, 2022 at 13:00</span>
+						</div> 
+						<div class="body">Excellent, thank you for such clarity!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joe</span> on 
+							<span class="date">December 12, 2022 at 17:52</span>
+						</div> 
+						<div class="body">I love you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">TMK</span> on 
+							<span class="date">April 12, 2023 at 14:00</span>
+						</div> 
+						<div class="body">First advice on this hassle that works.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Les Johnson</span> on 
+							<span class="date">May 02, 2023 at 23:29</span>
+						</div> 
+						<div class="body">Thank you. Nice and to the point. :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Egidio</span> on 
+							<span class="date">September 09, 2023 at 23:27</span>
+						</div> 
+						<div class="body">chmod -R 750 /var/www/my-website.com/<br />
+<br />
+You are making all files in the directory executable, and you don't want to do that. Executable bit on directories, means you can traverse the directory, but on files it means you can execute them as a program. You want to set directories to 750 and files to 640 instead, you can set them with find:<br />
+<br />
+# Set all directories to 750<br />
+find /var/www/my-website.com/ -type d -exec chmod 750<br />
+# Set all files to 640<br />
+find /var/www/my-website.com/ -type f -exec chmod 640</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Goldin Bennet</span> on 
+							<span class="date">February 07, 2024 at 05:26</span>
+						</div> 
+						<div class="body">Thank you.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

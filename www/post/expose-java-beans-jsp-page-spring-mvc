@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to expose Java beans to a JSP page in Spring MVC - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="ServletContextAttributeExporter definitely saved my life.">
+		<meta name="keywords" content="Java,Spring,MVC,bean">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to expose Java beans to a JSP page in Spring MVC" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/expose-java-beans-jsp-page-spring-mvc" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="ServletContextAttributeExporter definitely saved my life." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/expose-java-beans-jsp-page-spring-mvc" />
+<meta name="twitter:title" content="How to expose Java beans to a JSP page in Spring MVC" />
+<meta name="twitter:description" content="ServletContextAttributeExporter definitely saved my life." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 09, 2015 
+								• updated on June 10, 2016  
+								• ID 2 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to expose Java beans to a JSP page in Spring MVC</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>ServletContextAttributeExporter definitely saved my life.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></p>
+<p>Recently I needed to expose a Java bean to a JSP page through Spring MVC framework, version 4.x. After a bit of struggle, I finally managed to do it with no blood loss.</p>
+<p>Say you have a simple bean that contains a list of stuff:</p>
+<pre><code class="lang-java">public class MyBeautifulBean
+{
+  public List&lt;String&gt; values;
+}
+</code></pre>
+<p>And you want to print that stuff in your JSP pages. To do that we have to rely on the so-called <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/context/support/ServletContextAttributeExporter.html">ServletContextAttributeExporter</a>, an exporter utility that takes Spring-defined objects and exposes them as ServletContext attributes. That's exactly what I want! First of all open your Spring configuration file and add what follows wherever you like:</p>
+<pre><code class="lang-xml">&lt;beans:bean class=&quot;org.springframework.web.context.support.ServletContextAttributeExporter&quot;&gt;
+  &lt;beans:property name=&quot;attributes&quot;&gt;
+    &lt;beans:map&gt;
+      &lt;beans:entry key=&quot;MyBeautifulBean&quot;&gt;
+        &lt;beans:ref bean=&quot;MyBeautifulBean&quot; /&gt;
+      &lt;/beans:entry&gt;
+      [more beans here if needed]
+    &lt;/beans:map&gt;
+  &lt;/beans:property&gt;
+&lt;/beans:bean&gt;
+</code></pre>
+<p>Then in any JSP page just print the content as you would do with a regular variable. In my example I iterate over a list of String's:</p>
+<pre><code class="lang-html">&lt;c:forEach items=&quot;${MyBeautifulBean.values}&quot; var=&quot;value&quot;&gt;
+  ${value}
+&lt;/c:forEach&gt;
+</code></pre>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/java">Java</a>
+				 • 								<a class="ip-tag" href="/tag/spring">Spring</a>
+				 • 								<a class="ip-tag" href="/tag/mvc">MVC</a>
+				 • 								<a class="ip-tag" href="/tag/bean">bean</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">charles ross</span> on 
+							<span class="date">April 06, 2019 at 19:35</span>
+						</div> 
+						<div class="body">This is a very nice article - but that is a POJO, and is not a Bean. A Bean should have getters and setters, default no-argument constructor.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

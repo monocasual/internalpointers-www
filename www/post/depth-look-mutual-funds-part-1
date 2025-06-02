@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>An in-depth look at mutual funds, part 1 - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes.">
+		<meta name="keywords" content="investment,fund,mutual fund,aum,nav,stock">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="An in-depth look at mutual funds, part 1" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/depth-look-mutual-funds-part-1" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/depth-look-mutual-funds-part-1" />
+<meta name="twitter:title" content="An in-depth look at mutual funds, part 1" />
+<meta name="twitter:description" content="First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 30, 2016 
+								• updated on February 21, 2016  
+								• ID 28 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>An in-depth look at mutual funds, part 1</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+																							<li>
+						<p>
+							<span class="title">
+								<a href="/post/depth-look-mutual-funds-part-2">An in-depth look at mutual funds, part 2</a>
+							</span> —
+							<span class="intro">How to read a mutual fund's online prospectus like a pro (even without suit and tie).</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/should-i-know-index-funds">What should I know about index funds</a>
+							</span> —
+							<span class="intro">A type of mutual fund with a portfolio that approximates an index.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/real-estate-investing-reits-mlps-and-mutual-funds">Real estate investing with REITs, MLPs and mutual funds</a>
+							</span> —
+							<span class="intro">A way of investing in lands and buildings without getting your hands too dirty.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>The world of investment funds is definitely huge. I tried to shed some light on the topic in <a href="http://www.internalpointers.com/post/introduction-investment-funds">one of my previous articles</a>. In this episode I want to focus particularly on <em>open-end mutual funds</em>, a very common type of investment strategy. It's so well-known and established that when people talk about investment funds usually refer to open-end mutual funds.</p>
+<h2>How a mutual fund works</h2>
+<p>A mutual fund is a pool of stocks, bonds or commodities, aka <em>securities</em> mantained by a fund manager. The term <em>mutual</em> means that it's a sort of collective investment: you are combining your money alongside other investors who want to get into in a specific financial opportunity.</p>
+<p>The fund managers raise money from the investors and invest it back in securities. They then do their best in studying the markets and buying/selling at the right time. Of course, in return for their support you have to pay a fee. The term <em>open-end</em> means that there are no restrictions in how many times you can invest in the fund.</p>
+<p>Picture .1 below show the initial stage of an imaginary fund, boldly called <em>Internal Pointers Mutual Fund</em>. For example, the fund manager might collect $100 from the public, then buy 10 stocks where each is worth $10. Small numbers and only one type of security for simplicity's sake. Those stocks become something called <strong>units</strong>, or <strong>shares</strong>. They conceptually abstract away the underlying securities: you can think of them as tradable pieces of the mutual fund. Those $100 are the so-called <strong>Assets Under Management</strong> or <strong>AUM</strong>, namely the total securities' value.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/01/mutual-fund-initial-shares.svg" alt="Initial shares of a mutual fund">
+<div class="caption">1. Initial stage of Internal Pointers Mutual Fund: 10 shares, 10 dollars each with 100 dollars of AUM.</div>
+</div><h3>NAV: Net Asset Value</h3>
+<p>The <strong>NAV (Net Asset Value)</strong> is one of the core concepts of a mutual fund: it's the value of a fund's securities minus its <em>liabilities</em> (i.e. debts or obligations). The NAV is typically calculated on a per-unit basis, which turns out to be the price at which you buy fund units, or in other words the fund's market value. Called <strong>NAV per unit</strong> (or also <strong>NAV per share</strong>), the formula is rather simple:</p>
+<p>§NAV = "value of the securities" - "liabilities"§</p>
+<p>§NAV_{unit} = {NAV} / "number of securities"§</p>
+<p>In our example so far, let's pretend that Internal Pointers Mutual Fund owes $8 to its energy supplier:</p>
+<p>§NAV_{unit} = {$100 - $8} / 10 = $9.2§</p>
+<p>The NAV is computed at the end of each trading day, based on the closing market prices of the fund's securities. No, there's no place for <a href="https://en.wikipedia.org/wiki/Day_trading">day trading</a> in mutual funds market.</p>
+<h3>Let's getting serious</h3>
+<p>One day you come along and decide to invest in Internal Pointers Mutual Fund: the NAV per unit is still fixed at $9.2 so you buy, say, 2 units for $18.4. The fund manager puts your money into the pool and issues new fund units for you, by buying more stocks from the market. Note: you don't actually own the stocks, but mutual fund units instead. Picture .2 below shows the process.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/01/mutual-fund-more-shares.svg" alt="Adding more shares to the mutual fund">
+<div class="caption">2. You buy more fund units: Internal Pointers Mutual Fund now contains 12 shares, 10 dollars each. AUM rises to $120.</div>
+</div><p>As you may see the NAV per unit has adjusted: <span class="ip-inline">§{$120 - $8}/12~=$9.34§</span>. Unlike stocks, where prices are moved by the supply and demand forces, fund prices are determined only by the number and the value of the underlying securities.</p>
+<p>Also, fund units cannot be purchased from other investors on a market such as the New York Stock Exchange. You can buy units only from the fund itself, or through a broker for the fund.</p>
+<h2>How to make money from a mutual fund</h2>
+<p>At this point there are some ways you can make money from your mutual fund, as seen in the <a href="http://www.internalpointers.com/post/introduction-investment-funds">previous introduction</a>. They can be summarized into <strong>income</strong> and <strong>growth</strong> classes. However you can also sell back your units to the fund, by making the so-called <strong>redemption</strong>.</p>
+<h3>Income</h3>
+<p>The underlying securities yield something — the fund manager will pay out nearly all the incomes. Mutual fund yield is expressed as a percentage and is calculated as follows:</p>
+<p>§"yield" = "security dividends" / "security price" * 100§</p>
+<p>Say for example that Internal Pointers Mutual Fund's stocks pay $0.3 in dividends over the year and the stock value is still fixed at $10, so:</p>
+<p>§{$0.3}/{$10} * 100 = 3%§</p>
+<p>Let's compute now how much money would come from the yield. The math is quite common here: you own two units of Internal Pointer Mutual Fund, so your income is <span class="ip-inline">§$0.3 * 2 = $0.6§</span>.</p>
+<h3>Growth</h3>
+<p>The underlying securities' value grows — here the fund manager can switch between two strategies:</p>
+<ol>
+<li><p>sell the securities (<em>capital gain</em>) — a capital gain occurs when the fund manager sells part of the securities for more than the purchase price. In Internal Pointers Mutual Fund the underlying stocks might rise to $14: if the manager sells part of them, say 3 stocks, the capital gain would be <span class="ip-inline">§$14*3 - $10*3 = $12§</span> (the new value minus the original value). When such thing happens, mutual funds are required by law to distribute almost all gains to their investors.</p>
+<p>Another thing that might happen: the NAV per unit adjusts a bit, because the number of securities has changed as well. Internal Pointers Mutual Fund initially owned 12 stocks, so the NAV summed up to:</p>
+<p>§NAV_{unit} = {12 * $14 - $8} / 12 = $13.34§</p>
+<p>(12 securities $14 each, $8 liabilities). Without those 3 stocks just sold, it becomes:</p>
+<p>§NAV_{unit} = {9 * $14 - $8} / 9 = $13.12§</p>
+<p>(9 securities $14 each, $8 liabilities). Lesson learned: if the NAV decreases a bit doesn't always mean that your fund is going bad.</p>
+</li>
+<li><p>keep the securities — the fund's NAV grows as seen in the previous example where it rose to $13.34. There are no dividends to yield, but the overall fund's value increases.</p>
+</li>
+</ol>
+<p>Whenever the fund yields something, be it from the underlying stocks or from a sell of securities, you can choose between the <strong>accumulation</strong> or <strong>income</strong> version of a mutual fund, otherwise known as <strong>acc</strong> or <strong>inc</strong>. Buying the accumulation model would mean that the incomes would be reinvested back into the fund, while buying the income model would pay out to you in cash directly in your bank account.</p>
+<h3>Redemption</h3>
+<p>Redempion occurs when you sell back the fund units. You can redeem part of your bag of units or the whole collection by selling them at the current NAV.</p>
+<h2>Taxes, fees and other nuisances</h2>
+<p>The real world a mutual fund brings up two main categories of expenses: <strong>expense ratio</strong>, or the cost of owning a fund, and <strong>sales loads</strong>, or the money you have to pay when you actually buy/sell fund units. They are a fundamental aspect to take into consideration when you are forecasting all the possible incomes/losses from your investments.</p>
+<h3>Expense ratio</h3>
+<p>The expense ratio is an <em>annual</em> fee that the fund managers charge the investor. More to the point, there are three main types of expenses:</p>
+<ul>
+<li><p>management fees — the fund manager's salary;</p>
+</li>
+<li><p>administrative costs — the cost of running an organization;</p>
+</li>
+<li><p>12b-1 distribution fee — marketing, advertising, and distribution services. The bizarre name comes from the section of the <a href="https://en.wikipedia.org/wiki/Investment_Company_Act_of_1940">Investment Company Act of 1940</a> that makes them legal.</p>
+</li>
+</ul>
+<p>12b1-1 fees might seem almost insulting. Actually back in the early days of the mutual fund business, the 12b-1 fee was thought as a boost for the fund's assets as management could lower expenses because of economies of scale. This has yet to be proved.</p>
+<p>In general, the expense ratio is expressed as a percentage and it's calculated as follows:</p>
+<p>§"expense ratio" = "total fund expenses per year" / "averaged AUM"§</p>
+<p>Note that averaged AUM: it is the total value of all the securities in the portfolio, less any liabilities, <em>averaged</em> over a period of time (usually one year). So for example Internal Pointers Mutual Fund might face $3 of annual expenses over an average AUM of $180, which turns out to be:</p>
+<p>§"expense ratio" = {$3} / {$180} ~= 0.017 = %1.7§</p>
+<p>Those expenses are buried into the NAV, so what you actually see in charts and official papers is the <em>net</em> NAV, made after the fees. You pay the fees just by holding fund units: nobody would suck that %1.7 from your account at the end of the year!</p>
+<h3>Sales loads</h3>
+<p>Sales loads occur whenever you buy or sell fund units. Funds that apply sales loads are called <strong>load funds</strong>. They usually come into play when you purchase fund units from your advisor, broker or any other middleman. There are two types of sales loads:</p>
+<ul>
+<li><p><strong>front-end</strong> sales loads — fees you have to pay at the time of the investment. For example, if you invest $1000 in Internal Pointers Mutual funds with a 3% front-end sales loads, $30 would be taken out from your account, so that you would end up with a $970 investment. Those money pays the broker and other intermediate layers.</p>
+</li>
+<li><p><strong>back-end</strong> sales loads — fees you have to pay when you quit, i.e. when you redeem you units. Usually the fee amounts to a percentage of the value of the units you want to sold. That percentage decreases year after year until it eventually drops to zero. That way you are discouraged from buying and selling units at a very fast pace. For this very reason back-end loads are also known as <strong>redempion fees</strong>.</p>
+</li>
+</ul>
+<p>Do sales loads seem unreasonable to you? <strong>No-loads</strong> mutual funds are funds in which units are sold directly by the investment company without further fees.</p>
+<h2>The real-world complexity</h2>
+<p>Our fictional Internal Pointers Mutual Fund was obviously over-simplified. In the real world mutual funds hold hundreds of thousands of securities, often mixed between stocks, bonds, currencies and commodities and their exact composition is not completely undisclosed: the securities' picking is their secret recipe after all.</p>
+<p>Moreover, operating and mantaining mutual funds include annual operating costs and sales charges, dividends might be non-periodic, liabilities change over the time: lots of aspects that complicate the math. I will evaluate such components more in detail in the second part of the article.</p>
+<h2>Sources</h2>
+<p>Khan Academy - <em>Open-Ended Mutual Fund</em> (<a href="https://www.youtube.com/watch?v=DzYwB3uSU-c&index=1&list=PLE2A22E279ABFC7C6">video</a>)<br>
+Investopedia - <em>Assets Under Management - AUM</em> (<a href="http://www.investopedia.com/terms/a/aum.asp">link</a>)<br>
+InvestingAnswers - <em>Net Asset Value</em> (<a href="http://www.investinganswers.com/financial-dictionary/mutual-funds-etfs/net-asset-value-155">link</a>)<br>
+Investopedia - <em>How A Mutual Fund Works</em> (<a href="http://www.investopedia.com/university/quality-mutual-fund/chp1-introduction/mf-structure.asp">link</a>)<br>
+American Funds - <em>Capital Gain Distribution FAQs</em> (<a href="https://www.americanfunds.com/individual/investments/capital-gain-faqs.html">link</a>)<br>
+Morningstar - <em>Share Classes: Accumulation vs. Income</em> (<a href="http://www.morningstar.co.uk/uk/news/69927/share-classes-accumulation-vs-income.aspx">link</a>)<br>
+Sec.gov - <em>Mutual Funds</em> (<a href="http://www.sec.gov/answers/mutfund.htm">link</a>)<br>
+The Motley Fool - <em>Expense Ratios</em> (<a href="http://www.fool.com/school/mutualfunds/costs/ratios.htm">link</a>)<br>
+Morningstar - <em>Expense Ratio</em> (<a href="http://www.morningstar.com/InvGlossary/expense_ratio.aspx">link</a>)<br>
+The Street - <em>Are a Fund's Expenses Deducted Daily From Assets?</em> (<a href="http://www.thestreet.com/story/729472/1/are-a-funds-expenses-deducted-daily-from-assets.html">link</a>)<br>
+About Money - <em>Are No-load Mutual Funds Free?</em> (<a href="http://beginnersinvest.about.com/od/mutualfunds1/a/are-no-load-mutual-funds-expense-free.htm">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/investment">investment</a>
+				 • 								<a class="ip-tag" href="/tag/fund">fund</a>
+				 • 								<a class="ip-tag" href="/tag/mutual-fund">mutual fund</a>
+				 • 								<a class="ip-tag" href="/tag/aum">aum</a>
+				 • 								<a class="ip-tag" href="/tag/nav">nav</a>
+				 • 								<a class="ip-tag" href="/tag/stock">stock</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/depth-look-mutual-funds-part-2">An in-depth look at mutual funds, part 2</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

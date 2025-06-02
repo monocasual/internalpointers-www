@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Squash commits into one with Git - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A nice way to group some changes together, especially before sharing them with others.">
+		<meta name="keywords" content="git">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Squash commits into one with Git" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/squash-commits-into-one-git" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A nice way to group some changes together, especially before sharing them with others." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/squash-commits-into-one-git" />
+<meta name="twitter:title" content="Squash commits into one with Git" />
+<meta name="twitter:description" content="A nice way to group some changes together, especially before sharing them with others." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on November 17, 2017 
+								• updated on December 21, 2020  
+								• ID 60 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Squash commits into one with Git</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A nice way to group some changes together, especially before sharing them with others.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>In Git you can merge several commits into one with the powerful <strong>interactive rebase</strong>. It's a handy tool I use quite often; I usually tidy up my working space by grouping together several small intermediate commits into a single lump to push upstream.</p>
+<h2>Step 1: choose your starting commit</h2>
+<p>The first thing to do is to invoke git to start an interactive rebase session:</p>
+<pre><code>git rebase --interactive HEAD~N
+</code></pre>
+<p>Or, shorter:</p>
+<pre><code>git rebase -i HEAD~N
+</code></pre>
+<p>where N is the number of commits you want to join, <em>starting from the most recent one</em>. For example, this is a hypothetical list of commits taken from the <code>git log</code> command, while I'm working on a generic feature Z:</p>
+<pre><code>871adf OK, feature Z is fully implemented      --- newer commit
+0c3317 Whoops, not yet...
+87871a I'm ready!
+643d0e Code cleanup
+afb581 Fix this and that
+4e9baa Cool implementation
+d94e78 Prepare the workbench for feature Z
+6394dc Feature Y                               --- older commit
+</code></pre>
+<p>And this is what I would like to do:</p>
+<pre><code>871adf OK, feature Z is fully implemented      --- newer commit --┐
+0c3317 Whoops, not yet...                                         |
+87871a I'm ready!                                                 |
+643d0e Code cleanup                                               |-- Join these into one
+afb581 Fix this and that                                          |
+4e9baa Cool implementation                                        |
+d94e78 Prepare the workbench for feature Z     -------------------┘
+6394dc Feature Y                               --- older commit
+</code></pre>
+<p>Obtaining:</p>
+<pre><code>84d1f8 Feature Z                               --- newer commit (result of rebase)
+6394dc Feature Y                               --- older commit
+</code></pre>
+<p>Notice how a rebase generates a new commit with a new hash (<code>84d1f8</code> in the example above). So in this case the command would be:</p>
+<pre><code>git rebase --interactive HEAD~[7]
+</code></pre>
+<p>because I want to combine the last seven commits into one, and <code>d94e78 Prepare the workbench for feature Z</code> is the seventh one.</p>
+<h3>I have tons of commits to squash, do I have to count them one by one?</h3>
+<p>A downside of the <code>git rebase --interactive HEAD~[N]</code> command is that you have to guess the exact number of commits, by counting them one by one. Luckily, there is another way:</p>
+<pre><code>git rebase --interactive [commit-hash]
+</code></pre>
+<p>Where <code>[commit-hash]</code> is the hash of <em>the commit just before the first one you want to rewrite from</em>. So in my example the command would be:</p>
+<pre><code>git rebase --interactive 6394dc
+</code></pre>
+<p>Where <code>6394dc</code> is <code>Feature Y</code>. You can read the whole thing as:</p>
+<blockquote><p>Merge all my commits on top of commit <code>[commit-hash]</code>.</p>
+</blockquote>
+<p>Way easier, isn't it?</p>
+<h2>Step 2: picking and squashing</h2>
+<p>At this point your editor of choice will pop up, showing the list of commits you want to merge. Note that it might be confusing at first, since they are displayed in a <em>reverse order</em>, where the older commit is on top. I've added <code>--- older commit</code> and <code>--- newer commit</code> to make it clear, you won't find those notes in the editor.</p>
+<pre><code>pick d94e78 Prepare the workbench for feature Z     --- older commit
+pick 4e9baa Cool implementation 
+pick afb581 Fix this and that  
+pick 643d0e Code cleanup
+pick 87871a I'm ready! 
+pick 0c3317 Whoops, not yet... 
+pick 871adf OK, feature Z is fully implemented      --- newer commit
+
+[...]
+</code></pre>
+<p>Below the commit list there is a short comment (omitted in my example) which outlines all the operations available. You can do many smart tricks during an interactive rebase, let's stick with the basics for now though. Our task here is to mark all the commits as <strong>squashable</strong>, <em>except the first/older one</em>: it will be used as a starting point.</p>
+<p>You mark a commit as squashable by changing the word <code>pick</code> into <code>squash</code> next to it (or <code>s</code> for brevity, as stated in the comments). The result would be:</p>
+<pre><code>pick d94e78 Prepare the workbench for feature Z     --- older commit
+s 4e9baa Cool implementation 
+s afb581 Fix this and that  
+s 643d0e Code cleanup
+s 87871a I'm ready! 
+s 0c3317 Whoops, not yet... 
+s 871adf OK, feature Z is fully implemented      --- newer commit
+
+[...]
+</code></pre>
+<p>Save the file and close the editor.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Step 3: Create the new commit</h2>
+<p>You have just told Git to combine all seven commits into the first commit in the list. It's now time to give it a name: your editor pops up again with a default message, made of the names of all the commits you have squashed.</p>
+<p>You can leave it as it is and the commit message will result in a list of all the intermediate commits, as follows:</p>
+<pre><code>Prepare the workbench for feature Z
+Cool implementation 
+Fix this and that  
+Code cleanup
+I'm ready! 
+Whoops, not yet... 
+OK, feature Z is fully implemented
+</code></pre>
+<p>Usually I don't care to keep such information, so I wipe out the default message and use something more self-explanatory like <code>Implemented feature Z</code>.</p>
+<h2>Sources</h2>
+<p>Stackoverflow - <em>Git rebase interactive the last n commits</em> (<a href="https://stackoverflow.com/questions/41464752/git-rebase-interactive-the-last-n-commits">link</a>)<br>
+Stackoverflow - <em>How can I merge two commits into one?</em> (<a href="https://stackoverflow.com/questions/2563632/how-can-i-merge-two-commits-into-one">link</a>)<br>
+Gitready - <em>Squashing commits with rebase</em> (<a href="http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html">link</a>)</p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/git">git</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">surendhra</span> on 
+							<span class="date">July 06, 2018 at 11:03</span>
+						</div> 
+						<div class="body">Neat and clean explanation ..Great job...Thanks for the article..</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Aleksey</span> on 
+							<span class="date">October 22, 2018 at 15:30</span>
+						</div> 
+						<div class="body">Very good article, thank You very much for detailed explanation! The only difference for me was: I needed to squash all into the first commit. in this case need to use --root argument:<br />
+<br />
+git rebase -i --root<br />
+<br />
+Also SmartGit performs very convenient UI Squash... command for commits.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Marie</span> on 
+							<span class="date">October 24, 2018 at 05:06</span>
+						</div> 
+						<div class="body">Very well explained! Good job and thanks a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mihai</span> on 
+							<span class="date">December 02, 2018 at 08:16</span>
+						</div> 
+						<div class="body">Excellent presentation of this topic. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Micah</span> on 
+							<span class="date">February 15, 2019 at 09:34</span>
+						</div> 
+						<div class="body">Thanks for this!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ben</span> on 
+							<span class="date">February 20, 2019 at 09:40</span>
+						</div> 
+						<div class="body">Thanks a lot for this tutorial, clean and very well explained.<br />
+Worked like a charm</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">CaffeinePwrdAl</span> on 
+							<span class="date">March 06, 2019 at 15:20</span>
+						</div> 
+						<div class="body">Nicely done :) Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Pernelius</span> on 
+							<span class="date">March 14, 2019 at 11:14</span>
+						</div> 
+						<div class="body">clear and precise :) Ty</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vadim</span> on 
+							<span class="date">March 28, 2019 at 04:53</span>
+						</div> 
+						<div class="body">Respect!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Volodymyr</span> on 
+							<span class="date">May 02, 2019 at 22:10</span>
+						</div> 
+						<div class="body">Really nice article!<br />
+I did it with your help</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nakoon</span> on 
+							<span class="date">May 06, 2019 at 10:13</span>
+						</div> 
+						<div class="body">Perfect! Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Darshan Timbadia</span> on 
+							<span class="date">May 16, 2019 at 19:41</span>
+						</div> 
+						<div class="body">Very well explained. Thanks very much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thanks so much</span> on 
+							<span class="date">May 28, 2019 at 12:10</span>
+						</div> 
+						<div class="body">Great article.<br />
+Respect.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amjad</span> on 
+							<span class="date">June 01, 2019 at 10:14</span>
+						</div> 
+						<div class="body">Thanks for the simple and to the point explanation. After reading multiple resources on this topic, I finally get it!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">g-dawg</span> on 
+							<span class="date">July 03, 2019 at 10:35</span>
+						</div> 
+						<div class="body">Thanks for sharing.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Very good article</span> on 
+							<span class="date">July 11, 2019 at 21:27</span>
+						</div> 
+						<div class="body">I'll just add that if you want to save and quit from editor you need to:<br />
+press escape<br />
+and type<br />
+":wq"</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shane</span> on 
+							<span class="date">July 11, 2019 at 21:41</span>
+						</div> 
+						<div class="body">I had to `git push -f origin` after it was done squashing or else the remote wouldn't correctly squash if I just did a normal push/pull. It would just look like a merge and everything squashed would look like it was in a separate branch.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mike</span> on 
+							<span class="date">July 12, 2019 at 01:18</span>
+						</div> 
+						<div class="body">Very helpful, very easy, thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">July 12, 2019 at 10:14</span>
+						</div> 
+						<div class="body">@Very good article guy: that's the VIM quit command and it works only if you are using VIM as the commit message editor, of course.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Feeerdo</span> on 
+							<span class="date">July 18, 2019 at 15:13</span>
+						</div> 
+						<div class="body">God bless you for this squash guide :D :D</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sathya</span> on 
+							<span class="date">July 19, 2019 at 13:04</span>
+						</div> 
+						<div class="body">Very simple and clear.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ethan</span> on 
+							<span class="date">July 31, 2019 at 17:06</span>
+						</div> 
+						<div class="body">This is very helpful.<br />
+<br />
+Thanks so much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Meag</span> on 
+							<span class="date">August 13, 2019 at 21:19</span>
+						</div> 
+						<div class="body">Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anant</span> on 
+							<span class="date">August 17, 2019 at 17:16</span>
+						</div> 
+						<div class="body">Terrific article!<br />
+General question about Git. If not already there, why is there no option to merge the latest commit from the feature branch to the mainline. The advantage I see is that all my N commits won't pollute the mainline; at the same time, I have access to the commits in my feature branch, which is lost in rebase/squash.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Patrik Jonsson</span> on 
+							<span class="date">August 20, 2019 at 15:44</span>
+						</div> 
+						<div class="body">First article of many that did a great job of explaining this. Well done!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 21, 2019 at 10:11</span>
+						</div> 
+						<div class="body">@Anant good idea, I don't think there's such a command on Git (yet?). You could create a "temporary" branch out of our feature one, squash it and merge it into the mainline...</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sourabh</span> on 
+							<span class="date">August 22, 2019 at 10:04</span>
+						</div> 
+						<div class="body">@Anant, <br />
+There is indeed a way to do that. <br />
+You can cherry-pick the latest commit from the feature branch and apply it to the mainline(master). <br />
+In case you are not authorized to push directly to master, you can create a new branch, cherry-pick the latest commit from your feature branch to the newly created branch, and then raise a pull request of your newly-created branch.<br />
+<br />
+Command - <br />
+[newly-created-branch] git cherry-pick <latest-commit-id-from-your-feature-branch></div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Suvradeep</span> on 
+							<span class="date">August 27, 2019 at 08:30</span>
+						</div> 
+						<div class="body">I've been struggling with git interactive rebase for quite a long. I was able to do it somehow but everytime some problem remains and it was not upto my satisfaction. Your post really walked me through neatly and I've made a first clean git interactive rebase. Thanks a lot mate... :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Victor</span> on 
+							<span class="date">September 12, 2019 at 15:14</span>
+						</div> 
+						<div class="body">Thank you! Best explanation of git -i rebase I have read so far!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Philip</span> on 
+							<span class="date">September 23, 2019 at 18:21</span>
+						</div> 
+						<div class="body">Thank you for this nice and clean tutorial as others have stated</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Trung</span> on 
+							<span class="date">September 30, 2019 at 04:23</span>
+						</div> 
+						<div class="body">Thank you. It is good document with git rebase</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elson</span> on 
+							<span class="date">October 01, 2019 at 21:40</span>
+						</div> 
+						<div class="body">I wish all the tutorials online could be written like this. Very easy to follow and understand. Good job!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mak</span> on 
+							<span class="date">October 03, 2019 at 02:58</span>
+						</div> 
+						<div class="body">Excellent article. Not found such a clear explanation so far. Thank you so much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elwee</span> on 
+							<span class="date">October 04, 2019 at 07:40</span>
+						</div> 
+						<div class="body">This is a very useful guide. Thanks! It helps a lot to clean up a local git repo before pushing to remote. Kudos!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Krishnamurti</span> on 
+							<span class="date">October 08, 2019 at 09:41</span>
+						</div> 
+						<div class="body">Clear explanation, thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Abhi</span> on 
+							<span class="date">October 10, 2019 at 00:56</span>
+						</div> 
+						<div class="body">Typo in the command git rebase --interactive HEAD~[7]<br />
+You forgot to remove the brackets :)<br />
+<br />
+Great step by step instructions though, it helped. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dibs</span> on 
+							<span class="date">October 10, 2019 at 20:00</span>
+						</div> 
+						<div class="body">Best guide out there :)<br />
+Thanks a lot, you saved me a lot of time</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yan</span> on 
+							<span class="date">October 17, 2019 at 17:08</span>
+						</div> 
+						<div class="body">Thx for a clear explanation.<br />
+<br />
+I want to notice though that if you do it by hash, you should select the hash of the commit before the first one. When I used the hash of the first one, it was left out and everything after got squashed.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">QuachGia</span> on 
+							<span class="date">October 28, 2019 at 10:17</span>
+						</div> 
+						<div class="body">need "git push -f " if wan't to change origin log</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Prasanna Hegde</span> on 
+							<span class="date">November 07, 2019 at 11:51</span>
+						</div> 
+						<div class="body">Very helpful. You can add as the last step to force push to remote branch (git push --force). This will be required when you've pushed your previous commits into remote.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">MRC</span> on 
+							<span class="date">November 11, 2019 at 04:35</span>
+						</div> 
+						<div class="body">This guide is helpful, thank you.<br />
+<br />
+FYI, I notice a small typo:<br />
+"because I want to combine the last seven commits into one, and d94e78 Prepare the workbench for feature X is the seventh one"<br />
+-> "feature X" should be "feature Z"</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ggicci</span> on 
+							<span class="date">November 12, 2019 at 08:31</span>
+						</div> 
+						<div class="body">The most comprehensible article introducing "git squash" I've ever read!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 13, 2019 at 11:45</span>
+						</div> 
+						<div class="body">@MRC typo fixed. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">slunker</span> on 
+							<span class="date">November 13, 2019 at 11:52</span>
+						</div> 
+						<div class="body">The best explanation I've ever read. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Filipe Bezerra</span> on 
+							<span class="date">November 17, 2019 at 00:42</span>
+						</div> 
+						<div class="body">Wow, that's pretty awesome. Congrats man</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tom Early</span> on 
+							<span class="date">November 20, 2019 at 11:35</span>
+						</div> 
+						<div class="body">Worked a treat. Better than the other articles I read!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">DrLightman</span> on 
+							<span class="date">November 26, 2019 at 04:16</span>
+						</div> 
+						<div class="body">Thanks, amazing guide!<br />
+But as others mentioned, this needs to be fixed, square brackets removed:<br />
+git rebase --interactive HEAD~[7]<br />
+>><br />
+git rebase --interactive HEAD~7</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elton King</span> on 
+							<span class="date">November 28, 2019 at 06:08</span>
+						</div> 
+						<div class="body">Nice article. Very well written.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 28, 2019 at 16:03</span>
+						</div> 
+						<div class="body">@DrLightman thanks, fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shivakumar</span> on 
+							<span class="date">December 04, 2019 at 13:48</span>
+						</div> 
+						<div class="body">Very handy for beginners</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dimitris</span> on 
+							<span class="date">December 05, 2019 at 14:28</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Giridhar</span> on 
+							<span class="date">December 10, 2019 at 09:46</span>
+						</div> 
+						<div class="body">Thank You</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">rajQSL</span> on 
+							<span class="date">December 21, 2019 at 02:28</span>
+						</div> 
+						<div class="body">good info. best squash instructions I have seen.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Carlos</span> on 
+							<span class="date">December 27, 2019 at 00:11</span>
+						</div> 
+						<div class="body">This great! All the important details that one would have to know.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mary</span> on 
+							<span class="date">December 30, 2019 at 11:39</span>
+						</div> 
+						<div class="body">Thanks, great and clear explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jerin</span> on 
+							<span class="date">December 31, 2019 at 12:41</span>
+						</div> 
+						<div class="body">Detailed and easy to understand. Thank you !!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amr</span> on 
+							<span class="date">January 08, 2020 at 15:07</span>
+						</div> 
+						<div class="body">Thanks. Really easy to understand</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ml</span> on 
+							<span class="date">January 13, 2020 at 00:54</span>
+						</div> 
+						<div class="body">Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mori</span> on 
+							<span class="date">January 13, 2020 at 01:43</span>
+						</div> 
+						<div class="body">Great write-up! Would be nice to include the result of "git log" at the very end.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Martin</span> on 
+							<span class="date">January 17, 2020 at 15:16</span>
+						</div> 
+						<div class="body">Super clear and easy! Thanks of Spain XD</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">another Carlos</span> on 
+							<span class="date">January 17, 2020 at 17:29</span>
+						</div> 
+						<div class="body">Solid explanation, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jörg</span> on 
+							<span class="date">January 22, 2020 at 23:07</span>
+						</div> 
+						<div class="body">Really really good tutorial. Thanks a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rohan Dsouza</span> on 
+							<span class="date">January 25, 2020 at 14:29</span>
+						</div> 
+						<div class="body">Nice explanation. Now how do I push the local squashed branch to the remote branch that already exists. git push will give an error as there is no tracking of commits anymore as multiple commits were squashed. Should I do a git push -f ? </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">JJ</span> on 
+							<span class="date">January 29, 2020 at 11:34</span>
+						</div> 
+						<div class="body">Very good article</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">February 02, 2020 at 12:26</span>
+						</div> 
+						<div class="body">@Rohan Dsouza exactly, git push --force is the way to go!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Michael Milette</span> on 
+							<span class="date">February 05, 2020 at 20:00</span>
+						</div> 
+						<div class="body">If you don't want to keep all of the commit messages in between, you can use the f (fixup) instead. It does the same thing as s (squash) but discards the commit log message.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">kayut</span> on 
+							<span class="date">February 18, 2020 at 11:03</span>
+						</div> 
+						<div class="body">Thanks for the article. I think I found a typo. You are saying that your newer commit is 84d1f8 Feature Z. However, looking at the result of git log, your newer commit is 871adf Feature Z.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">yykk</span> on 
+							<span class="date">February 20, 2020 at 02:53</span>
+						</div> 
+						<div class="body">thanks. very clear tutorial</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Miguel</span> on 
+							<span class="date">February 26, 2020 at 14:41</span>
+						</div> 
+						<div class="body">Thanks, very good explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 07, 2020 at 10:49</span>
+						</div> 
+						<div class="body">@kayut good point: actually Feature Z is the result of a git rebase, which creates a new commit. I will update the article, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">anonymous</span> on 
+							<span class="date">March 23, 2020 at 12:10</span>
+						</div> 
+						<div class="body">Fantastic tutorial</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">hana</span> on 
+							<span class="date">March 31, 2020 at 07:04</span>
+						</div> 
+						<div class="body">Thanks for the blog. It really helped! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Diego Machado Dias</span> on 
+							<span class="date">April 13, 2020 at 20:08</span>
+						</div> 
+						<div class="body">Fantastic. Thanks for clear tutorial!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Christian K.</span> on 
+							<span class="date">May 04, 2020 at 13:05</span>
+						</div> 
+						<div class="body">Many thanks for this helpful article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sathiya baskar</span> on 
+							<span class="date">May 12, 2020 at 15:12</span>
+						</div> 
+						<div class="body">nice explanation... working to me... tq bro<br />
+<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jerome</span> on 
+							<span class="date">May 19, 2020 at 10:07</span>
+						</div> 
+						<div class="body">Thank you for the very useful explanation !<br />
+Tiny typo : I think you meant "changing the _word_ pick into squash" (not "work")</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">May 31, 2020 at 10:00</span>
+						</div> 
+						<div class="body">@Jerome thanks, typo fixed! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Adam Stankiewicz</span> on 
+							<span class="date">June 01, 2020 at 21:49</span>
+						</div> 
+						<div class="body">I've written a tool for squashing all commits on some branch (it works just like "squash and merge" of GitHub): https://github.com/sheerun/git-squash</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tal</span> on 
+							<span class="date">June 09, 2020 at 10:37</span>
+						</div> 
+						<div class="body">Very nice and clear, best squash tutorial I've seen yet :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">CicheR</span> on 
+							<span class="date">June 17, 2020 at 17:20</span>
+						</div> 
+						<div class="body">If it's only about squashing the lasts N commits, maybe the easyest way is:<br />
+ `git reset --soft HEAD~N`<br />
+That will remove the last N commits and leaves all the changes of the commits as staged changes. <br />
+Then, simply commit again:<br />
+`git commit -m"New commit message"`</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Habib De León</span> on 
+							<span class="date">June 20, 2020 at 07:43</span>
+						</div> 
+						<div class="body">Thank you so much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">muhammadali</span> on 
+							<span class="date">June 29, 2020 at 15:57</span>
+						</div> 
+						<div class="body">Thanks for this extremely helpful tutorial.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jon Snores</span> on 
+							<span class="date">July 01, 2020 at 14:39</span>
+						</div> 
+						<div class="body">For years I have not understood squashing! Every tutorial I met would say "the first commit" and I would be confused as to which one is the first!!!! That simple clarification you made, and the first that you even addressed the reverse order made this super simple to me after years of shame! Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mehdi Griche</span> on 
+							<span class="date">July 02, 2020 at 12:57</span>
+						</div> 
+						<div class="body">i had to run "git push -f origin" in order to complete the task, thanks for the effort <3</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">that dude</span> on 
+							<span class="date">July 19, 2020 at 14:01</span>
+						</div> 
+						<div class="body">Warning: Read this tutorial CAREFULLY.<br />
+Note that in the last code block, the commit hash order is REVERSED. If you do not reverse your commits, all of your work will be DELETED FOREVER.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sreeni</span> on 
+							<span class="date">July 20, 2020 at 11:17</span>
+						</div> 
+						<div class="body">such a wonderful explanation. Thank you :) </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gabriel</span> on 
+							<span class="date">July 22, 2020 at 11:42</span>
+						</div> 
+						<div class="body">Thanks for this explanation !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joey</span> on 
+							<span class="date">July 23, 2020 at 00:56</span>
+						</div> 
+						<div class="body">Neat and clean, great job. Thank you so much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">WinNgo</span> on 
+							<span class="date">July 24, 2020 at 09:19</span>
+						</div> 
+						<div class="body">You save my life :)<br />
+Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sakib</span> on 
+							<span class="date">July 28, 2020 at 12:01</span>
+						</div> 
+						<div class="body">Very nicely and simply explained. Helpful :) </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">David Buyinza</span> on 
+							<span class="date">July 28, 2020 at 21:48</span>
+						</div> 
+						<div class="body">I always refer learners to this page when it comes to squashing commits. You present it so well for a newbie. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kari</span> on 
+							<span class="date">July 29, 2020 at 11:15</span>
+						</div> 
+						<div class="body">Thank you so much, really helpful!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amit</span> on 
+							<span class="date">August 03, 2020 at 12:56</span>
+						</div> 
+						<div class="body">that's neat, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andre Chiarelli</span> on 
+							<span class="date">August 06, 2020 at 14:40</span>
+						</div> 
+						<div class="body">Excellent article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">John</span> on 
+							<span class="date">August 14, 2020 at 14:03</span>
+						</div> 
+						<div class="body">Can you please add that you have to do a "git push -f" after the rebase? I did it without first and it just looked like a regular commit.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Priya</span> on 
+							<span class="date">August 21, 2020 at 03:00</span>
+						</div> 
+						<div class="body">Thank you so much, Very Helpful. Even a beginner can do it, very explanatory thanks a lot</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Clint</span> on 
+							<span class="date">September 04, 2020 at 22:41</span>
+						</div> 
+						<div class="body">A fantastically written article. Your attention to detail and consistent referral back to your example made this very straightforward. Thank you for your efforts!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nabin</span> on 
+							<span class="date">September 09, 2020 at 21:00</span>
+						</div> 
+						<div class="body">Clear and concise explanation. Thanks mate. It was very helpful</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tom</span> on 
+							<span class="date">September 10, 2020 at 12:14</span>
+						</div> 
+						<div class="body">Thank you, it's very helpful!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">cuongpt</span> on 
+							<span class="date">September 11, 2020 at 03:11</span>
+						</div> 
+						<div class="body">Perfect</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Varun</span> on 
+							<span class="date">September 14, 2020 at 02:15</span>
+						</div> 
+						<div class="body">Need to add one more step/command at the end<br />
+git push --force</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Varun</span> on 
+							<span class="date">September 14, 2020 at 02:18</span>
+						</div> 
+						<div class="body">Very nicely explained, just one more step/addition/command at the end would be <br />
+git push --force </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Arun</span> on 
+							<span class="date">September 17, 2020 at 06:58</span>
+						</div> 
+						<div class="body">Excellent work. Even beginners can understand this easily. I agree with John's comment, It should add.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Xtbl</span> on 
+							<span class="date">September 17, 2020 at 16:01</span>
+						</div> 
+						<div class="body">Great article, best squash explanation I've found. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nacho</span> on 
+							<span class="date">September 26, 2020 at 17:56</span>
+						</div> 
+						<div class="body">Awesome guide! Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mohamed Abdulbaset</span> on 
+							<span class="date">October 07, 2020 at 10:53</span>
+						</div> 
+						<div class="body">Thanks man, great article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">xcdaqwe</span> on 
+							<span class="date">October 16, 2020 at 15:49</span>
+						</div> 
+						<div class="body">pick hash1 commitmessage1 (oldest)<br />
+pick hash2 commitmessage2<br />
+pick hash3 commitmessage3<br />
+pick hash4 commitmessage4 (newest)<br />
+<br />
+how do I squash hash4 into hash1 in rebase --interactive mode?<br />
+<br />
+Is this even possible?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">James Howlett</span> on 
+							<span class="date">October 19, 2020 at 16:24</span>
+						</div> 
+						<div class="body">Excellent guide. Thanks for taking the time to put it together.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tammy</span> on 
+							<span class="date">October 23, 2020 at 18:50</span>
+						</div> 
+						<div class="body">Very clear, descriptive and to the point. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nick</span> on 
+							<span class="date">November 09, 2020 at 08:21</span>
+						</div> 
+						<div class="body">Good document :+1<br />
+Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ray</span> on 
+							<span class="date">November 09, 2020 at 17:45</span>
+						</div> 
+						<div class="body">Perfect. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vadim</span> on 
+							<span class="date">December 02, 2020 at 14:00</span>
+						</div> 
+						<div class="body">Thanks for your article, helped me!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Maja</span> on 
+							<span class="date">December 17, 2020 at 10:29</span>
+						</div> 
+						<div class="body">Excellent explanation through clear steps, thank You!<br />
+Found a small typo in Step 3:  "into <the the> first commit".<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">December 21, 2020 at 09:49</span>
+						</div> 
+						<div class="body">Thank you @Maja, typo fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Adam G</span> on 
+							<span class="date">January 20, 2021 at 18:13</span>
+						</div> 
+						<div class="body">Thank you. This article was very clear and helped me today.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sreenivas Sama</span> on 
+							<span class="date">February 09, 2021 at 08:50</span>
+						</div> 
+						<div class="body">fabulously neat and elegantly explained... Kudos.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">an</span> on 
+							<span class="date">March 03, 2021 at 00:07</span>
+						</div> 
+						<div class="body">Excellent. Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sluge</span> on 
+							<span class="date">March 25, 2021 at 05:12</span>
+						</div> 
+						<div class="body">Thanks, good!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">massenzio</span> on 
+							<span class="date">April 01, 2021 at 18:38</span>
+						</div> 
+						<div class="body">the best article on this topic, this is what i was searching for a long time. Thank you very much</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dhanesh</span> on 
+							<span class="date">April 14, 2021 at 12:42</span>
+						</div> 
+						<div class="body">Great article! Thanks for help.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kshitij</span> on 
+							<span class="date">April 18, 2021 at 08:58</span>
+						</div> 
+						<div class="body">best thing was - I understood everything in one go. Sweet!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Royner Chavarria</span> on 
+							<span class="date">May 19, 2021 at 22:11</span>
+						</div> 
+						<div class="body">Great article!! Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">andymnc</span> on 
+							<span class="date">June 11, 2021 at 10:18</span>
+						</div> 
+						<div class="body">very good post, but you should also explain what's next. I mean, how to push after alla of that, why and what will happen to other people using that branch</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">VT</span> on 
+							<span class="date">June 15, 2021 at 16:15</span>
+						</div> 
+						<div class="body">Great post. Very helpful. Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andrey</span> on 
+							<span class="date">June 24, 2021 at 18:37</span>
+						</div> 
+						<div class="body">Everything went well, but i still see all my commits in the history. Expecting to see only one</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Karthi</span> on 
+							<span class="date">July 01, 2021 at 19:16</span>
+						</div> 
+						<div class="body">Explanation is pretty clear. It helped me</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Santiago</span> on 
+							<span class="date">July 07, 2021 at 20:15</span>
+						</div> 
+						<div class="body">This post helped me a lot, squash is a powerful command within the "rebase --interactive" tool Git offers. Thanks for the explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thao Chau</span> on 
+							<span class="date">July 12, 2021 at 11:25</span>
+						</div> 
+						<div class="body">Great! It's handy to me</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Greg</span> on 
+							<span class="date">July 28, 2021 at 15:08</span>
+						</div> 
+						<div class="body">Extremely helpful post, than you very much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ash</span> on 
+							<span class="date">August 06, 2021 at 02:22</span>
+						</div> 
+						<div class="body">fantastic - just what i needed. thanks much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ardi</span> on 
+							<span class="date">August 11, 2021 at 04:35</span>
+						</div> 
+						<div class="body">Thank you very much for this post! I learned so much because of it</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">harmeek</span> on 
+							<span class="date">September 07, 2021 at 12:13</span>
+						</div> 
+						<div class="body">Thanks . very nice explained</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mp</span> on 
+							<span class="date">September 14, 2021 at 22:23</span>
+						</div> 
+						<div class="body">Thanks. Very crisp and nicely explained. :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">cookie</span> on 
+							<span class="date">September 23, 2021 at 14:57</span>
+						</div> 
+						<div class="body">You saved my day bro, nice ;)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">KK</span> on 
+							<span class="date">September 24, 2021 at 15:53</span>
+						</div> 
+						<div class="body">Indeed !!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Viktor</span> on 
+							<span class="date">October 20, 2021 at 10:28</span>
+						</div> 
+						<div class="body">Thanks! Saved as bookmark :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">krodriguez</span> on 
+							<span class="date">November 19, 2021 at 09:00</span>
+						</div> 
+						<div class="body">Is it possible to squash all the commits into the latest one instead?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Marco</span> on 
+							<span class="date">December 20, 2021 at 18:14</span>
+						</div> 
+						<div class="body">I only wanted to thank you for this article, I have come back to it every time I need to squash.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Leo</span> on 
+							<span class="date">February 08, 2022 at 16:21</span>
+						</div> 
+						<div class="body">Your are a god at explaining things!!! Thanks! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">SM</span> on 
+							<span class="date">February 17, 2022 at 19:51</span>
+						</div> 
+						<div class="body">Nice article with clear examples. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Zwakele </span> on 
+							<span class="date">February 24, 2022 at 04:19</span>
+						</div> 
+						<div class="body">Best explanation I've come across, am sharing with my whole team. Thanks!!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">NDB</span> on 
+							<span class="date">February 24, 2022 at 08:15</span>
+						</div> 
+						<div class="body">Precise and very beautifully explained. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nelu</span> on 
+							<span class="date">February 24, 2022 at 15:12</span>
+						</div> 
+						<div class="body">Thanks! Nice and simple :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Lokesh</span> on 
+							<span class="date">March 18, 2022 at 14:10</span>
+						</div> 
+						<div class="body">Thank you so much. Such a precise,clean and Beautiful Explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thai</span> on 
+							<span class="date">June 17, 2022 at 23:54</span>
+						</div> 
+						<div class="body">Great explanation for Git rebase interactive and squash commits. I've dreaded this Git feature for a long time until now. Thanks a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">tristan</span> on 
+							<span class="date">June 29, 2022 at 22:39</span>
+						</div> 
+						<div class="body">thank you man, very clear and easy to follow</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Juliano K.</span> on 
+							<span class="date">July 14, 2022 at 00:14</span>
+						</div> 
+						<div class="body">I would also suggest adding to the article that it does not finish unless you do "git push -f origin" as the last step. Seems like an essential missing part in my opinion. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">PS</span> on 
+							<span class="date">July 27, 2022 at 13:59</span>
+						</div> 
+						<div class="body">Thanks. This was helpful.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Michael Ou</span> on 
+							<span class="date">August 17, 2022 at 06:03</span>
+						</div> 
+						<div class="body">Clear and Simple! Very good article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elkarni Bachar</span> on 
+							<span class="date">August 25, 2022 at 15:39</span>
+						</div> 
+						<div class="body">Thanks man you truly saved me</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Faris Abuali</span> on 
+							<span class="date">September 14, 2022 at 16:04</span>
+						</div> 
+						<div class="body">Thanks for sharing! much informative</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Davila</span> on 
+							<span class="date">September 16, 2022 at 11:22</span>
+						</div> 
+						<div class="body">Great tutorial, really helpful</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joe</span> on 
+							<span class="date">November 13, 2022 at 22:41</span>
+						</div> 
+						<div class="body">Really clear article. Helped a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Santeri</span> on 
+							<span class="date">December 22, 2022 at 10:33</span>
+						</div> 
+						<div class="body">ty</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Michael Deyaso</span> on 
+							<span class="date">March 03, 2023 at 14:35</span>
+						</div> 
+						<div class="body">Awesome article. Clear explanation. Hats off!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Hossam A.</span> on 
+							<span class="date">May 05, 2023 at 15:42</span>
+						</div> 
+						<div class="body">Thanks for the great info. It was really helpful.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Robin Bastiaan</span> on 
+							<span class="date">June 01, 2023 at 10:26</span>
+						</div> 
+						<div class="body">Thank you for your explanation. Very clear and concise. Using rebase makes my commit history more clean and ready for a code review. <br />
+<br />
+One thing I need to always take into account tho, is that I should not do rebases when I already pushed or shared my code since I will be changing history and that can lead to all kinds of inconsistenties, merge conflicts and other headaches.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rush</span> on 
+							<span class="date">July 11, 2023 at 05:17</span>
+						</div> 
+						<div class="body">Good explanation!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

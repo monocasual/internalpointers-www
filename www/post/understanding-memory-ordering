@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Understanding memory reordering  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="...and why it matters when writing lock-free multithreading code.">
+		<meta name="keywords" content="atomics,lock-freedom,multithreading,concurrency,algorithm">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Understanding memory reordering " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/understanding-memory-ordering" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/12/memory-ordering-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="...and why it matters when writing lock-free multithreading code." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/understanding-memory-ordering" />
+<meta name="twitter:title" content="Understanding memory reordering " />
+<meta name="twitter:description" content="...and why it matters when writing lock-free multithreading code." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/12/memory-ordering-image.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on December 29, 2019 
+								• updated on June 30, 2021  
+								• ID 78 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Understanding memory reordering </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>...and why it matters when writing lock-free multithreading code.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/gentle-introduction-multithreading">A gentle introduction to multithreading</a>
+							</span> —
+							<span class="intro">Approaching the world of concurrency, one step at a time.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-thread-synchronization">Introduction to thread synchronization</a>
+							</span> —
+							<span class="intro">A look at one of the most popular ways of concurrency control in a multithreaded application.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>
+							</span> —
+							<span class="intro">Synchronizing threads at a lower level.</span>
+						</p>
+					</li>
+																						</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>In the previous article of this series, <a href="https://www.internalpointers.com/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>, I introduced <strong>lock-free multithreading</strong>: a low-level strategy for synchronizing threads in concurrent software.</p>
+<p>Based upon <strong>atomic operations</strong> — machine instructions performed directly by the CPU that can't be broken into smaller steps, lock-free multithreading provides a faster and more fine-tuned synchronization mechanism if compared to traditional primitives like <a href="https://internalpointers.com/post/introduction-thread-synchronization">mutexes and semaphores</a>.</p>
+<p>As always, with great power comes great responsibility. In lock-free programming you get closer to the metal, so it is always a good idea to understand how the machine works and some of its quirks.</p>
+<p>In this article I want to show you one of the most important side effects that hardware (and software too) might cause on your lock-free code. This is also a great opportunity to marvel at the complexity of the miniaturized world inside your computer.</p>
+<h2>Memory reordering, or the unpleasant surprise</h2>
+<p>The first thing any programming course out there will teach you is how instructions written in the source code are executed <em>sequentially</em> by your computer. A program is just a list of operations laid down in a text file that the processor performs from top to bottom.</p>
+<p>Surprisingly, this is often a lie: your machine has the ability to change the order of <em>some</em> low-level operations according to its needs, especially when reading from and writing to memory. This weird modification, called <strong>memory reordering</strong>, occurs both hardware and software wise and it is mostly due to performance reasons.</p>
+<p>Memory reordering is a paradigm developed to make use of instruction cycles that would otherwise be wasted. This trick dramatically improves the speed of your programs; on the other hand it might wreak havoc over lock-free multithreading. We will see why in a minute.</p>
+<p>Let's first take a closer look at the reasons why something this unpredictable would happen.</p>
+<h2>Memory reordering in a nutshell</h2>
+<p>Programs are loaded in the <strong>main memory</strong> in order to be executed. The CPU task is to run instructions stored there, along with reading and writing data when necessary.</p>
+<p>Over time this type of memory has become damn slow if compared to the processor. For example, a modern CPU is capable of executing ten instructions per nanosecond, but will require many tens of nanoseconds to fetch some data from memory! Engineers don't like such waste of time, so they equip the CPU with a small yet extremely fast chunk of special memory called <strong>cache</strong>.</p>
+<p>The cache is where the processor stores its most frequently used data, in order to avoid lethargic interactions with the main memory.  When the processor needs to read from or write to main memory, it first checks whether a copy of that data is available in its own cache. If so, the processor reads from or writes to the cache directly instead of waiting for the slower main memory response.</p>
+<p>Modern CPUs are made of multiple <strong>cores</strong> — the component that performs actual computations, and each core has its own chunk of cache that is in turn connected to the main memory, as pictured in the following image:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/12/cpu-cache-main-memory.png" alt="CPU, cache and main memory">
+<div class="caption">1. A simplified model of multiple cores connected to the main memory through cache. This is known as a <strong>shared memory system</strong>, because the main memory is accessed by multiple entities.</div>
+</div><p>All in all, cache makes computers run faster. Or better, it helps the processor not to waste precious time waiting for the main memory response by keeping it always busy and productive.</p>
+<h3>Memory reordering as an optimization trick</h3>
+<p>Clearly such caching mechanism increases the system complexity in a multi-core scenario. Now you will need detailed rules to determine how data flows across different caches, and to make sure each core has the most up-to-date version of it. Known as <strong>cache coherence protocols</strong>, they could potentially trigger huge performance penalties. So engineers conceived the memory reordering trick (and many others!) to get the best out of each core.</p>
+<p>There are several reasons why a memory reordering might take place. For example, consider two cores instructed to access the same chunk of data in memory. Core A reads from memory, core B writes to it. A cache coherence protocol might force core A to wait while core B writes its local cached data back to the main memory, so that core A can read the most up-to-date information. The waiting core might choose to run other memory instructions in advance, instead of wasting precious cycles doing nothing. Even if such decision would depart from what you have explicitly written in your program.</p>
+<p>Compilers and virtual machines too take the liberty of reordering instructions when certain optimizations are enabled. These changes happen at compile time and can be easily spotted by looking at the assembly code or byte code. Software memory reordering exists to take advantage of any feature the underlying hardware may offer, just to make your code run faster.</p>
+<h2>A concrete example of hardware memory reordering</h2>
+<p>Consider the following example, written in hardware pseudo-code. Each step of the program corresponds to an individual processor instruction:</p>
+<pre><code>x = 0
+v = false
+
+thread_one():
+    while load(v) == false: 
+        continue
+    print(load(x))
+
+thread_two():
+    store(x, 1)
+    store(v, true)
+</code></pre>
+<p>In the snippet above two threads are running in parallel <em>on two different cores</em>. The first thread waits until <code>v</code> is set to <code>true</code> by the other one. Let's also assume that <code>store()</code> and <code>load()</code> are atomic CPU instructions that write and read memory.</p>
+<p>What would you expect to see printed on screen by thread one? If it starts before thread two (and <a href="https://internalpointers.com/post/gentle-introduction-multithreading#race-conditions">it is not always the case</a>), there is no right answer. You might see <code>1</code> if no reordering takes place. However, it is possible for <code>v</code> to be updated before <code>x</code>, and the print statement might then print <code>0</code> if the store instructions are reordered in the second thread. Similarly, a memory reordering might take place in the first thread and it is possible for <code>x</code> to be loaded before <code>v</code> is checked.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>The impact of memory reordering on multithreading</h2>
+<p>Hardware memory reordering is not an issue on single-core machines, where threads are a software construct ruled by the operating system. The CPU just receives a continuous stream of memory instructions. They still can be reordered, yet according to a fundamental rule: <em>memory accesses by a given core will appear to that core to have occurred as written in your program</em>. So memory reordering might take place, but only if it doesn't screw up the final outcome.</p>
+<p>This rule still applies to each core in a multi-core scenario, but nothing takes care of the whole picture where different operations are simultaneously performed on separate hardware components (<a href="https://internalpointers.com/post/gentle-introduction-multithreading#what-threads-are-used-for">true parallelism</a>). Make your threads run on two physical cores and you will experience any kind of weird surprise as seen in the example above. Not to mention the reordering performed by compilers and virtual machines!</p>
+<p>The usual <a href="https://internalpointers.com/post/introduction-thread-synchronization">locking synchronization mechanisms</a> such as mutexes and semaphores are designed to take care of the memory reordering problem for you, both hardware and software wise. They are high level tools after all.</p>
+<p>A multithreaded program that follows a lock-free approach is way closer to the metal instead: it exploits <code>store</code>s and <code>load</code>s atomic instructions to synchronize its threads, as seen in <a href="https://internalpointers.com/post/lock-free-multithreading-atomic-operations">the previous episode</a>. Funnily enough these are the operations that might get reordered, destroying all your careful plans.</p>
+<h2>How to solve the memory reordering problem</h2>
+<p>You definitely don't want to build your synchronization mechanism upon something that might change randomly. This problem can be fixed in a practical way by triggering a <strong>memory barrier</strong>, a CPU instruction that forces the processor to execute memory operations in a predictable way. A memory barrier works like a barricade: operations issued prior to the barrier are guaranteed to be performed before operations issued after it.</p>
+<p>A memory barrier is a hardware thing: you have to talk directly to the CPU. This makes it a low-level solution which hurts the portability of your programs. The best way to tackle the problem is to step up the software hierarchy and make use of the tools that operating systems, compilers and virtual machines provide.</p>
+<p>Software gadgets are only the halfway stage, though. Let's first take a high-level look at all the memory scenarios that might take place in a system, whether hardware or software, in order to build a clear mental map of the issue. The so-called <strong>memory model</strong> will help in the process.</p>
+<h2>The memory model</h2>
+<p>A memory model is an abstract way to describe what a system may and may not do when it comes to accessing and reordering memory. Processors and programming languages implement one, especially if they make use of multithreading: a memory model applies both to hardware and software.</p>
+<p>When a system is very cautious about changing the order of memory operations is said to be following a <strong>strong memory model</strong>. Conversely, in a <strong>weak memory model</strong> you can expect all sorts of crazy reorderings. For example, processors in the x86 family belong to the former category, while ARM and PowerPC processors belong to the latter. What about software instead?</p>
+<h3>The benefits of a software memory model</h3>
+<p>While hardware memory models are set in stone for obvious reasons, the software counterpart lets you choose how memory accesses can be ordered, according to your needs. This is an interesting property that will help a lot while writing lock-free multithreading code.</p>
+<p>For example, a compiler can be instructed to produce machine code that follows a strong memory model, in order to avoid unwelcome reorderings around atomic operations used as synchronization mechanism. The compiler will do its best to provide the memory model you have requested by issuing the correct memory barriers, in case the underlying hardware implements a weak model. It also takes care of any memory reordering operation that might occur on the software side. Working with a software memory model abstracts away the hardware details.</p>
+<p>Basically all programming languages implement a memory model, in the sense that they follow specific rules for handling the memory internally. Some of them just stop there, as they don't deal with multithreading directly. Some others, <a href="https://docs.oracle.com/javase/9/docs/api/java/lang/invoke/VarHandle.html">Java</a>, <a href="https://doc.rust-lang.org/nomicon/atomics.html">Rust</a> and <a href="https://en.cppreference.com/w/cpp/atomic/memory_order">C++</a> to name a few, also provide tools to control the memory reordering behavior as described above.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Fine-tuning the memory model</h2>
+<p>Strong vs. weak memory model is a theoretical classification of how memory operations get reordered. When it comes to actual coding, most programming languages that support atomic operations give you three ways to control memory reordering. Let's take a closer look.</p>
+<h3>1) Sequential consistency</h3>
+<p>The less intrusive way of memory reordering is no reordering at all. This is a form of strong memory model and is called <strong>sequential consistency</strong>: exactly what you need to solve all lock-free multithreading problems mentioned above. Disabling reordering makes your multithreaded program easy to follow: the source code is executed in the same order you have written it.</p>
+<p>Sequential consistency adds another important feature to parallel execution: if forces a <strong>total order</strong> of all atomic memory operations in all threads. To better understand this statement consider the following example, in hardware pseudocode:</p>
+<pre><code>x = 0
+y = 0
+
+thread_A:
+    store(x, 1)
+
+thread_B: 
+    store(y, 1)
+
+thread_C:
+    assert(load(x) == 1 &amp;&amp; load(y) == 0)
+
+thread_D:
+    assert(load(x) == 0 &amp;&amp; load(y) == 1)
+</code></pre>
+<p>Forget memory reordering inside specific threads for a second and just look at the big picture. If threads run, say, in order A - C - B - D, thread C sees <code>x == 1</code> and <code>y == 0</code> because it has been executed right in the middle between A and B, so its assertion won't fail. Here's the catch: the total order imposed by sequential consistency forces thread D to see the same events as thread C, so its assert will fail. It's impossible for thread D to see the two <code>store</code>s ordered in a different way than what thread C has perceived. In other words, with sequential consistency all threads will see the same story line.</p>
+<p>As I said before this is a very intuitive and natural way of thinking about multithreaded execution. However, sequential consistency disables any potential hardware or software optimization a memory reorder could offer: a recipe for serious performance bottlenecks. Sequential consistency is a necessary evil sometimes, for example in multiple producer-multiple consumer situations where all consumers must observe the actions of all producers occurring in the same order.</p>
+<h3>2) Acquire-release ordering</h3>
+<p><strong>Acquire-release</strong> is halfway between a strong and a weak memory model. First of all, acquire-release works like sequential consistency except that you don't have a total order of execution. Let's go back to the previous example for a moment: with acquire-release, thread D is allowed to see a different story line than thread C, so that its assert too may pass.</p>
+<p>The absence of a total order is just a side effect here. Acquire-release provides synchronization around <em>a specific</em> shared atomic variable <em>across multiple threads</em>. That is, you can for example synchronize thread A and thread C around the shared variable <code>x</code> so that thread C loads the value only when thread A has finished writing. In this case <code>y</code> is not taken into account, so you can expect any kind of reordering around it.</p>
+<p>Concretely, programming languages that support this ordering allow you to tag memory accesses as <code>acquire</code> or <code>release</code>. An atomic store marked as <code>release</code> on a shared variable in thread A guarantees that thread B will see the full and not reordered sequence of memory events performed by thread A, once thread B triggers an atomic load marked as <code>acquire</code> on the same variable. I know it's brain-melting, but this is the foundation that mutexes stand on: critical sections and their <em>protected area</em> are built with this stuff (<em>acquire-release</em> name comes from the mutex jargon, where you acquire and release locks on it).</p>
+<p>Acquire-release allows for more optimization opportunities as only some memory reorderings are prevented. On the other hand your code becomes more difficult to reason about.</p>
+<h3>3) Relaxed ordering</h3>
+<p>This is a form of weak memory model.  With <strong>relaxed ordering</strong> you are telling your program that you don't care about memory reordering at all. The compiler and the processor are free to do whathever they want in order to optimize the execution. What remains is of course the atomic nature of the memory operation: this is useful for example for incrementing shared counters, where you just want the operation to be atomic so that other threads don't see the operation half complete.</p>
+<p>Relaxed ordering doesn't guarantee a specific memory ordering, so it's not a tool you can safely use for thread synchronization. On the other hand, allowing any kind of memory tricks increases the performance of your multithreaded application.</p>
+<h2>What's next?</h2>
+<p>In this article I wanted to take a bird's eye view on the memory reordering problem, the reasons behind its existence and its impact on lock-free multithreading. In the next episode I'll get my hands dirty by playing with some C++ code that makes use of atomic operations.</p>
+<p>Why C++? The language has recently introduced <a href="https://en.cppreference.com/w/cpp/language/memory_model">a very detailed memory model</a>, which allows you to fine-tune how memory operations can be ordered around the C++ atomic objects. I believe it's a good way to see how sequential consistency, acquire-release and relaxed ordering play together in some real world scenarios. Wish me good luck :)</p>
+<h2>Sources</h2>
+<p>AA.VV. - <a href="https://www.morganclaypool.com/doi/abs/10.2200/S00346ED1V01Y201104CAC016">A Primer on Memory Consistency and Cache Coherence</a><br>
+AA. VV. - <a href="https://books.google.it/books?id=MMNiDwAAQBAJ">C++ Reactive Programming</a><br>
+Paul E. McKenney - <a href="http://www.puppetmastertrading.com/images/hwViewForSwHackers.pdf">Memory Barriers: a Hardware View for Software Hackers</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/atomic/memory_order">std::memory_order</a><br>
+GCC Wiki - <a href="https://gcc.gnu.org/wiki/Atomic/GCCMM/AtomicSync">Memory model synchronization modes</a><br>
+doc.rust-lang.org - <a href="https://doc.rust-lang.org/nomicon/atomics.html">Atomics</a><br>
+Herb Sutter - <a href="https://youtu.be/A8eCGOqgvH4?t=3419">Atomic Weapons 1 of 2</a><br>
+The ryg blog - <a href="https://fgiesen.wordpress.com/2014/07/07/cache-coherency/">Cache coherency primer</a><br>
+The ryg blog - <a href="https://fgiesen.wordpress.com/2014/08/18/atomics-and-contention/">Atomic operations and contention</a><br>
+Bartosz Milewski - <a href="https://bartoszmilewski.com/2008/12/01/c-atomics-and-memory-ordering/">C++ atomics and memory ordering</a><br>
+Bartosz Milewski - <a href="https://bartoszmilewski.com/2008/11/11/who-ordered-sequential-consistency/">Who ordered sequential consistency?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/30958375/memory-barriers-force-cache-coherency">Memory barriers force cache coherency?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/25345440/how-does-the-cache-coherency-protocol-enforce-atomicity">How does the cache coherency protocol enforce atomicity?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/42746793/does-a-memory-barrier-ensure-that-the-cache-coherence-has-been-completed">Does a memory barrier ensure that the cache coherence has been completed?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/6319146/c11-introduced-a-standardized-memory-model-what-does-it-mean-and-how-is-it-g">C++11 introduced a standardized memory model. What does it mean? And how is it going to affect C++ programming?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/12340773/how-do-memory-order-seq-cst-and-memory-order-acq-rel-differ">How do memory_order_seq_cst and memory_order_acq_rel differ?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/12346487/what-do-each-memory-order-mean">What do each memory_order mean?</a><br>
+Just Software Solutions - <a href="https://www.justsoftwaresolutions.co.uk/threading/memory_models_and_synchronization.html">Memory Models and Synchronization</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/CPU_cache">CPU cache</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Cache_coherence">Cache coherence</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Memory_barrier">Memory barrier</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Memory_ordering">Memory ordering</a><br>
+James Bornholt - <a href="https://www.cs.utexas.edu/~bornholt/post/memory-models.html">Memory Consistency Models: A Tutorial</a><br>
+Preshing on Programming - <a href="https://preshing.com/20120625/memory-ordering-at-compile-time/">Memory Ordering at Compile Time</a><br>
+Preshing on Programming - <a href="https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/">Memory Barriers Are Like Source Control Operations</a><br>
+Linux Journal - <a href="https://www.linuxjournal.com/article/8211">Memory Ordering in Modern Microprocessors, Part I</a><br>
+Doug Lea - <a href="http://gee.cs.oswego.edu/dl/html/j9mm.html">Using JDK 9 Memory Order Modes</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/atomics">atomics</a>
+				 • 								<a class="ip-tag" href="/tag/lock-freedom">lock-freedom</a>
+				 • 								<a class="ip-tag" href="/tag/multithreading">multithreading</a>
+				 • 								<a class="ip-tag" href="/tag/concurrency">concurrency</a>
+				 • 								<a class="ip-tag" href="/tag/algorithm">algorithm</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>
+					</div>
+				</div>
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rob</span> on 
+							<span class="date">January 04, 2020 at 17:23</span>
+						</div> 
+						<div class="body">In the A - C - B - D example: Did you mean to write this for thread D?<br />
+<br />
+thread_D:<br />
+    assert(load(x) == 1 && load(y) == 1)<br />
+<br />
+That is supposed to be an assert one might incorrectly expect to pass, right?<br />
+<br />
+Good article, by the way.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 09, 2020 at 11:13</span>
+						</div> 
+						<div class="body">@Rob the example comes from this page ("Acquire/release" paragraph): https://gcc.gnu.org/wiki/Atomic/GCCMM/AtomicSync<br />
+<br />
+Both <br />
+<br />
+assert(load(x) == 0 && load(y) == 1)<br />
+<br />
+and<br />
+<br />
+"assert(load(x) == 1 && load(y) == 1)<br />
+<br />
+might incorrectly pass with acquire/release ordering. I believe the first one just wants to stress how another thread can't see a "flipped" history in case of sequential consistency.  </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">VicDiesel</span> on 
+							<span class="date">January 10, 2020 at 21:00</span>
+						</div> 
+						<div class="body">I think you're wrong about single-core machines: threads are always a software construct, and on a single-core machine the OS can interleave them in such a way that you get all the problems that you describe for multi-core processors.<br />
+<br />
+2. Sequential consistency does not impose a total ordering. That would make it deterministic. SC says that the result has to come from *some* interleaving of the not-reordered thread programs. (That prevents what you call "memory reordering" and therefore leads to low performance.) But the result is not unique.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 14, 2020 at 17:50</span>
+						</div> 
+						<div class="body">@VicDiesel, thanks for your feeback! I'll take some time to digest your points. Do you have any links or resources to share for points 1. and 2.?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">George Cao</span> on 
+							<span class="date">March 23, 2020 at 10:04</span>
+						</div> 
+						<div class="body">A Chinese version of this post, see https://reploop.org/blog/2020/02/understanding-memory-reordering.html</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">dave b</span> on 
+							<span class="date">March 26, 2021 at 17:09</span>
+						</div> 
+						<div class="body">I know this is an older series now, but i hope you come back and add more eventually.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 28, 2021 at 10:28</span>
+						</div> 
+						<div class="body">@dave b for sure! There's a lot of new multithreading stuff in the pipeline ready to be published. Stay tuned :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Blizzy.cz</span> on 
+							<span class="date">June 22, 2021 at 01:24</span>
+						</div> 
+						<div class="body">Hi, thanks for this comprehensible yet accurate enough explanation.<br />
+<br />
+Just a typo: I believe "very detailed memory model" should link to https://en.cppreference.com/w/cpp/language/memory_model instead.<br />
+<br />
+Looking forward to a new installment of this series!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">June 30, 2021 at 11:12</span>
+						</div> 
+						<div class="body">Thanks for the heads-up @Blizzy.cz, typo fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">rapiz</span> on 
+							<span class="date">August 13, 2021 at 04:17</span>
+						</div> 
+						<div class="body">Thank you for writing this. It's a pleasant read. I see this was posted on Dec 29, 2019. Is there a next episode available now? Or, will there ever be one?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 13, 2021 at 10:58</span>
+						</div> 
+						<div class="body">@rapiz thanks. Sure, there's more content to be added to this series! Just keep your fingers crossed :) </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mobious</span> on 
+							<span class="date">November 24, 2021 at 12:55</span>
+						</div> 
+						<div class="body">What a brilliant, well-described post. Thank you so much, author</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ftmmohd2000</span> on 
+							<span class="date">June 30, 2023 at 01:56</span>
+						</div> 
+						<div class="body">Superb post! Clears up a lot of questions I had about memory ordering. Cannot wait to see the next post in this series!!! When can we expect one?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">V</span> on 
+							<span class="date">October 09, 2023 at 16:31</span>
+						</div> 
+						<div class="body">Hi! Thank you for this great topic it helped me a lot!<br />
+But, I wait for a next one with playing with C++ code please continue doing it you make it so mentally simple</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

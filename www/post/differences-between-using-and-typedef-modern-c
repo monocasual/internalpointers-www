@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The differences between &quot;using&quot; and &quot;typedef&quot; in modern C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Two ways of defining type aliases for a smarter code.">
+		<meta name="keywords" content="C++11,C++,Templates">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The differences between &quot;using&quot; and &quot;typedef&quot; in modern C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/differences-between-using-and-typedef-modern-c" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Two ways of defining type aliases for a smarter code." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/differences-between-using-and-typedef-modern-c" />
+<meta name="twitter:title" content="The differences between &quot;using&quot; and &quot;typedef&quot; in modern C++" />
+<meta name="twitter:description" content="Two ways of defining type aliases for a smarter code." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on August 22, 2018 
+								• updated on January 21, 2020  
+								• ID 65 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The differences between "using" and "typedef" in modern C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Two ways of defining type aliases for a smarter code.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Since the beginning of C you can add <em>synonyms</em> to types that otherwise would be too complex or not much meaningful to work with. In a nutshell, you give an existing type, e.g. <code>int</code>, a new name, e.g. <code>Pixel</code>. Known as <strong>type aliases</strong>, they help you keep your code clean, short and understandable.</p>
+<p>Say for example you are working with a graphical library. Compare the following two functions:</p>
+<pre><code class="lang-c++">int getScreenWidth();
+
+// Or ... 
+
+Pixel getScreenWidth();
+</code></pre>
+<p>The latter is clearly more intuitive: having declared the alias <code>Pixel</code> it is obvious what this function is about. Another example:</p>
+<pre><code class="lang-c++">std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; map;
+
+// Or ... 
+
+Map map;
+</code></pre>
+<p>I think you get the picture.</p>
+<p>However keep in mind that a type alias does not create a new type: it only generates a <em>synonym</em>, or another way of calling the underlying one. The alias <code>Pixel</code> is still an <code>int</code> and <code>Map</code> is still that frightening <code>std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;</code> and they can be used with functions that accept <code>int</code>s and <code>std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;</code>s as inputs.</p>
+<h2>Declaring new aliases</h2>
+<p>There are two ways of declaring new type aliases in modern C++. The first and traditional one is with the <code>typedef</code> keyword:</p>
+<pre><code class="lang-nolang">typedef [original-type] [your-alias];
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">typedef int Pixel;
+typedef std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; Map;
+</code></pre>
+<p>The other one, introduced in C++11, is with the <code>using</code> keyword:</p>
+<pre><code class="lang-nolang">using [your-alias] = [original-type];
+</code></pre>
+<p>For example</p>
+<pre><code class="lang-c++">using Pixel = int;
+using Map   = std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;;
+</code></pre>
+<p>The result is identical: either way you will end up with new names <code>Pixel</code> and <code>Map</code> that you can use everywhere you need. But...</p>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2><code>using</code> works best with templates</h2>
+<p>The alias <code>Map</code> created in the two examples above (both with <code>typedef</code> and <code>using</code>) has its original type set in stone: it will always be a <code>std::map&lt;std::string, std::vector&lt;std::string&gt;&gt;</code> and there is no way to change it, for example into a <code>std::map&lt;int, std::vector&lt;int&gt;&gt;</code>, unless you declare a new alias with that type.</p>
+<p>Fortunately the C++11's <code>using</code> has the ability to create the so-called <strong>alias template</strong>: an alias that keeps an open door to the underlying type. You can have the usual type aliasing <em>and</em> the ability to specify the template parameter(s) in the future.</p>
+<p>This is how to declare an alias template:</p>
+<pre><code class="lang-nolang">template&lt;[template-parameter-list]&gt; using [your-alias] = [original-type];
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">template&lt;typename T1, typename T2&gt; using Map = std::map&lt;T1, std::vector&lt;T2&gt;&gt;;
+</code></pre>
+<p>Now I can define new <code>Map</code> variables of different types:</p>
+<pre><code class="lang-c++">// Actual type: std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; (as in the original example)
+Map&lt;std::string, std::string&gt; map1;
+
+// Actual type: std::map&lt;int, std::vector&lt;int&gt;&gt;
+Map&lt;int, int&gt; map2;
+
+// Actual type: std::map&lt;int, std::vector&lt;float&gt;&gt;
+Map&lt;int, float&gt; map3;
+</code></pre>
+<p>Such behavior could be replicated with the traditional <code>typedef</code>, but it's way trickier and it's not worth it.</p>
+<h2>A template declaration cannot appear at block scope</h2>
+<p>You can put type alias declarations — both performed with <code>typedef</code> or <code>using</code> — everywhere you wish: in namespaces, in classes and inside blocks (i.e. between <code>{</code> and <code>}</code>).</p>
+<p>Alias templates on the other hand follow the same rules of any other templated thing in C++: they cannot appear inside a block. They are actual template declarations, after all!</p>
+<h2>Sources</h2>
+<p>cprogramming.com - <a href="https://www.cprogramming.com/tutorial/typedef.html">The Typedef Keyword in C and C++</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/language/type_alias">Type alias, alias template</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/language/typedef">typedef specifier</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/10747810/what-is-the-difference-between-typedef-and-using-in-c11">What is the difference between 'typedef' and 'using' in C++11?</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c-11">C++11</a>
+				 • 								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/templates">Templates</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">fred</span> on 
+							<span class="date">June 07, 2019 at 11:14</span>
+						</div> 
+						<div class="body">Thank you it was short but very clear</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Will</span> on 
+							<span class="date">October 18, 2019 at 21:41</span>
+						</div> 
+						<div class="body">Great explanation. Right to the point</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ginger9</span> on 
+							<span class="date">December 29, 2019 at 09:30</span>
+						</div> 
+						<div class="body">clear explanation, helps a lot</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">SimonA</span> on 
+							<span class="date">January 20, 2020 at 12:35</span>
+						</div> 
+						<div class="body">?Typo? You write: 'The alias ..., for example into a std::map<int, std::vector<int>>, unless you don't declare a new alias with that type.'<br />
+-- 'unless you don't' --? </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 21, 2020 at 10:31</span>
+						</div> 
+						<div class="body">@SimonA thanks, typo fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sanjeev</span> on 
+							<span class="date">February 05, 2021 at 08:29</span>
+						</div> 
+						<div class="body">clear explanation. easy to grasp</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ron</span> on 
+							<span class="date">March 10, 2021 at 15:00</span>
+						</div> 
+						<div class="body">Thanks just what I was looking for</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Steving</span> on 
+							<span class="date">November 20, 2022 at 11:42</span>
+						</div> 
+						<div class="body">Thank you, very clear and useful with good examples.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

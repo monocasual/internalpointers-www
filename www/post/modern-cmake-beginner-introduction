@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Introduction to modern CMake for beginners  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A look at one of the most popular build systems for C and C++. ">
+		<meta name="keywords" content="C++,CMake">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Introduction to modern CMake for beginners " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/modern-cmake-beginner-introduction" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/09/cmake/introduction-modern-cmake-beginners.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A look at one of the most popular build systems for C and C++. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/modern-cmake-beginner-introduction" />
+<meta name="twitter:title" content="Introduction to modern CMake for beginners " />
+<meta name="twitter:description" content="A look at one of the most popular build systems for C and C++. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/09/cmake/introduction-modern-cmake-beginners.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 04, 2020 
+								• updated on September 08, 2020  
+								• ID 83 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Introduction to modern CMake for beginners </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A look at one of the most popular build systems for C and C++. </p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p><strong>CMake</strong> is a collection of open-source and cross-platform tools used to build and distribute software. In recent years it has become a <em>de-facto</em> standard for C and C++ applications, so the time has come for a lightweight introductory article on the subject. In the following paragraphs we will understand what CMake is exactly, its underlying philosophy and how to use it to build a demo application from scratch. Mind you, this won't be the definitive CMake bible. Rather, just a practical, ongoing introduction to the tool for humble enthusiasts like me.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>What is CMake exactly</h2>
+<p>CMake is known as a <strong>meta build system</strong>. It doesn't actually build your source code: instead, it generates native project files for the target platform. For example, CMake on Windows will produce a <em>solution</em> for Visual Studio; CMake on Linux will produce a Makefile; CMake on macOS will produce a project for XCode and so on. That's what the word <em>meta</em> stands for: CMake builds build systems.</p>
+<p>A project based on CMake always contains the <code>CMakeLists.txt</code> file. This special text file describes how the project is structured, the list of source files to compile, what CMake should generate out of it and so on. CMake will read the instructions in it and will produce the desired output. This is done by the so-called <strong>generators</strong>, CMake components responsible for creating the build system files.</p>
+<p>Another nice CMake feature is the so-called <strong>out-of-source build</strong>. Any file required for the final build, executables included, will be stored in a separated build directory (usually called <code>build/</code>). This prevents cluttering up the source directory and makes it easy to start over again: just remove the build directory and you are done.</p>
+<h2>A toy project to work with</h2>
+<p>For this introduction I will be using a dummy C++ project made up of few source files:</p>
+<pre><code>myApp/
+    src/
+        engine.hpp
+        engine.cpp
+        utils.hpp
+        utils.cpp
+        main.cpp
+</code></pre>
+<p>To make things more interesting, later on I will spice up the project with an external dependency and some parameters to pass at build stage to perform conditional compilation. But first let's add a <code>CMakeLists.txt</code> file and write something meaningful in it.</p>
+<h2>Understanding the <code>CMakeLists.txt</code> file</h2>
+<p>A modern CMake's <code>CMakeLists.txt</code> is a collection of <strong>targets</strong> and <strong>properties</strong>. A target is a job of the building process or, in other words, a desired outcome. In our example, we want to build the source code into a binary executable: that's a target. Targets have properties: for example the source files required to compile the executable, the compiler options, the dependencies and so on. In CMake you define targets and then add the necessary properties to them.</p>
+<p>Let's start off by creating the <code>CMakeLists.txt</code> file in the project directory, outside the <code>src/</code> directory. The folder will look like this:</p>
+<pre><code>myApp/
+    src/
+        engine.hpp
+        engine.cpp
+        utils.hpp
+        utils.cpp
+        main.cpp
+    CMakeLists.txt
+</code></pre>
+<p>Then open the <code>CMakeLists.txt</code> file with the editor of your choice and start editing it.</p>
+<h2>Define the CMake version</h2>
+<p>A <code>CMakeLists.txt</code> file always starts with the <a href="https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html"><code>cmake_minimum_required()</code></a> command, which defines the CMake version required for the current project. This must be the first thing inside a <code>CMakeLists.txt</code> file and it looks like this:</p>
+<pre><code>cmake_minimum_required(VERSION &lt;version-number&gt;)
+</code></pre>
+<p>where <code>&lt;version-number&gt;</code> is the desired CMake version you want to work with. Modern CMake starts from version 3.0.0 onwards: the general rule is to use a version of CMake that came out after your compiler, since it needs to know compiler flags, etc, for that version. Generating the project with a CMake older than the required version will result in an error message.</p>
+<h2>Set the project name</h2>
+<p>The second instruction a <code>CMakeLists.txt</code> file must contain is the project name, defined by the <a href="https://cmake.org/cmake/help/latest/command/project.html"><code>project()</code></a> command. This command may take multiple options such as the version number, the description, the homepage URL and much more. The full list is available in the documentation page. A pretty useful one is the programming language the project is written in, specified with the <code>LANGUAGES</code> flag. So in our example:</p>
+<pre><code>project(myApp
+    VERSION 1.0
+    DESCRIPTION "A brief CMake experiment"
+    LANGUAGES CXX)
+</code></pre>
+<p>where <code>CXX</code> stands for C++.</p>
+<h2>Define the executable target</h2>
+<p>We are about to add our first CMake target: the <em>executable</em>. Defined by the <a href="https://cmake.org/cmake/help/latest/command/add_executable.html"><code>add_executable()</code></a> command, it tells CMake to create an executable from a list of source files. Suppose we want to call it <code>myApp</code>, the command would look like this:</p>
+<pre><code>add_executable(myApp
+    src/engine.hpp
+    src/engine.cpp
+    src/utils.hpp
+    src/utils.cpp
+    src/main.cpp)
+</code></pre>
+<p>CMake is smart enough to construct the filename according to the target platform conventions: <code>myApp.exe</code> on Windows, <code>myApp</code> on macOS and Linux and so on.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Set some target properties</h2>
+<p>As said earlier, targets have properties. They are set by a bunch of commands that start with the <code>target_</code> suffix. These commands also require you to define the <strong>scope</strong>: how properties should propagate when you include the project into other CMake-based parent projects. Since we are working on a binary executable (not a library), nobody will include it anywhere so we can stick to the default scope called <code>PRIVATE</code>. In the future I will probably write another article about CMake libraries to fully cover this topic.</p>
+<h3>Set the C++ standard in use</h3>
+<p>Let's assume our dummy project is written in modern C++20: we have to instruct the compiler to act accordingly. For example, on Linux it would mean to pass the <code>-stdc++=20</code> flag to GCC. CMake takes care of it by setting a property on the <code>myApp</code> target with the <a href="https://cmake.org/cmake/help/latest/command/target_compile_features.html"><code>target_compile_features()</code></a> command, as follows:</p>
+<pre><code>target_compile_features(myApp PRIVATE cxx_std_20)
+</code></pre>
+<p>The full list of available C++ compiler features is available <a href="https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES">here</a>.</p>
+<h3>Set some hardcoded preprocessor flags</h3>
+<p>Let's also assume that our project wants some additional preprocessor flags defined in advance, something like <code>USE_NEW_AUDIO_ENGINE</code>. It's a matter of setting another target property with the <a href="https://cmake.org/cmake/help/latest/command/target_compile_definitions.html"><code>target_compile_definitions()</code></a> command:</p>
+<pre><code>target_compile_definitions(myApp PRIVATE USE_NEW_AUDIO_ENGINE)
+</code></pre>
+<p>The command will take care of adding the <code>-D</code> part for you if required, so no need for it.</p>
+<h3>Set compiler options</h3>
+<p>Enabling compiler warnings is considered a good practice. On GCC I usually go with the common triplet <code>-Wall -Wextra -Wpedantic</code>. Such compiler flags are set in CMake with the
+<a href="https://cmake.org/cmake/help/latest/command/target_compile_options.html"><code>target_compile_options()</code></a> command:</p>
+<pre><code>target_compile_options(myApp PRIVATE -Wall -Wextra -Wpedantic)
+</code></pre>
+<p>However, this is not 100% portable. In Microsoft's Visual Studio for example, compiler flags are passed in a completely different way. The current setup works fine on Linux, but it's still not cross-platform: we will see how to improve it in a few paragraphs.</p>
+<h2>Running CMake to build the project</h2>
+<p>At this point the project is kind of ready to be built. The easiest way to do it is by invoking the <a href="https://cmake.org/cmake/help/latest/manual/cmake.1.html"><code>cmake</code></a> executable from the command line: this is what I will do in the rest of this article. A graphical wizard is also available, which is usually the preferred way on Windows: the <a href="https://cmake.org/runningcmake/">official documentation</a> covers it in depth. On Unix <a href="https://cmake.org/cmake/help/latest/manual/ccmake.1.html"><code>ccmake</code></a> is also available: same thing for Windows but with a text-based interface.</p>
+<p>As said earlier, CMake supports out-of-source builds, so the first thing to do is to create a directory — sometimes called <code>build</code> but the name is up to you — and go in there. The project folder will now look like this:</p>
+<pre><code>myApp/
+    build/
+    src/
+        engine.hpp
+        engine.cpp
+        utils.hpp
+        utils.cpp
+        main.cpp
+    CMakeLists.txt
+</code></pre>
+<p>From inside the new folder invoke the CMake as follows:</p>
+<pre><code>cmake ..
+</code></pre>
+<p>This will instruct CMake to read the <code>CMakeLists.txt</code> file from above, process it and churn out the result in the <code>build/</code> directory. Once completed, you will find your generated project files in there. For example, assuming I'm running CMake on Linux, my <code>build/</code> directory will contain a <code>Makefile</code> ready to be run.</p>
+<p>What we have seen so fare is a barebone yet working CMake configuration. We can do better, though: keep reading for additional improvements.</p>
+<h2>Add multiplatform support: Linux, Windows and macOS</h2>
+<p>CMake gives you the ability to detect which platform you are working on and act accordingly. This is done by inspecting <code>CMAKE_SYSTEM_NAME</code>, one of the many variables that CMake defines internally. CMake also supports <a href="https://cmake.org/cmake/help/latest/command/if.html">conditionals</a>, that is the usual if-else combination. With this tools in place, the task is pretty easy. For example, assuming we want to fix the portability issue we had before with the compiler options:</p>
+<pre><code>if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_compile_options(myApp PRIVATE /W4)
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_options(myApp PRIVATE -Wall -Wextra -Wpedantic)
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # other macOS-specific flags for Clang
+endif()
+</code></pre>
+<p>Notice how <code>STREQUAL</code> is the CMake way for comparing strings. A list of possible <code>CMAKE_SYSTEM_NAME</code> values is available <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-To-Write-Platform-Checks#cmake-system">here</a>. You can also check for additional information such as the operating system version, the processor name and so on: full list <a href="https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html#id2">here</a>.</p>
+<h2>Passing command line variables to CMake</h2>
+<p>In our current configuration we have a hardcoded preprocessor definition: <code>USE_NEW_AUDIO_ENGINE</code>. Why not giving users the ability to enable it optionally while invoking CMake? You can do it by adding the <a href="https://cmake.org/cmake/help/latest/command/option.html"><code>option()</code></a> command anywhere in the <code>CMakeLists.txt</code> file. The syntax is the following:</p>
+<pre><code>option(&lt;variable&gt; "&lt;help_text&gt;" [value])
+</code></pre>
+<p>The optional <code>[value]</code> can be <code>ON</code> or <code>OFF</code>. If omitted, <code>OFF</code> is used. This is how it would look like in our dummy project:</p>
+<pre><code>option(USE_NEW_AUDIO_ENGINE "Enable new experimental audio engine" OFF)
+</code></pre>
+<p>To use it, just run CMake as follows:</p>
+<pre><code>cmake -DUSE_NEW_AUDIO_ENGINE=ON ..
+</code></pre>
+<p>or:</p>
+<pre><code>cmake -DUSE_NEW_AUDIO_ENGINE=OFF ..
+</code></pre>
+<p>This is also how <a href="https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html">internal CMake variables</a> and other options are passed from the <code>cmake</code> executable. More generally:</p>
+<pre><code>cmake [options and flags here] &lt;path to CMakeLists.txt&gt;
+</code></pre>
+<h2>Debug versus release builds</h2>
+<p>Sometimes you want to build an executable with debugging information and optimizations turned off for testing purposes. Some other times an optimized build ready for release is just fine. CMake supports the following build types:</p>
+<ul>
+<li><strong>Debug</strong> — debugging information, no optimization;</li>
+<li><strong>Release</strong> —  no debugging information and full optimization;</li>
+<li><strong>RelWithDebInfo</strong> — same as Release, but with debugging information;</li>
+<li><strong>MinSizeRel</strong> — a special Release build optimized for size.</li>
+</ul>
+<p>How build types are handled depends on the generator that is being used. Some are <em>multi-configuration</em> generators (e.g. <a href="https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#visual-studio-generators">Visual Studio Generators</a>): they will include all configurations at once and you can select them from your IDE.</p>
+<p>Some are <em>single-configuration</em> generators instead (e.g. <a href="https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html#makefile-generators">Makefile Generators</a>): they generate one output file (e.g. one Makefile) per build type. So you have to tell CMake to generate a specific configuration by passing it the <code>CMAKE_BUILD_TYPE</code> variable. For example:</p>
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Debug ..
+</code></pre>
+<p>In such case it's useful to have multiple build directories, one for each configuration: <code>build/debug/</code>, <code>build/release/</code> and so on.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Dependency management</h2>
+<p>Real world programs often depend on external libraries but C++ still lacks of a good package manager. Luckily, CMake can help in multiple ways. What follows is a brief overview of the commands available in CMake for dependency management, pretending that our project depends on SDL (a cross-platform development library).</p>
+<h3>1: the <code>find_library()</code> command</h3>
+<p>The idea here is to instruct CMake to search the system for the required library and then link it to the executable if found. The search is performed by the <a href="https://cmake.org/cmake/help/latest/command/find_library.html"><code>find_library()</code></a> command: it takes the name of the library to look for and a variable that will be filled with the library path, if found. For example:</p>
+<pre><code>find_library(LIBRARY_SDL sdl)
+</code></pre>
+<p>You then check the correctness of <code>LIBRARY_SDL</code> and then pass it to <a href="https://cmake.org/cmake/help/latest/command/target_link_libraries.html"><code>target_link_libraries()</code></a>. This command is used to specify the libraries or flags to use when linking the final executable. Something like this:</p>
+<pre><code>if (LIBRARY_SDL)
+    target_link_libraries(myApp PRIVATE ${LIBRARY_SDL})
+else()
+    # throw an error or enable compilation without the library
+endif()
+</code></pre>
+<p>Notice the use of the <code>${...}</code> syntax to grab the variable content and use it as a command parameter.</p>
+<h3>2: the <code>find_package()</code> command</h3>
+<p>The <a href="https://cmake.org/cmake/help/latest/command/find_package.html"><code>find_package()</code></a> command is like <code>find_library()</code> on steroids. With this command you are using special CMake <em>modules</em> that help in finding various well-known libraries and packages. Such modules are provided by the library authors or CMake itself (and you can also <a href="https://bastian.rieck.me/blog/posts/2018/cmake_tips/">write your own</a>). You can see the list of available modules on your machine by running <code>cmake --help-module-list</code>. Modules that start with the <code>Find</code> suffix are used by the <code>find_package()</code> command for its job. For example, the CMake version we are targeting is shipped with the <code>FindSDL</code> module, so it's just a matter of invoking it as follows:</p>
+<pre><code>find_package(SDL)
+</code></pre>
+<p>Where <code>SDL</code> is a variable defined by the <code>FindSDL</code> module. If the library is found, the module will define some additional variables to be used in your CMake script as shown in the previous method. If you can, always prefer this method over <code>find_library()</code>.</p>
+<h3>3: the <code>ExternalProject</code> module</h3>
+<p>The two previous commands assume the library is already available and compiled somewhere in your system. The <a href="https://cmake.org/cmake/help/latest/module/ExternalProject.html"><code>ExternalProject</code></a> module follows a different approach: it downloads, builds and prepares the library for use in your CMake project. <code>ExternalProject</code> can also interface with popular version control systems such as Git, Mercurial and so on. By default it assumes the dependency to be a CMake project but you can easily pass custom build instructions if necessary.</p>
+<p>Using this module is about calling the <code>ExternalProject_Add(&lt;name&gt; [&lt;option&gt;...])</code> command, something like this:</p>
+<pre><code>include(ExternalProject) # Needs to be included first
+ExternalProject_Add(sdl
+    GIT_REPOSITORY https://github.com/SDL-mirror/SDL.git
+)
+</code></pre>
+<p>This will download the SDL source code from the GitHub repository, run CMake on it — SDL is a CMake project — and then build it into a library ready to be linked. By default the artifacts will be stored in the build directory.</p>
+<p>One thing to keep in mind: the download step is performed when you <em>build</em> the project (e.g. when invoking <code>make</code> on Linux), so CMake is not aware of the library presence while it <em>generates</em> the project (e.g. when you invoke the <code>cmake</code> command). The consequence is that you can't obtain the right path and flags for your library with commands like <code>find_library()</code> or <code>find_package()</code>. One way is to assume that the dependency is already in place because it will be downloaded and built sooner or later, so you just pass its full path to <code>target_link_libraries()</code> instead of a variable as we did before.</p>
+<h3>4: the <code>FetchContent</code> module (CMake 3.14+)</h3>
+<p>This module is based on the previous one. The difference here is that <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html"><code>FetchContent</code></a> downloads the source code in advance while <em>generating</em> the project. This lets CMake know that the dependency exists and to treat it as a child project. A typical usage looks like this:</p>
+<pre><code>include(FetchContent) # Needs to be included first
+FetchContent_Declare(sdl
+  GIT_REPOSITORY https://github.com/SDL-mirror/SDL.git
+)
+FetchContent_MakeAvailable(sdl)
+</code></pre>
+<p>In words: you first declare what you want to download with <code>FetchContent_Declare</code>, then you include the dependency with <code>FetchContent_MakeAvailable</code> to set up your project for the required library. The dependency will be automatically configured and compiled while building the final executable, before the linkage.</p>
+<p>The <code>FetchContent</code> module assumes CMake-based dependencies. If so, including it in your project is as easy as seen above. Otherwise you need to explicitly tell CMake how to compile it, for example with the <a href="https://cmake.org/cmake/help/latest/command/add_custom_target.html"><code>add_custom_target()</code></a> command. More on this in future episodes.</p>
+<p>As you can see, there are multiple ways to deal with external dependencies in CMake. Choosing the right one really depends on your taste and your project requisites. CMake can also interface with external package managers such as <a href="https://github.com/microsoft/vcpkg">Vcpkg</a>, <a href="https://conan.io/">Conan</a> and <a href="https://cliutils.gitlab.io/modern-cmake/chapters/projects/submodule.html">existing git submodules</a> directly.</p>
+<h2>Read more</h2>
+<p>In this article I've just scratched the surface of the huge CMake universe, while there are tons of interesting features that deserve a mention: <a href="https://cmake.org/cmake/help/latest/command/macro.html">macros</a> and <a href="https://cmake.org/cmake/help/latest/command/function.html">functions</a> to write reusable CMake blocks; <a href="https://cmake.org/cmake/help/latest/command/set.html">variables</a> and <a href="https://cmake.org/cmake/help/latest/command/list.html">lists</a>, useful for storing and manipulating data; <a href="https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html">generator expressions</a> to write complex generator-specific properties; continuous integration test support with <a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">ctest</a>. Stay tuned for more!</p>
+<h2>Sources</h2>
+<p><a href="https://www.jetbrains.com/help/clion/quick-cmake-tutorial.html">CLion manual — Quick CMake tutorial</a><br>
+<a href="http://www.saoe.net/blog/using-cmake-with-external-projects/">saoe.net — Using CMake with External Projects</a><br>
+<a href="https://cgold.readthedocs.io/en/latest/">CGold: The Hitchhiker’s Guide to the CMake</a><br>
+<a href="https://cliutils.gitlab.io/modern-cmake/">An Introduction to Modern CMake</a><br>
+<a href="https://mirkokiefer.com/cmake-by-example-f95eb47d45b1">Mirko Kiefer’s blog — CMake by Example</a><br>
+<a href="https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/">Pablo Arias — It's Time To Do CMake Right</a><br>
+<a href="https://kubasejdak.com/modern-cmake-is-like-inheritance">Kuba Sejdak — Modern CMake is like inheritance</a><br>
+<a href="https://preshing.com/20170511/how-to-build-a-cmake-based-project/">Preshing on Programming — How to Build a CMake-Based Project</a><br>
+<a href="https://www.youtube.com/watch?v=HPMvU64RUTY">Jason Turner — C++ Weekly - Ep 78 - Intro to CMake</a><br>
+<a href="https://www.youtube.com/watch?v=YbgH7yat-Jo">Jason Turner — C++ Weekly - Ep 208 - The Ultimate CMake / C++ Quick Start</a><br>
+<a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-To-Write-Platform-Checks">How To Write Platform Checks</a><br>
+<a href="https://cmake.org/cmake/help/latest/guide/using-dependencies/index.html">CMake manual — Using Dependencies Guide</a><br>
+<a href="https://foonathan.net/2016/07/cmake-dependency-handling/">foonathan::​blog() — Tutorial: Easy dependency management for C++ with CMake and Git</a><br>
+<a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-To-Find-Libraries#using-external-libraries-that-cmake-doesnt-yet-have-modules-for">Using external libraries that CMake doesn't yet have modules for</a><br>
+<a href="https://stackoverflow.com/questions/23832339/package-vs-library">StackOverflow — Package vs Library</a><br>
+<a href="https://stackoverflow.com/questions/26243169/cmake-target-include-directories-meaning-of-scope">StackOverflow — CMake target_include_directories meaning of scope</a><br>
+<a href="https://stackoverflow.com/questions/63667653/how-to-build-an-external-library-downloaded-with-cmake-fetchcontent">StackOverflow — How to build an external library downloaded with CMake FetchContent?</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/cmake">CMake</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">linhr</span> on 
+							<span class="date">September 15, 2020 at 16:21</span>
+						</div> 
+						<div class="body">good jop!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">fred</span> on 
+							<span class="date">September 22, 2020 at 18:36</span>
+						</div> 
+						<div class="body">One of the best CMake articles I have read in the last years. Thanks for that!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mathis</span> on 
+							<span class="date">September 25, 2020 at 16:48</span>
+						</div> 
+						<div class="body">Thank you ! This is the most detailed and explained step by step up to date cmake walkthrough I have seen so far !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vit</span> on 
+							<span class="date">September 26, 2020 at 12:23</span>
+						</div> 
+						<div class="body">Nice tutorial. Definitely bookmarking this for easy access.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">slbtty</span> on 
+							<span class="date">October 09, 2020 at 02:46</span>
+						</div> 
+						<div class="body">Thanks! clear and concise.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">dim</span> on 
+							<span class="date">January 07, 2021 at 23:47</span>
+						</div> 
+						<div class="body">Thank you!<br />
+<br />
+Out of all cmake introduction guides i've read yours is the easiest to follow and understand.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">am</span> on 
+							<span class="date">January 13, 2021 at 03:46</span>
+						</div> 
+						<div class="body">gosh, i’ve really found the clearest intro. thanks!!! waiting for new posts:)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">cdan</span> on 
+							<span class="date">January 30, 2021 at 00:33</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elias</span> on 
+							<span class="date">March 04, 2021 at 19:42</span>
+						</div> 
+						<div class="body">Man, I have never read a clear and concise tutorial on CMake. You did a fantastic job.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Josué Andrade Gomes</span> on 
+							<span class="date">March 27, 2021 at 23:41</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kumar</span> on 
+							<span class="date">July 23, 2021 at 17:05</span>
+						</div> 
+						<div class="body">Thanks for this informative article.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vintage Wander</span> on 
+							<span class="date">September 16, 2021 at 21:48</span>
+						</div> 
+						<div class="body">Awesome tutorial, concise information and easy to follow! Hoping to see more cmake contents from you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sm</span> on 
+							<span class="date">November 11, 2021 at 15:15</span>
+						</div> 
+						<div class="body">Thanks a lot!<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Richard</span> on 
+							<span class="date">January 30, 2022 at 11:03</span>
+						</div> 
+						<div class="body">Thank you for this excellent introduction to CMake which makes it so easy to learn the essential details you need to know.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">James</span> on 
+							<span class="date">June 05, 2022 at 07:34</span>
+						</div> 
+						<div class="body">Appreciate your time for writing this up!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sajid</span> on 
+							<span class="date">July 13, 2022 at 16:40</span>
+						</div> 
+						<div class="body">this is awesome! thanks a lot</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">RHarper</span> on 
+							<span class="date">August 24, 2022 at 00:13</span>
+						</div> 
+						<div class="body">I have been using CMake for a few months now without understanding (monkey see monkey do). This is a great tutorial to get underway to understand the C/C++ devlopment sequence in Linux. Thank you very much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">happy_reader</span> on 
+							<span class="date">July 07, 2023 at 12:02</span>
+						</div> 
+						<div class="body">Thanks for this great introduction. I'm starting to understand what I blindly copied from the internet, and it feels great.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">G.Man</span> on 
+							<span class="date">July 19, 2023 at 01:31</span>
+						</div> 
+						<div class="body">Thanks for clarifying, love CLion coming from Intellij, maven in comparison is straight forward, but CMake is an obstacle larger than learning C++ for me. <br />
+Thanks! looking forward for feature episodes!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Phill</span> on 
+							<span class="date">October 30, 2023 at 04:23</span>
+						</div> 
+						<div class="body">I've been putting off learning cmake for ages because I thought it would be too difficult. I was hitting all kinds of build system errors manually writing a makefile. This has got me up and running with my hobby project in about 20 minutes and all the errors have gone. Genuinely one of the best beginner introductions I've come across</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

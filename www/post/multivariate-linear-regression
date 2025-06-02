@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Multivariate linear regression - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="How to upgrade a linear regression algorithm from one to many input variables.">
+		<meta name="keywords" content="machine learning,linear regression">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Multivariate linear regression" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/multivariate-linear-regression" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="How to upgrade a linear regression algorithm from one to many input variables." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/multivariate-linear-regression" />
+<meta name="twitter:title" content="Multivariate linear regression" />
+<meta name="twitter:description" content="How to upgrade a linear regression algorithm from one to many input variables." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on March 05, 2017 
+								• updated on March 05, 2017  
+								• ID 50 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Multivariate linear regression</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>How to upgrade a linear regression algorithm from one to many input variables.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-machine-learning">Introduction to machine learning</a>
+							</span> —
+							<span class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/linear-regression-one-variable">Linear regression with one variable</a>
+							</span> —
+							<span class="intro">Finding the best-fitting straight line through points of a data set.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-function">The gradient descent function</a>
+							</span> —
+							<span class="intro">How to find the minimum of a function using an iterative algorithm.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-action">The gradient descent in action</a>
+							</span> —
+							<span class="intro">It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a>
+							</span> —
+							<span class="intro">A collection of practical tips and tricks to improve the gradient descent process and make it easier to understand.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a>
+							</span> —
+							<span class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a>
+							</span> —
+							<span class="intro">Preparing the logistic regression algorithm for the actual implementation.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/problem-overfitting-machine-learning-algorithms">The problem of overfitting in machine learning algorithms</a>
+							</span> —
+							<span class="intro">Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>Up to now I've played with linear regression based on a single variable. In the original version of the algorithm I had a single input feature [texi]x[texi] (the size of the house in <a href="https://www.internalpointers.com/post/linear-regression-one-variable">the house pricing problem</a>) that I used to predict the output [texi]y[texi] (the price of the house). I eventually ended up with a hypothesis function for such problem:</p>
+<p>[tex]
+h_\theta(x) = \theta_0 + \theta_1 x
+[tex]</p>
+<p>It's now time to introduce a more powerful version that works with multiple variables called <strong>multivariate linear regression</strong>, where the term <strong>multivariate</strong> is a fancy word for <em>more than one variable</em>.</p>
+<h2>The house pricing problem with multiple features</h2>
+<p>You surely need more than one feature in order to better predict the price of a house, like for example the number of rooms, the number of floors, the age of the house itself and so on. Those are your new input features [texi]x[texi]. Being more than one, we need to update the notation a little bit.</p>
+<table>
+<thead><tr>
+<th style="text-align:center">size</th>
+<th style="text-align:center"># of bedrooms</th>
+<th style="text-align:center"># of floors</th>
+<th>age</th>
+<th>price($)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2104</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+<td>40</td>
+<td>460,000</td>
+</tr>
+<tr>
+<td style="text-align:center">1416</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td>30</td>
+<td>230,000</td>
+</tr>
+<tr>
+<td style="text-align:center">1534</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td>30</td>
+<td>315,000</td>
+</tr>
+<tr>
+<td style="text-align:center">...</td>
+<td style="text-align:center">...</td>
+<td style="text-align:center">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<h3>Improving the notation</h3>
+<p>This is what I'm going to use:</p>
+<ul>
+<li>[texi]n[texi] — number of input features;</li>
+<li>[texi]m[texi] — number of training examples;</li>
+<li>[texi]x_n[texi] — [texi]n[texi]-th input feature;</li>
+<li>[texi]x^{(i)}[texi] — input feature of [texi]i[texi]-th training example;</li>
+<li>[texi]x^{(i)}_j[texi] — value of feature [texi]j[texi] in [texi]i[texi]-th training example;</li>
+</ul>
+<p>Let me explain it a little bit. The lower-case [texi]n[texi] is the number of input features, the number of columns in the table above. There are four input features here, so [texi]n = 4[texi]. As in the univariate version, [texi]m[texi] denotes the number of training examples, that is the number of rows in the table above.</p>
+<p>The [texi]n[texi]-th input feature is written as [texi]x_n[texi]. For example: [texi]x_1[texi] is the size of the house, [texi]x_4[texi] is the age of the house. The output variable is still one, so it remains [texi]y[texi] with no subscript.</p>
+<p>I will be writing [texi]x^{(i)}[texi] to refer to all the values of a specific training example, i.e. the [texi]i[texi]-th row in the table. Being more than one input values, the result turns out to be a vector. For example, I grab the values of the third training example:</p>
+<p><span>
+[tex]
+\vec{x}^{(3)} = 
+\begin{bmatrix}
+  1534 \\ 3 \\ 2 \\ 30 
+\end{bmatrix}
+[tex] 
+</span></p>
+<p>Being [texi]x^{(i)}[texi] a vector, I'll use [texi]x^{(i)}_{j}[texi] to refer to a specific value of that vector. For example [texi]x^{(3)}_4 = 30[texi].</p>
+<h2>A multivariate version of the hypothesis function</h2>
+<p>The original, univariate hypothesis function was like:</p>
+<p>[tex]
+h_\theta(x) = \theta_0 + \theta_1 x
+[tex]</p>
+<p>with one input variable [texi]x[texi]. Obviously it has to be updated in order to work with multiple inputs. It's going to be:</p>
+<p>[tex]
+h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + ... + \theta_n x_n 
+[tex]</p>
+<p>Quite annoying when you have tons of parameters, isn't it? We can simplify it. First of all let me add a fake value [texi]x_0 = 1[texi]:</p>
+<p>[tex]
+h_\theta(x) = \theta_0 x_0 + \theta_1 x_1 + \theta_2 x_2 + ... + \theta_n x_n 
+[tex]</p>
+<p>The magic is going to happen, thanks to that trick: any linear algebra wizard will now recognize the formula above as the <strong>inner product</strong> between two vectors [texi]\vec{\theta}[texi] and [texi]\vec{x}[texi]. In particular:</p>
+<p><span>
+[tex]
+\begin{equation}
+\vec{\theta} = 
+\begin{bmatrix}
+  \theta_0 \\ \theta_1 \\ \theta_2 \\ \vdots \\ \theta_n 
+\end{bmatrix}
+\qquad
+\vec{x} = 
+\begin{bmatrix}
+  x_0 \\ x_1 \\ x_2 \\ \vdots \\ x_n 
+\end{bmatrix}
+\end{equation}
+[tex]
+</span></p>
+<p>By definition of the inner product, the first argument ([texi]\vec{\theta}[texi]) must be a row vector. However our [texi]\vec{\theta}[texi] is a column vector. That's not a problem: just <strong>transpose</strong> it, that is make it a row (lay it down). A transposed vector is written as [texi]\vec{\theta}^\top[texi], so I'm ready to beautifully compress the hypothesis function as follows:</p>
+<p><span>
+[tex]
+h_\theta(x) = \vec{\theta}^{\top} \vec{x}
+[tex]
+</span></p>
+<p>This notation will make the implementation way easier: computing the hypothesis function it's now just a matter of an inner product between two vectors, a simple task you can accomplish with any mathematical package of your favorite programming language.</p>
+<h2>A multivariate version of the gradient descent function</h2>
+<p>I've updated the hypothesis function to work with multiple input parameters. Both the gradient descent function and the cost function need some tweaks as well.</p>
+<h3>Improving the cost function</h3>
+<p>We know that the cost function takes in input all the parameters [texi]\theta_0, \theta_1, ... \theta_n[texi], but let's now plug in the vector [texi]\vec{\theta}[texi] instead of writing each parameter separately:</p>
+<p><span>
+[tex]
+J(\vec{\theta}) = \frac{1}{2m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2
+[tex]
+</span></p>
+<p>It's just a matter of notation, as you may see. The equation stays the same.</p>
+<h3>Improving the gradient descent function</h3>
+<p>Now that we have a compact cost function we can simplify the look of the gradient descent formula, which becomes:</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\vec{\theta}) &
+\newline \rbrace \end{align*}
+[tex]
+</span></p>
+<p>In particular we have a slightly different kind of derivative, that is:</p>
+<p><span>
+[tex]
+\frac{\partial}{\partial \theta_j} J(\vec{\theta}) = \frac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) x^{(i)}_j
+[tex]
+</span></p>
+<p>As always I lift you from the burden of computing the derivative step by step. So let me re-write the formula with all the pieces glued together:</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_j := \theta_j - \alpha \frac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) x^{(i)}_j &
+\newline \rbrace \end{align*}
+[tex]
+</span></p>
+<p>Remember to compute each value separately by storing [texi]\theta[texi]s in temporary variables, as we did for the univariate version. The unrolled loop would look like the following:</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_0^{(i)} \newline \; & 
+\theta_1 := \theta_1 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_1^{(i)} \newline \; & 
+\theta_2 := \theta_2 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_2^{(i)} \newline & 
+\cdots 
+\newline \rbrace \end{align*}
+[tex]
+</span></p>
+<p>In conclusion, adding the little trick of [texi]x_0 = 1[texi] makes the notation easier to read and more compact. You still have to loop through each [texi]\theta_j[texi] in the gradient descent formula until you reach convergence, but the outcome is a practical vector. Plug it into the hypothesis function, compute the inner product as seen above and you have a working implementation of the multivariate linear regression.</p>
+<h2>Sources</h2>
+<p>Khan Academy - <em>Vector dot product and vector length</em> (<a href="https://www.youtube.com/watch?v=WNuIhXo39_k">video</a>)<br>
+Stat Trek - <em>Vector Multiplication</em> (<a href="http://stattrek.com/matrix-algebra/vector-multiplication.aspx">link</a>)<br>
+Machine Learning @ Coursera - <em>Multiple Features</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/6Nj1q/multiple-features">link</a>)<br>
+Machine Learning @ Coursera - <em>Gradient Descent for Multiple Variables</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/Z9DKX/gradient-descent-for-multiple-variables">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/machine-learning">machine learning</a>
+				 • 								<a class="ip-tag" href="/tag/linear-regression">linear regression</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/gradient-descent-action">The gradient descent in action</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

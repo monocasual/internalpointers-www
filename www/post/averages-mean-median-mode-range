@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Averages: mean, median, mode, range - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Basic statistical concepts.">
+		<meta name="keywords" content="mean,median,mode,range,set">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Averages: mean, median, mode, range" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/averages-mean-median-mode-range" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Basic statistical concepts." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/averages-mean-median-mode-range" />
+<meta name="twitter:title" content="Averages: mean, median, mode, range" />
+<meta name="twitter:description" content="Basic statistical concepts." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 31, 2015 
+								• updated on July 31, 2015  
+								• ID 9 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Averages: mean, median, mode, range</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Basic statistical concepts.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>This is a naive collection of mathematical tools for analyzing data and computing <em>averages</em> on it. You have a <em>set</em> of numbers, on which you apply some operations.</p>
+<h2>Mean</h2>
+<p>The mean is the average of all the numbers in your set. Add up all the numbers and divide the sum by the size of the set.</p>
+<p>§
+x̄ = (x_1 + x_2 + ... + x_n) / n
+§</p>
+<p>The line over <em>x</em> is a <em>bar</em> (aka <em>overbar</em>): a horizontal line written above a mathematical symbol to give it some special meaning. In this case it represents the mean of the set <em>x</em>. Another way of writing it:</p>
+<p>§
+x̄ = 1/n sum_{i=1}^{n} x_i
+§</p>
+<p>For example, I calculate the mean of the following set <em>x</em>:</p>
+<p>§
+x = {1, 5, 4, 3, 2, 8}
+§</p>
+<p>§
+x̄ = (1 + 5 + 4 + 3 + 2 + 8) / 6 = 3.8333...
+§</p>
+<h2>Median</h2>
+<p>The median is the number in the middle of you <em>sorted</em> set. Yes, the set must be sorted first. If the set has a even amount of numbers, you can't pick the central point. In such case the median is the average of the two middle values. Example:</p>
+<p>§
+x = {1, 2, 3, 4, 5, 8}
+§</p>
+<p>§
+"median(x)" = (4 + 3) / 2 = 3.5
+§</p>
+<h2>Mode</h2>
+<p>The mode is the number that occurs more often in your set. Example:</p>
+<p>§
+x = {1, 2, 2, 3, 4, 5, 8}
+§</p>
+<p>§
+"mode(x)" = 2
+§</p>
+<p>A set can have more than one mode:</p>
+<p>§
+x = {1, 2, 2, 3, 4, 5, 8, 10, 10, 10}
+§</p>
+<p>§
+"mode(x)" = 2, 10
+§</p>
+<p>If no number is repeated, then there is no mode for the set.</p>
+<h2>Range</h2>
+<p>The range is the difference between the highest and lowest values of a set. Example:</p>
+<p>§
+x = {1, 2, 3, 4, 5, 8}
+§</p>
+<p>§
+"range(x)" = 8 - 1 = 7
+§</p>
+<h2>Sources</h2>
+<p>Wolfram Mathworld - <em>Bar</em> (<a href="http://mathworld.wolfram.com/Bar.html">link</a>)<br>
+Cs.mtu.edu - <em>Computing the Median</em> (<a href="http://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap08/median.html">link</a>)<br>
+Mathisfun.com - <em>How to Find the Median Value</em> (<a href="https://www.mathsisfun.com/median.html">link</a>)<br>
+Mathisfun.com - <em>The Range (Statistics)</em> (<a href="https://www.mathsisfun.com/data/range.html">link</a>)<br>
+Purplemath.com - <em>Mean, Median, Mode, and Range</em> (<a href="https://www.purplemath.com/modules/meanmode.htm">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/mean">mean</a>
+				 • 								<a class="ip-tag" href="/tag/median">median</a>
+				 • 								<a class="ip-tag" href="/tag/mode">mode</a>
+				 • 								<a class="ip-tag" href="/tag/range">range</a>
+				 • 								<a class="ip-tag" href="/tag/set">set</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

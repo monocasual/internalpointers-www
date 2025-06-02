@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Run painless test suites in Python with Unittest - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A gentle introduction to aggregate tests that will be executed together.">
+		<meta name="keywords" content="Python,unit-test,tdd">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Run painless test suites in Python with Unittest" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/run-painless-test-suites-python-unittest" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A gentle introduction to aggregate tests that will be executed together." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/run-painless-test-suites-python-unittest" />
+<meta name="twitter:title" content="Run painless test suites in Python with Unittest" />
+<meta name="twitter:description" content="A gentle introduction to aggregate tests that will be executed together." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on March 02, 2016 
+								• updated on November 13, 2017  
+								• ID 31 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Run painless test suites in Python with Unittest</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A gentle introduction to aggregate tests that will be executed together.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Writing unit tests in Python is fairly easy, thanks to the well-known <a href="https://docs.python.org/3/library/unittest.html">Unittest</a> module. What I found less obvious was how to organize those tests properly and run them all together.</p>
+<p>Let me begin with a little bit of theory on how that module works and what it expects from your code. I will be using Python 3 for the following tutorial, but everything will work fine also with previous versions.</p>
+<h2>Cases, suites, runners, fixtures</h2>
+<p>The Unittest module borrows four basic concepts from the unit testing philosophy.</p>
+<p>A <strong>text fixture</strong> is a function that contains the preparation of your test environment. Here you usually initialize databases, create files, prepare stuff so that your tests can work properly. Fixtures are also used to clean up the scene once finished.</p>
+<p>A <strong>test case</strong> is a class that represents an individual unit of testing. That's the place where you make sure your code works correctly. It contains fixtures and calls to <a href="https://docs.python.org/3/library/unittest.html#assert-methods">assert methods</a> to check for and report failures.</p>
+<p>A <strong>test suite</strong> is just a bunch of test cases together.</p>
+<p>A <strong>test runner</strong> is a script that takes care of running the test suite.</p>
+<h2>My app needs to be tested</h2>
+<p>Now suppose that you are writing a minimalistic game made of the following objects: Player, Scenario and Thing. You are following a test-driven development so you write tests along the actual code.</p>
+<p>Each test is contained in a module (i.e. a Python file), so you would end up with three modules/files. Let's set up a barebone test case for the Player object: with Unittest it would look something like that:</p>
+<pre><code class="lang-python"># tests/player.py
+
+import unittest
+
+class TestPlayer(unittest.TestCase):
+
+    def setUp(self):
+        ...
+
+    def test_run(self):
+        ...
+
+    def test_attack(self):
+        ...
+
+    def tearDown(self):
+        ...
+</code></pre>
+<p>First of all import the <code>unittest</code> module. That was obvious. The class <code>TestPlayer</code> is the actual test case and follows a naming convention: <code>Test[whatYouWantToTest]</code>. It also extends the <code>unittest.TestCase</code> base object to work: a test case is always created by subclassing the parent class.</p>
+<p>Then, each test case begins and ends with <code>setUp()</code> and <code>tearDown()</code>: those are fixtures. There you put the code that will be executed before and after each test method. They are not mandatory: you can just omit them if you don't need specific initializations or cleanups.</p>
+<p>The "body" of the test case is composed of test methods: <code>test_run</code> and <code>test_attack</code> in the example above. It's the place where you check that your code is running properly, with the aid of the <a href="https://docs.python.org/3/library/unittest.html#assert-methods">assert methods</a>.</p>
+<p>Individual test methods' name must start with the letters <code>test_</code>. That's another naming convention required by the test runner to know which methods are the actual tests. More on that in a couple of seconds.</p>
+<p>Just rinse and repeat the procedure for each class of your game and you eventually end up with several test cases, one for each component. You can then run the test cases one by one by hand, but that would be totally annoying. It's now time to set up a nice test suite and let it work for you on its own.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Organize tests in a test suite</h2>
+<p>The basic idea here is to have a new Python file <code>runner.py</code> alongside your tests that contains our runner. It looks something like the following:</p>
+<pre><code class="lang-python"># tests/runner.py
+import unittest
+
+# import your test modules
+import player
+import scenario
+import thing
+
+# initialize the test suite
+loader = unittest.TestLoader()
+suite  = unittest.TestSuite()
+
+# add tests to the test suite
+suite.addTests(loader.loadTestsFromModule(player))
+suite.addTests(loader.loadTestsFromModule(scenario))
+suite.addTests(loader.loadTestsFromModule(thing))
+
+# initialize a runner, pass it your suite and run it
+runner = unittest.TextTestRunner(verbosity=3)
+result = runner.run(suite)
+</code></pre>
+<p>First of all import your modules containing your tests (<code>player</code>, <code>scenario</code> and <code>thing</code>, remember?). Then initialize the suite and the loader by calling <code>unittest.TestLoader()</code> and <code>unittest.TestSuite()</code>.</p>
+<p>Add your tests to the test suite with <code>suite.addTests(loader.loadTestsFromModule([your-module-here]))</code>, then initialize the test runner and fire it with <code>runner.run(suite)</code>.</p>
+<p>I also set the verbosity level of the test runner to 3: that's how much information you'll see in the console output.</p>
+<p>Launch the script and all your tests will be executed nicely.</p>
+<h2>Sources</h2>
+<p>Python Official Documentation - <em>Unit testing framework</em> (<a href="https://docs.python.org/3.5/library/unittest.html">link</a>)<br>
+Python Testing - <em>unittest introduction</em> (<a href="http://pythontesting.net/framework/unittest/unittest-introduction/">link</a>)<br>
+Wikipedia - <em>Test fixture</em> (<a href="https://en.wikipedia.org/wiki/Test_fixture#Software">link</a>)<br>
+Voidspace - <em>Introduction to unittest</em> (<a href="http://www.voidspace.org.uk/python/articles/introduction-to-unittest.shtml">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/python">Python</a>
+				 • 								<a class="ip-tag" href="/tag/unit-test">unit-test</a>
+				 • 								<a class="ip-tag" href="/tag/tdd">tdd</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">o_rety</span> on 
+							<span class="date">March 26, 2018 at 21:16</span>
+						</div> 
+						<div class="body">Great tutorial. I recommended it on StackOverflow here: https://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-directory-structure?rq=1#comment86001894_2992477</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 27, 2018 at 16:26</span>
+						</div> 
+						<div class="body">@o_rety many thanks for your love!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rita</span> on 
+							<span class="date">May 04, 2018 at 10:45</span>
+						</div> 
+						<div class="body">Can you please show me content present in player,thing modules?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">May 07, 2018 at 10:39</span>
+						</div> 
+						<div class="body">@Rita actually there's not much of interest in there. Player and Thing are just two hypothetical objects from a hypothetical game architecture. Player class manages things like attack(), run(), getLifePoints(), ... while Thing could be thought as a base class for objects, rooms, weapons, power-ups and so on.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">husen</span> on 
+							<span class="date">November 02, 2018 at 16:28</span>
+						</div> 
+						<div class="body">short and simple good explanation!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">loren</span> on 
+							<span class="date">July 09, 2019 at 08:55</span>
+						</div> 
+						<div class="body">very good explained and very helpful. :-)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Larry</span> on 
+							<span class="date">October 07, 2019 at 10:21</span>
+						</div> 
+						<div class="body">Short and sweet. Thanks for this!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Manohar</span> on 
+							<span class="date">November 04, 2019 at 19:57</span>
+						</div> 
+						<div class="body">How you will  be running the runner.py ?<br />
+python -m unittest runner <br />
+or<br />
+python runner.py</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 08, 2019 at 11:10</span>
+						</div> 
+						<div class="body">@Manohar runner.py is a regular script, so `python runner.py` should be enough (I suppose).</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">devi</span> on 
+							<span class="date">November 29, 2019 at 12:57</span>
+						</div> 
+						<div class="body">very good tutorial</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ronak</span> on 
+							<span class="date">June 05, 2020 at 14:27</span>
+						</div> 
+						<div class="body">Very Helpful!<br />
+Thank you!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Siddharth</span> on 
+							<span class="date">January 03, 2021 at 12:01</span>
+						</div> 
+						<div class="body">Thank You!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Peter</span> on 
+							<span class="date">April 07, 2021 at 14:50</span>
+						</div> 
+						<div class="body">Very helpful, I had to search for a solution for a while so I am glad I've your tutorial</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">apb</span> on 
+							<span class="date">September 30, 2021 at 17:58</span>
+						</div> 
+						<div class="body">Thanks a lot, very useful example !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yomi Longe (olonge)</span> on 
+							<span class="date">August 20, 2022 at 00:16</span>
+						</div> 
+						<div class="body">After searing Bing/google for almost an hour, this is by far the best intro to unittest suites I could find.<br />
+<br />
+Simple, clear, concise and immensely useful.<br />
+Many thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Рома</span> on 
+							<span class="date">June 30, 2023 at 09:16</span>
+						</div> 
+						<div class="body">Спасибо большое! Во всех источниках набор собирался из функции addTest, что неудобно.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

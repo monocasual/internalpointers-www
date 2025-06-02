@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Encrypt a file with GnuPG and a keypair - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="GPG (aka GNU Privacy Guard), is a public key cryptography implementation. It allows for the secure transmission of information between parties and can be used to verify that the origin of a message is genuine.">
+		<meta name="keywords" content="gpg,keypair">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Encrypt a file with GnuPG and a keypair" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/encrypt-file-gnupg-and-keypair" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="GPG (aka GNU Privacy Guard), is a public key cryptography implementation. It allows for the secure transmission of information between parties and can be used to verify that the origin of a message is genuine." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/encrypt-file-gnupg-and-keypair" />
+<meta name="twitter:title" content="Encrypt a file with GnuPG and a keypair" />
+<meta name="twitter:description" content="GPG (aka GNU Privacy Guard), is a public key cryptography implementation. It allows for the secure transmission of information between parties and can be used to verify that the origin of a message is genuine." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on August 19, 2015 
+								• updated on August 20, 2015  
+								• ID 11 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Encrypt a file with GnuPG and a keypair</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>GPG (aka GNU Privacy Guard), is a public key cryptography implementation. It allows for the secure transmission of information between parties and can be used to verify that the origin of a message is genuine.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>In this post I want to use the <a href="https://www.gnupg.org/">GnuPG</a> command-line tool to encrypt sensitive data. The procedure requires just the following three basic steps:</p>
+<ol>
+<li>generate a new keypair;</li>
+<li>encrypt the file;</li>
+<li>decrypt the file (for testing purposes).</li>
+</ol>
+<h2>Step 1: generate a new keypair</h2>
+<p>Open a terminal and invoke GPG as follows:</p>
+<pre><code>gpg --gen-key
+</code></pre>
+<p>You will be presented with a list of several options. First of all: what kind of key should we generate?</p>
+<pre><code>Please select what kind of key you want:
+    (1) RSA and RSA (default)
+    (2) DSA and Elgamal
+    (3) DSA (sign only)
+    (4) RSA (sign only)
+Your selection?
+</code></pre>
+<p>Default one (1) is fine for most users (like me). Then, how long the RSA keys should be?</p>
+<pre><code>RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048)
+</code></pre>
+<p>I choose 2048, a default value. The longer the key the more secure it is, but also slower during encryption and decryption.</p>
+<p>Now is time to set an expiration time:</p>
+<pre><code>Please specify how long the key should be valid. 
+    0 = key does not expire 
+    [n]= key expires in n days 
+    [n]w = key expires in n weeks 
+    [n]m = key expires in n months 
+    [n]y = key expires in n years 
+Key is valid for? (0)
+</code></pre>
+<p>0 is good enough for me.</p>
+<p>Now comes the ID part. The user ID is used to associate the key being created with a real person.</p>
+<pre><code>You need a user ID to identify your key; 
+the software constructs the user ID from the Real Name, Comment and Email Address in this form: 
+"Heinrich Heine (Der Dichter) heinrichh@duesseldorf.de"
+</code></pre>
+<p>Finally you have to enter a passphrase, used to unlock the private key. Once done, gpg will generate the keypair based on your computer's entropy. To enhance the level of that entropy, you are advised to perform some work like pressing keys and use the disks. If the process seems to be stuck, you could do:</p>
+<pre><code>find / &gt; /dev/null
+</code></pre>
+<p>to reach the desired level of chaos in your machine.</p>
+<p>Once done, type</p>
+<pre><code>gpg --list-keys
+</code></pre>
+<p>to see the available keypairs in your system. You should see the one we previously generated. In my Linux box the keypairs are stored inside <code>/.gnupg/pubring.gpg</code>.</p>
+<h2>Step 2: encrypt the file</h2>
+<p>Say I have a private file to encrypt. In order to do that, you have to invoke gpg with the <code>--encrypt</code> flag:</p>
+<pre><code>gpg --output [encrypted-file] --encrypt --recipient [your-ID] [original-file]
+</code></pre>
+<p>where <code>[your-ID]</code> is the ID we previously generated during the step 1. You can find your ID by invoking the command <code>gpg --list-keys</code> we have seen before. So for example you could do:</p>
+<pre><code>gpg --output test.txt.gpg --encrypt --recipient johnny test.txt
+</code></pre>
+<h2>Step 3: decrypt the file</h2>
+<p>Decrypt file is dead simple. Just do:</p>
+<pre><code>gpg --output [original-file] --decrypt [encrypted-file]
+</code></pre>
+<p>You will be prompted for the passphrase you chose during the keypair generation. Type it in and you're done!</p>
+<h2>Sources</h2>
+<p>The GNU Privacy Handbook - <em>Generating a new keypair</em> (<a href="https://www.gnupg.org/gph/en/manual/c14.html#AEN25">link</a>)<br>
+ The GNU Privacy Handbook - <em>Encrypting and decrypting documents</em> (<a href="https://www.gnupg.org/gph/en/manual/x110.html">link</a>)<br>
+ Stackoverflow - <em>PGP Asymmetric - Not enough random bytes available</em> (<a href="http://stackoverflow.com/questions/11708334/pgp-asymmetric-not-enough-random-bytes-available-please-do-some-other-work-to">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/gpg">gpg</a>
+				 • 								<a class="ip-tag" href="/tag/keypair">keypair</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

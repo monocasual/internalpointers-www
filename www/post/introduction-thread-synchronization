@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Introduction to thread synchronization - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A look at one of the most popular ways of concurrency control in a multithreaded application.">
+		<meta name="keywords" content="thread,multithreading,concurrency,mutex,semaphore,condition variable">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Introduction to thread synchronization" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-thread-synchronization" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A look at one of the most popular ways of concurrency control in a multithreaded application." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-thread-synchronization" />
+<meta name="twitter:title" content="Introduction to thread synchronization" />
+<meta name="twitter:description" content="A look at one of the most popular ways of concurrency control in a multithreaded application." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on May 10, 2019 
+								• updated on May 05, 2020  
+								• ID 72 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Introduction to thread synchronization</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A look at one of the most popular ways of concurrency control in a multithreaded application.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/gentle-introduction-multithreading">A gentle introduction to multithreading</a>
+							</span> —
+							<span class="intro">Approaching the world of concurrency, one step at a time.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>
+							</span> —
+							<span class="intro">Synchronizing threads at a lower level.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-memory-ordering">Understanding memory reordering </a>
+							</span> —
+							<span class="intro">...and why it matters when writing lock-free multithreading code.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>As seen in <a href="https://www.internalpointers.com/post/gentle-introduction-multithreading">my previous introduction to multithreading</a>, writing concurrent code can be tricky. Two big problems might emerge: data races, when a writer thread modifies the memory while a reader thread is reading it and race conditions, when two or more threads do their job in an unpredictable order. Luckily for us there are several ways to prevent these errors: in this article I will take a look at the most common one known as <strong>synchronization</strong>.</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>What is synchronization</h2>
+<p>Synchronization is a bag of tricks that make sure two or more threads behave themselves. More specifically, synchronization will help you to achieve at least two important features in your multithreaded program:</p>
+<ol>
+<li><p><strong>atomicity</strong> — if your code contains instructions that operate on data shared across multiple threads, an unregulated concurrent access to that data might trigger a data race. The code segment that contains those instructions is called <strong>critical section</strong>. You want to make sure that critical sections are executed <em>atomically</em>: as defined in the previous episode, an <a href="https://www.internalpointers.com/post/gentle-introduction-multithreading#data-races">atomic operation</a> can't be broken into smaller ones, so that while a thread is executing it no other thread can slip through;</p>
+</li>
+<li><p><strong>ordering</strong> — sometimes you want two or more threads to perform their job in a predictable order, or put a restriction on how many threads can access a specific resource. Normally you don't have control over these things, which might be the root cause of race conditions. With synchronization you can orchestrate your threads to perform according to a plan.</p>
+</li>
+</ol>
+<p>Synchronization is implemented through special objects called <strong>synchronization primitives</strong> provided by the operating system or any programming language that supports threading. You then make use of such synchronization primitives in your code to make sure your threads don't trigger data races, race conditions or both.</p>
+<p>Synchronization takes place both in hardware and software, as well as between threads and operating system processes. This article is about synchronization of software threads: the physical counterpart and process synchronization are fascinating topics that will surely get some love in a future post.</p>
+<h2>Common synchronization primitives</h2>
+<p>The most important synchronization primitives are <strong>mutexes</strong>, <strong>semaphores</strong> and <strong>condition variables</strong>. There are no official definitions for these terms, so different texts and implementations associate slightly different characteristics with each primitive.</p>
+<p>Operating systems provide these tools natively. For example Linux and macOS support <strong>POSIX threads</strong>, also known as <strong>pthreads</strong>, a set of functions that allows you to write safe multithreaded applications. Windows has its own synchronization tools in the C Run-Time Libraries (CRT): conceptually similar to POSIX threads functions but with different names.</p>
+<p>Unless you are writing very low-level code, you usually want to employ the synchronization primitives shipped with the programming language of your choice. Every programming language that deals with multithreading has its own toolbox of synchronization primitives, along with other functions to fiddle around with threads. For example Java provides the <code>java.util.concurrent</code> package, modern C++ has its own <code>thread</code> library, C# ships the <code>System.Threading</code> namespace and so on. All these functions and objects are based upon the underlying operating system primitives, of course.</p>
+<p>There are many other synchronization tools around. In this article I'll stick to the three mentioned above, as they act as a foundation often used to build more complex entities. Let's take a closer look.</p>
+<h2>Mutexes</h2>
+<p>A <strong>mutex</strong> (<strong>mut</strong>ual <strong>ex</strong>clusion) is a synchronization primitive that puts a restriction around a critical section, in order to prevent data races. A mutex guarantees <em>atomicity</em>, by making sure that only one thread accesses the critical section at a time.</p>
+<p>Technically, a mutex is a global object in your application, shared across multiple threads, that provides two functions usually called <code>lock</code> and <code>unlock</code>. A thread that is about to enter the critical section calls <code>lock</code> to lock the mutex; when it's done, that is when the critical section is over, the same thread calls <code>unlock</code> to unlock it. The important feature of a mutex: only the thread that locks the mutex is allowed to unlock it later on.</p>
+<p>If another thread jumps in and tries to lock a locked mutex, the operating system puts it to sleep until the first thread has finished its task and has unlocked the mutex. This way only one thread can access the critical section; any other thread is excluded from it and must wait for the unlock. For this reason a mutex is also known as a <strong>locking mechanism</strong>.</p>
+<p>You can use a mutex to protect simple actions like a concurrent read and write of a shared variable, as well as bigger and more complex operations that need to be executed by one thread at a time, such as writing to a log file or modifying a database. Anyway, the mutex lock/unlock operations always match the boundaries of the critical section.</p>
+<h3>Recursive mutexes</h3>
+<p>In any regular mutex implementation, a thread that locks a mutex twice causes an error. A <strong>recursive mutex</strong> allows this, instead: a thread can lock a recursive mutex multiple times without unlocking it first. However no other thread can lock the recursive mutex until all the locks held by the first thread have been released. This synchronization primitive is also known as <strong>reentrant mutex</strong>, where <strong>reentrancy</strong> is the ability to call a function multiple times (i.e. to enter it again) before the previous invocations are over.</p>
+<p>Recursive mutexes are difficult to work with and are error-prone. You have to keep track of which thread has locked the mutex how many times and make sure the same thread unlocks it completely. Failing to do so would leave locked mutexes around with nasty consequences. Most of the time a regular mutex is enough.</p>
+<h3>Reader/Writer Mutexes</h3>
+<p>As we know from the previous episode, multiple threads can concurrently read from a shared resource without harm as long as they don't modify it. So why bother locking a mutex if some of your threads are operating in "read-only" mode? For example consider a concurrent database that is frequently read by many threads, while another thread seldomly writes updates. You certainly need a mutex to protect the read/write access, but most of the time you would end up locking it just for read operations, preventing other reading threads to do their job.</p>
+<p>A <strong>reader/writer mutex</strong> allows <em>concurrent</em> reads from multiple threads and <em>exclusive</em> writes from a single thread to a shared resource. It can be locked in <em>read</em> or <em>write</em> mode. To modify a resource, a thread must first acquire the exclusive write lock. An exclusive write lock is not permitted until all read locks have been released.</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>Semaphores</h2>
+<p>A <strong>semaphore</strong> is a synchronization primitive used to orchestrate threads: which one starts first, how many threads can access a resource and so on. Like a street semaphore regulates the traffic, a programming semaphore regulates the multithreading flow: for this reason a semaphore is also known as a <strong>signaling mechanism</strong>. It can be seen as an evolution of a mutex, because it guarantees both <em>ordering</em> and <em>atomicity</em>. However in a few paragraphs I will show you why using semaphores for atomicity only is not a great idea.</p>
+<p>Technically, a semaphore is a global object in your application, shared across multiple threads, that contains a <em>numeric counter</em> managed by two functions: one that increases the counter, another one that decreases it. Historically called <code>P</code> and <code>V</code>, modern implementations use more friendly names for those functions such as <code>acquire</code> and <code>release</code>.</p>
+<p>A semaphore controls the access to a shared resource: the counter determines the maximum number of threads that can simultaneously access it. At the beginning of your program, when the semaphore gets initialized, you choose that number according to your needs. Then, a thread that wants to access a shared resource calls <code>acquire</code>:</p>
+<ul>
+<li>if the counter is <em>greater than zero</em> the thread can proceed. The counter gets reduced by one right away, then the current thread starts doing its job. When done, it calls <code>release</code> which in turn increases the counter by one.</li>
+<li>if the counter is <em>equal to zero</em> the thread cannot proceed: other threads have already filled up the available space. The current thread is put to sleep by the operating system and will wake up when the semaphore counter becomes greater than zero again (that is when any other thread calls <code>release</code> once its job is done).</li>
+</ul>
+<p>Unlike a mutex, <em>any thread can release a semaphore</em>, not only the one that has acquired it in the first place.</p>
+<p>A single semaphore is used to limit the number of threads accessing a shared resource: for example to cap the number of multithreaded database connections, where each thread is triggered by someone connecting to your server.</p>
+<p>By combining multiple semaphores together you can solve thread ordering problems: for example the thread that renders a web page in your browser must start after the thread that downloads the HTML files from the Internet. Thread A would notify thread B when it's done, so that B can wake up and proceed with its job: this is also known as the famous <a href="https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem">Producer-Consumer problem</a>.</p>
+<h3>Binary semaphores</h3>
+<p>A semaphore whose counter is restricted to the values 0 and 1 is called <strong>binary semaphore</strong>: only one thread at a time can access the shared resource. Wait: this is basically a mutex protecting a critical section! You can actually replicate the mutex behavior with a binary semaphore. However there are two important points to keep in mind:</p>
+<ol>
+<li>a mutex can be unlocked only by thread that had locked it first, while a semaphore can be released from any other thread. This could lead to confusion and subtle bugs if what you want is just a locking mechanism; </li>
+<li>semaphores are signaling mechanisms that orchestrate threads, while mutexes are locking mechanisms that protects shared resources. You should not use semaphores to protect shared resources, nor mutexes for signaling: your intent will be more clear to you and to anyone who will read your code.</li>
+</ol>
+<h2>Condition variables</h2>
+<p>Condition variables are another synchronization primitive designed for <em>ordering</em>. They are used for sending a wake up signal across different threads. A condition variable always goes hand in hand with a mutex; using it alone doesn't make sense.</p>
+<p>Technically, a condition variable is a global object in your application, shared across multiple threads, that provides three functions usually called <code>wait</code>, <code>notify_one</code> and <code>notify_all</code>, plus a mechanism to pass it an existing mutex to work with (the exact way depends on the implementation).</p>
+<p>A thread that calls <code>wait</code> on the condition variable is put to sleep by the operating system. Then another thread that wants to wake it up invokes <code>notify_one</code> or <code>notify_all</code>. The difference is that <code>notify_one</code> unfreezes only one thread, while <code>notify_all</code> sends the wake up call to all the threads that are sleeping after the <code>wait</code> call on the condition variable. The mutex is used internally to provide the sleep/wakeup mechanism.</p>
+<p>Condition variables are a powerful mechanism to send signals between threads that you couldn't achieve with mutexes alone. For example you can use them to solve the Producer-Consumer problem once again, where thread A emits a signal when it's done so that thread B can start its job.</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>Common problems in synchronization</h2>
+<p>All the synchronization primitives described in this article have something in common: they put threads to sleep. For this reason they are also called <strong>blocking mechanisms</strong>. A blocking mechanism is a good way to prevent concurrent access to a shared resource if you want to avoid data races or race conditions: a sleeping thread does no harm. But it can trigger unfortunate side effects. Let's take a quick look at them.</p>
+<h3>Deadlock</h3>
+<p>A <strong>deadlock</strong> occurs when a thread is waiting for a shared variable that another thread holds, and this second thread is waiting for a shared variable that the first thread holds. These things usually happen when working with multiple mutexes: the two threads remain waiting forever in an infinite circular loop: thread A waits for thread B which waits for thread A which waits for thread B which...</p>
+<h3>Starvation</h3>
+<p>A thread goes in <strong>starvation</strong> mode when it doesn't get enough love: it remains stuck indefinitely in its sleep state while waiting for access to a shared resource that is continuously given to other threads. For example a poorly designed semaphore-based algorithm might forget to wake up one of the many threads behind the waiting line, by giving precedence only to a subset of them. The starving thread would wait forever without doing any useful work.</p>
+<h3>Spurious wake-ups</h3>
+<p>This is a subtle problem that comes from how condition variables are actually implemented in some operating systems. In a <strong>spurious wake-up</strong> a thread wakes up even if not signaled through the condition variable. That's why most synchronization primitives also include a way to check if the wakeup signal really comes from the condition variable the thread is waiting on.</p>
+<h3>Priority inversion</h3>
+<p><strong>Priority inversion</strong> occurs when a thread performing a high-priority task is blocked waiting for a lower-priority thread to release a resource, such as a mutex. For example when the thread that outputs audio to the soundcard (high priority) is blocked by the thread that displays the interface (low priority), resulting in a bad glitch through your speakers.</p>
+<h2>What's next</h2>
+<p>All these synchronization problems have been studied for years and many solutions, both technical and architectural are available. A careful design and a bit of experience help a lot in prevention. Also, given the <a href="https://www.internalpointers.com/post/gentle-introduction-multithreading#race-conditions">non-deterministic</a>, (i.e. extremely hard) nature of multithreaded applications, people have developed interesting tools to detect errors and potential pitfalls in concurrent code. Projects like <a href="https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual">Google's TSan</a> or <a href="http://valgrind.org/docs/manual/hg-manual.html">Helgrind</a> are just a few of them.</p>
+<p>However, sometimes you want to take a different route and get rid of any blocking mechanism in your multithreaded application. This would mean to enter the <strong>non-blocking</strong> realm: a very low-level territory, where threads are never put to sleep by the operating system and concurrency is regulated through <strong>atomic primitives</strong> and <strong>lock-free data structures</strong>. It's a challenging field, not always necessary, which can boost the speed of your software or wreak havoc on it. But this is a story for the next episode...</p>
+<h2>Sources</h2>
+<p>Wikipedia - <a href="https://en.wikipedia.org/wiki/Synchronization_%28computer_science%29#Thread_or_process_synchronization">Synchronization (computer science)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Reentrant_mutex">Reentrant mutex</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Reentrancy_%28computing%29">Reentrancy (computing)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Semaphore_%28programming%29">Semaphore (programming)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Spurious_wakeup">Spurious Wakeup</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Priority_inversion">Priority inversion</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Deadlock">Deadlock</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Starvation_%28computer_science%29">Starvation (computer science)</a><br>
+Columbia Engineering - <a href="http://www.cs.columbia.edu/~hgs/os/sync.html">Synchronization primitives</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/8017507/definition-of-synchronization-primitive">Definition of “synchronization primitive”</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/2332765/lock-mutex-semaphore-whats-the-difference">Lock, mutex, semaphore… what's the difference?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/11173532/why-is-locking-a-stdmutex-twice-undefined-behaviour">Why is locking a std::mutex twice 'Undefined Behaviour'?</a><br>
+Operating Systems: Three Easy Pieces - <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/">Concurrency</a><br>
+Jaka's Corner - <a href="http://jakascorner.com/blog/2016/01/data-races.html">Data race and mutex</a><br>
+Java 10 API specs - <a href="https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/Semaphore.html">Class Semaphore</a><br>
+Oracle's Multithreaded Programming Guide - <a href="https://docs.oracle.com/cd/E19455-01/806-5257/6je9h032t/index.html">Read-Write Lock Attributes</a><br>
+Oracle's Multithreaded Programming Guide - <a href="https://docs.oracle.com/cd/E19455-01/806-5257/6je9h0347/index.html">Avoiding Deadlock</a><br>
+Just Software Solutions - <a href="https://www.justsoftwaresolutions.co.uk/threading/locks-mutexes-semaphores.html">Locks, Mutexes, and Semaphores: Types of Synchronization Objects</a><br>
+Just Software Solutions - <a href="https://www.justsoftwaresolutions.co.uk/threading/non_blocking_lock_free_and_wait_free.html">Definitions of Non-blocking, Lock-free and Wait-free</a><br>
+Cppreference - <a href="https://en.cppreference.com/w/cpp/thread/shared_mutex">std::shared_mutex</a><br>
+Cppreference - <a href="https://en.cppreference.com/w/cpp/thread/condition_variable">std::condition_variable</a><br>
+Quora - <a href="https://www.quora.com/What-is-the-difference-between-a-mutex-and-a-semaphore">What is the difference between a mutex and a semaphore?</a><br>
+gerald-fahrnholz.eu - <a href="http://www.gerald-fahrnholz.eu/sw/online_doc_multithreading/html/group___grp_condition_variable_safe_way.html">Using condition variables - the safe way</a><br>
+Politecnico di Milano - <a href="http://home.deib.polimi.it/loiacono/uploads/Teaching/CP/CP_04_Pthread_CondVar.pdf">Thread Posix: Condition Variables</a><br>
+SoftwareEngineering - <a href="https://softwareengineering.stackexchange.com/questions/186842/spurious-wakeups-explanation-sounds-like-a-bug-that-just-isnt-worth-fixing-is">Spurious wakeups explanation sounds like a bug that just isn't worth fixing, is that right?</a><br>
+Android Open Source Project - <a href="https://source.android.com/devices/audio/avoiding_pi">Avoiding Priority Inversion</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/thread">thread</a>
+				 • 								<a class="ip-tag" href="/tag/multithreading">multithreading</a>
+				 • 								<a class="ip-tag" href="/tag/concurrency">concurrency</a>
+				 • 								<a class="ip-tag" href="/tag/mutex">mutex</a>
+				 • 								<a class="ip-tag" href="/tag/semaphore">semaphore</a>
+				 • 								<a class="ip-tag" href="/tag/condition-variable">condition variable</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/gentle-introduction-multithreading">A gentle introduction to multithreading</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kenny Shen</span> on 
+							<span class="date">May 16, 2019 at 09:59</span>
+						</div> 
+						<div class="body">Really enjoying this series. Looking forward to the next episode!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Youmoo</span> on 
+							<span class="date">November 27, 2019 at 10:50</span>
+						</div> 
+						<div class="body">Thank you for this great post. I have translated it into Chinese. The link: https://mp.weixin.qq.com/s/m5pgkK9s4XsJOKYYyDkGcw</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">George Cao</span> on 
+							<span class="date">March 23, 2020 at 10:05</span>
+						</div> 
+						<div class="body">A Chinese version of this post, see https://reploop.org/blog/2020/02/introduction-to-thread-synchronization.html</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Reflex_FN</span> on 
+							<span class="date">May 03, 2020 at 21:09</span>
+						</div> 
+						<div class="body">Thank you for making this amazing series. Can you explain a bit more what you mean when you said that any thread can release semaphore? <br />
+<br />
+Do you mean any random thread can release the semaphore or just the threads that are currently accessing the shared resource?<br />
+<br />
+The reason I got a bit confused is because you mentioned in the subsection about binary semaphores that one of the reasons we shouldn't use a binary semaphore as a mutex is because any thread can release the semaphore, unlike a mutex where only the locking thread can unlock it.<br />
+<br />
+Thank you! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">May 05, 2020 at 10:24</span>
+						</div> 
+						<div class="body">Hi @Reflex_FN, thanks for your love :) Any thread can call release() on a semaphore (assuming the semaphore variable is somehow global in your app), even threads that are not currently accessing the sync primitive or the shared resource.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

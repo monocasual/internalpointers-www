@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The problem of overfitting in machine learning algorithms - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Overfitting makes linear regression and logistic regression perform poorly. A technique called &quot;regularization&quot; aims to fix the problem for good.">
+		<meta name="keywords" content="linear regression,logistic regression,overfitting,regularization">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The problem of overfitting in machine learning algorithms" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/problem-overfitting-machine-learning-algorithms" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Overfitting makes linear regression and logistic regression perform poorly. A technique called &quot;regularization&quot; aims to fix the problem for good." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/problem-overfitting-machine-learning-algorithms" />
+<meta name="twitter:title" content="The problem of overfitting in machine learning algorithms" />
+<meta name="twitter:description" content="Overfitting makes linear regression and logistic regression perform poorly. A technique called &quot;regularization&quot; aims to fix the problem for good." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 02, 2018 
+								• updated on January 04, 2019  
+								• ID 66 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The problem of overfitting in machine learning algorithms</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-machine-learning">Introduction to machine learning</a>
+							</span> —
+							<span class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/linear-regression-one-variable">Linear regression with one variable</a>
+							</span> —
+							<span class="intro">Finding the best-fitting straight line through points of a data set.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-function">The gradient descent function</a>
+							</span> —
+							<span class="intro">How to find the minimum of a function using an iterative algorithm.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-action">The gradient descent in action</a>
+							</span> —
+							<span class="intro">It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/multivariate-linear-regression">Multivariate linear regression</a>
+							</span> —
+							<span class="intro">How to upgrade a linear regression algorithm from one to many input variables.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a>
+							</span> —
+							<span class="intro">A collection of practical tips and tricks to improve the gradient descent process and make it easier to understand.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a>
+							</span> —
+							<span class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a>
+							</span> —
+							<span class="intro">Preparing the logistic regression algorithm for the actual implementation.</span>
+						</p>
+					</li>
+																						</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>By now in my <a href="https://www.internalpointers.com/post-group/first-approach-machine-learning">First approach to machine learning series</a> I have written about two of the most famous building block algorithms: <a href="https://www.internalpointers.com/post/linear-regression-one-variable">linear regression</a> and <a href="https://www.internalpointers.com/post/introduction-classification-and-logistic-regression">logistic regression</a>. We know they can be very powerful yet, as the number of features increase, they might both suffer of a common problem: <em>overfitting</em>. Let's take a closer look at it.</p>
+<h2>Overfitting: what is it about?</h2>
+<p><strong>Overfitting</strong>, or <strong>high variance</strong>, happens when your hypothesis function [texi]h_\theta(x)[texi] tries <em>too hard</em> to fit the training set. The result is that the learned hypothesis function will work great with the training set you initially provided, but will fail to generalize new examples.</p>
+<p>Your algorithm can also face the opposite problem, called called <strong>underfitting</strong>, or <strong>high bias</strong>: the hypothesis function doesn't fit much well the data you have provided in the training stage.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/059d8b21452e7e58f6eb927d116f5619becb7128/2018/04/machine-learning-overfitting-example.png" alt="Examples of underfitting and overfitting in linear regression">
+<div class="caption">1. Examples of underfitting and overfitting in linear regression.</div>
+</div><p>Picture 1. above depicts two cases of <em>wrong fitting</em> during a linear regression task (the famous <a href="https://www.internalpointers.com/post/linear-regression-one-variable">house prediction problem we saw in earlier articles</a>). The top-left plot shows underfitting: the hypothesis function is a linear one, which doesn't fit so well the data. The top-right plot shows a quadratic function: visually it seems to generalize data pretty well. This is the way to go. The last plot at the bottom shows instead an example of overfitting, where the curve does touch all the points in the training examples (which is good), but with too much juggling. Such hypothesis function will struggle to predict new prices if fed with new examples outside the training set.</p>
+<p>Logistic regression too can suffer from bad fitting. As in linear regression, the problem here lies in the hypothesis function trying to <em>separate too much</em> the training examples.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2018/04/machine-learning-overfitting-logistic-regression.png" alt="Examples of underfitting and overfitting in logistic regression">
+<div class="caption">2. Examples of underfitting and overfitting in logistic regression.</div>
+</div><p>The top-left plot in image 2. above shows an underfitting logistic regression hypothesis function. The data is not well separated by such simplistic linear function. Conversely, a slightly more complex function in the top-right figure does a good job in fitting the data. The third bottom plot shows overfitting: the hypothesis function tries to hard to separate elements in the training set by producing a highly twisted decision boundary.</p>
+<h2>How to limit overfitting</h2>
+<p>In a perfect universe your machine learning problem deals with <em>low-dimensional data</em>, that is few input parameters. This is something we saw earlier in our <a href="https://www.internalpointers.com/post/linear-regression-one-variable">house price prediction examples</a>: we only had "size" and "price" parameters back then, producing a straightforward 2-D plot. Finding overfitting is easy here: just plot the hypothesis function and adjust the formula accordingly.</p>
+<p>However this solution is impractical when your learning problem deals with lots (hundreds) of features. There are two main options here:</p>
+<ul>
+<li><p>Reduce the number of features — you manually look through the list of features and decide what are the most important ones to keep. A class of algorithms called <strong>model selection algorithms</strong> automatically select the most relevant features: we will take a look at it in the future chapters. Either way, reducing the number of features fixes the overfitting problem, but it is a less than ideal solution. The disadvantage is that you are throwing away precious information you have about the problem.</p>
+</li>
+<li><p><strong>Regularization</strong> — you keep all the features, but reduce the <em>magnitude</em> (i.e. the value) of each parameter [texi]\theta_j[texi]. This method works well when you have a lot of features, each of which contributes a bit to predicting the output [texi]y[texi]. Let's take a look at this technique and apply it to the learning algorithms we already know, in order to keep overfitting at bay.</p>
+</li>
+</ul>
+<h2>A regularized cost function</h2>
+<p>Say we have two hypothesis functions from the same data set (take a look at picture 1. as a reference): the first one is <span>[texi]h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^{2}[texi]</span> and it works well; the second one is [texi]h_\theta(x) = \theta_0 + \theta_1 x + \theta_2 x^2 + \theta_3 x^3 + \theta_4 x^4[texi] and it suffers from overfitting. The training data is the same, so the second function must have something wrong in its formula. It turns out that those two parameters [texi]\theta_3[texi] and [texi]\theta_4[texi] contribute too much to the <em>curliness</em> of the function.</p>
+<p>The core idea: penalize those additional parameters and make them very small, so that they will contribute less, or even don't contribute at all to the function shape. If we set [texi]\theta_3 \approx 0[texi] and [texi]\theta_4 \approx 0[texi] (in words: set them to very small values, next to zero) we would basically end up with the first function, which fits well the data.</p>
+<p>A real implementation of a regularized cost function pushes the idea even further: <em>all</em> parameters values are reduced by some amount, producing a somehow simpler, or smoother hypothesis function (and it can be proven mathematically).</p>
+<p>For example, say we are working with the usual linear regression problem of house price prediction. We have:</p>
+<ul>
+<li>[texi]100[texi] features: <span>[texi]x_1, x_2, \cdots, x_{100}[texi]</span> (size, number of floors, ...) that produce...</li>
+<li>[texi]100[texi] parameters: <span>[texi]\theta_0, \theta_1, \cdots, \theta_{100}[texi]</span></li>
+</ul>
+<p>Of course is nearly impossible to know which parameter contributes more or less to the overfitting issue. So in regularization we modify the cost function to shrink <em>all</em> parameters by some amount.</p>
+<p>The original cost function for linear regression is:</p>
+<p><span>
+[tex]
+J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2
+[tex]
+</span></p>
+<p>The regularized version adds an extra term, called <strong>regularization term</strong> that shrinks all the parameters:</p>
+<p><span>
+[tex]
+J_{reg}(\theta) = \frac{1}{2m} \bigg[\sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2 + \lambda \sum_{j=1}^{m} \theta_j^2\bigg]
+[tex]
+</span></p>
+<p>The lambda symbol ([texi]\lambda[texi]) is called the <strong>regularization parameter</strong> and it is responsible for a trade-off between fitting the training set well and keeping each parameter small. By convention the first parameter [texi]\theta_0[texi] is left unprocessed, as the loop in the regularization term starts from 1 (i.e. [texi]j=1[texi]).</p>
+<p>The regularization parameter must be chosen carefully. If its too large, it will crush all the parameters except the first one, ending up with a hypothesis function like <span>[texi]h_\theta(x) = \theta_0[texi]</span> where all other [texi]\theta[texi]s are next to zero. Such function is a simple horizontal line, which of course doesn't fit well the data (and suffers from underfitting).</p>
+<p>There are some advanced techniques to find the regularization parameter automatically. We will take a look at some of those in future episodes. For now, let's see how to apply the regularization process to linear regression and logistic regression algorithms.</p>
+<h2>Regularized linear regression</h2>
+<p>In order to build a regularized linear regression, we have to tweak the gradient descent algorithm. The original one, outlined in <a href="https://www.internalpointers.com/post/multivariate-linear-regression">a previous chapter</a> looked like this:</p>
+
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; &
+\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_0^{(i)} \newline \; &
+\cdots  \newline \; & 
+\theta_j := \theta_j - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} &
+\newline \rbrace \end{align*}
+[tex]
+</span></p>
+
+<p>Nothing new, right? The derivative at this point has been already computed and we plugged it into the formula. In order to upgrade this into a regularized algorithm, we have to figure out the derivative for the new regularized cost function seen above.</p>
+<p>As always I will lift you the burden of the manual computation. This is how it looks like:</p>
+<p><span>
+[tex]
+\frac{\partial}{\partial \theta_j} J_{reg}(\theta) = \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} + \frac{\lambda}{m}\theta_j
+[tex]
+</span></p>
+<p>And now we are ready to plug it into the gradient descent algorithm. Note how the first [texi]\theta_0[texi] is left unprocessed, as we said earlier:</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_0^{(i)} \newline \; & 
+\cdots  \newline \; & 
+\theta_j := \theta_j - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} + \frac{\lambda}{m}\theta_j & \newline 
+\rbrace \end{align*}
+[tex]
+</span></p>
+<p>We can do even better. Let's group all the terms together that depends on [texi]\theta_j[texi] (and [texi]\theta_0[texi] left untouched as always):</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_0^{(i)} \newline \; & 
+\cdots  \newline \; & 
+\theta_j := \theta_j(1 - \alpha \frac{\lambda}{m}) - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)} & \newline 
+\rbrace \end{align*}
+[tex]
+</span></p>
+<p>I have simply rearranged things around in each [texi]\theta_j[texi] update, except for [texi]\theta_0[texi]. This alternate way of writing shows the regularization in action: as you may see, the term <span>[texi](1 - \alpha \frac{\lambda}{m})[texi]</span> multiplies [texi]\theta_j[texi] and it's responsible for its shrinkage. The rest of the equation is the same as before the whole regularization thing.</p>
+<h2>Regularized logistic regression</h2>
+<p>As seen in <a href="http://192.168.56.4/internalpointers/post/cost-function-logistic-regression">the previous article</a>, the gradient descent algorithm for logistic regression looks identical to the linear regression one. So the good news is that we can apply the very same regularization trick as we did above in order to shrink the [texi]\theta[texi]s parameters.</p>
+<p>The original, non-regularized cost function for logistic regression looks like:</p>
+<p><span>
+[tex]
+J(\theta) = - \dfrac{1}{m} \left[\sum_{i=1}^{m} y^{(i)} \log(h_\theta(x^{(i)})) + (1 - y^{(i)}) \log(1-h_\theta(x^{(i)}))\right]
+[tex]
+</span></p>
+<p>As we did in the regularized linear regression, we have to add the regularization term that shrinks all the parameters. It is slightly different here:</p>
+<p><span>
+[tex]
+J_{reg}(\theta) = - \dfrac{1}{m} \left[\sum_{i=1}^{m} y^{(i)} \log(h_\theta(x^{(i)})) + (1 - y^{(i)}) \log(1-h_\theta(x^{(i)}))\right] + \frac{\lambda}{2m} \sum_{j=1}^{n} \theta_j^2
+[tex]
+</span></p>
+<p>What is the derivative of this baby?</p>
+<p><span>
+[tex]
+\frac{\partial}{\partial \theta_j} J_{reg}(\theta) = \theta_j - \alpha \left[\dfrac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)} + \frac{\lambda}{m}\theta_j\right]
+[tex]
+</span></p>
+<p>We are now ready to plug it into the gradient descent algorithm for the logistic regression. As always the first item [texi]\theta_0[texi] is left unprocessed:</p>
+<p><span>
+[tex]
+\begin{align*} & \text{repeat until convergence:} \; \lbrace \newline \; & 
+\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) x_0^{(i)} \newline \; & 
+\cdots  \newline \; & 
+\theta_j := \theta_j - \alpha \left[\dfrac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)} + \frac{\lambda}{m}\theta_j\right] & \newline 
+\rbrace \end{align*}
+[tex]
+</span></p>
+<h2>Sources</h2>
+<p>Machine Learning @ Coursera - <a href="https://www.coursera.org/learn/machine-learning/lecture/ACpTQ/the-problem-of-overfitting">The Problem of Overfitting</a><br>
+Machine Learning @ Coursera - <a href="https://www.coursera.org/learn/machine-learning/lecture/B1MnL/cost-function">Cost Function</a><br>
+Machine Learning @ Coursera - <a href="https://www.coursera.org/learn/machine-learning/lecture/QrMXd/regularized-linear-regression">Regularized Linear Regression</a><br>
+Machine Learning @ Coursera - <a href="https://www.coursera.org/learn/machine-learning/lecture/4BHEy/regularized-logistic-regression">Regularized Logistic Regression</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/linear-regression">linear regression</a>
+				 • 								<a class="ip-tag" href="/tag/logistic-regression">logistic regression</a>
+				 • 								<a class="ip-tag" href="/tag/overfitting">overfitting</a>
+				 • 								<a class="ip-tag" href="/tag/regularization">regularization</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a>
+					</div>
+				</div>
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">a.smith</span> on 
+							<span class="date">January 04, 2019 at 10:02</span>
+						</div> 
+						<div class="body">A simple and clear explanation. Watch out for some garbled formulas at the end of the article...</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 04, 2019 at 10:07</span>
+						</div> 
+						<div class="body">@a.smith fixed, thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Edward</span> on 
+							<span class="date">August 10, 2019 at 14:06</span>
+						</div> 
+						<div class="body">can you upload the rest of the course as well? these explanations are incredible</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 14, 2019 at 12:20</span>
+						</div> 
+						<div class="body">@Edward thanks, I'm planning to add more articles on neural networks soon!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">R</span> on 
+							<span class="date">October 22, 2019 at 18:12</span>
+						</div> 
+						<div class="body">Thank you so much for all your effort and for your clear explanation. I hope you complete your series and explain neural networks and so on. As soon as possible please:( I depend on you in ML course</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">R</span> on 
+							<span class="date">November 07, 2019 at 18:14</span>
+						</div> 
+						<div class="body">I just read your message about you will complete the course :) and I'm so excited and waiting you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">F.M.</span> on 
+							<span class="date">December 12, 2019 at 13:04</span>
+						</div> 
+						<div class="body">Thoroughly benefiting from the understanding that I've acquired from your clear coverage.  Thanks! 1st question: Why does update expression for theta_0 not have a regularization term?  I get that the predictor value for that dimension is 1, but that doesn't necessarily mean that the partial derivative of Jreg with respect to theta_0 is zero.  The coursera video doesn't explain this either.  2nd question: Who is Triangles, and how can they afford to do this for free?  Thanks again!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">December 24, 2019 at 10:18</span>
+						</div> 
+						<div class="body">@F.M. Thanks! <br />
+<br />
+Question 1: I'm a bit rusty on this topic, however I believe it is related to the x_0 = 1 trick explained here: https://www.internalpointers.com/post/multivariate-linear-regression<br />
+<br />
+Question 2: https://i.kym-cdn.com/photos/images/newsfeed/000/183/103/alens.jpg</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">King</span> on 
+							<span class="date">April 18, 2020 at 06:27</span>
+						</div> 
+						<div class="body">Very good and clear explain. I am waiting for further topic of machine learning like neural network and many more.<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alif</span> on 
+							<span class="date">May 03, 2020 at 09:09</span>
+						</div> 
+						<div class="body">Thanks for writing this type of efficient and useful blogs.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jisha</span> on 
+							<span class="date">August 28, 2020 at 12:02</span>
+						</div> 
+						<div class="body">Very nicely explained<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yemane</span> on 
+							<span class="date">September 16, 2020 at 15:54</span>
+						</div> 
+						<div class="body">Simple and Clear Explanation thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jay</span> on 
+							<span class="date">May 22, 2021 at 01:58</span>
+						</div> 
+						<div class="body">With all due respect, just wanted to say that, upload the rest of the course :(</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

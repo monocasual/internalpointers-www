@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Buying and selling stocks: how-to - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Let's disclose what happens behind that click on the &quot;buy&quot; button.">
+		<meta name="keywords" content="">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Buying and selling stocks: how-to" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/buying-and-selling-stocks" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Let's disclose what happens behind that click on the &quot;buy&quot; button." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/buying-and-selling-stocks" />
+<meta name="twitter:title" content="Buying and selling stocks: how-to" />
+<meta name="twitter:description" content="Let's disclose what happens behind that click on the &quot;buy&quot; button." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on November 20, 2016 
+								• updated on November 20, 2016  
+								• ID 45 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Buying and selling stocks: how-to</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Let's disclose what happens behind that click on the "buy" button.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/stock">What is a stock?</a>
+							</span> —
+							<span class="intro">Understanding how stocks work both from companies' and investors' point of view.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/most-important-metrics-stock-investments">The most important metrics for stock investments</a>
+							</span> —
+							<span class="intro">What are the most famous stock metrics and how to translate them into something useful to humans.</span>
+						</p>
+					</li>
+																						</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>Welcome back to the third chapter of my <a href="https://www.internalpointers.com/post-group/adventures-stock-market">adventures in stock markets</a>. This time I want to take a look at the stock exchanges, how they work and how one can trade stocks in the market. As always, I'd love to start with some basic questions.</p>
+<h2>Stock exchanges: what are they</h2>
+<p>Whenever you wish to buy or sell a stock you have to rely on a <strong>stock exchange</strong>. A stock exchange is a place where buyers get in touch with sellers (and vice versa) to buy and sell stocks. If you wish to trade a stock with someone else, you need a stock exchange and its services.</p>
+<p>Stock exchanges are spread all over the world, and the majority of nations has one or more stock exchanges. Let me name a few of them: <strong>New York Stock Exchange</strong> (<strong>NYSE</strong>) and <strong>Nasdaq</strong>, both of the United States; <strong>London Stock Exchange Group</strong>, British-based and owner of <strong>Borsa Italiana</strong>, the Italian stock exchange; <strong>Japan Exchange Group</strong> of Japan; <strong>Shanghai Stock Exchange</strong> of China. The list goes on, as you may see <a href="https://en.wikipedia.org/wiki/List_of_stock_exchanges#Major_stock_exchanges">here</a>. Few countries lack of a central stock exchange.</p>
+<div class="ip-img">
+  <img src="https://s3.amazonaws.com/images.internalpointers.com/2016/10/new-york-stock-exchange-floor.jpg" alt="The floor of the New York Stock Exchange">
+  <div class="caption">1. The floor of the New York Stock Exchange.<br/>Author: <a href="http://www.flickr.com/photos/hutchike/">Kevin Hutchinson</a>, released under <a href="http://creativecommons.org/licenses/by/2.0">Creative Commons license</a>.</div>
+</div><p>A stock exchange is a big room filled with computers and people. In those buildings you may find the so-called <strong>floor</strong>, a place where trading activities are conducted. It's an actual space where traders buy or sell assets, often through shouting and hand signaling. However that's the traditional way of trading goods. Today most exchanges use electronic trading systems to reduce the costs and to improve execution speed; today the floor is filled with computers to place orders, as displayed in the picture 1. above.</p>
+<p>It's very unlikely (maybe even impossible) that a common investor would walk into a stock exchange and start trading with the other fellows in there. Those places are meant for professionals, as we will see later. If you want to buy or sell stocks you have to rely on several middlemen that trade for you on your behalf.</p>
+<p>Stock exchanges are said to be <strong>secondary markets</strong>, because you are trading stocks that have been created in a previous step — the <strong>primary market</strong>, namely when the companies issue the stock for the first time in their lives (the famous <a href="https://www.internalpointers.com/post/stock">IPO process</a>). In a primary market you buy stocks directly from the company, while in a secondary market you buy/trade them with other people, completely unrelated with the company who issued the stocks initially.</p>
+<h3>Why so many stock exchanges?</h3>
+<p>Stock exchanges are in fact private companies that profit from other companies being listed on their databases. Most often times stock exchanges follow the usual market rules and compete with other exchanges. This could be a reason for the existence of many of them in the world.</p>
+<p>Another cause is the currency. Generally, an exchange will support transactions only in its local currency. Since many countries have their own variety, you will need at least the same number of stock exchanges to support local trading. Securities trading always strives to be a clean and frictionless process: adding cross-currency translation to the mix would just complicate things.</p>
+<h3>How to get listed into a stock exchange</h3>
+<p>We know from the first <a href="https://www.internalpointers.com/post/stock">chapter</a> of this series that a company chooses in which stock exchange to trade its stocks once the IPO is over. To be publicly traded, every stock must list on an exchange where buyers and sellers can meet. For example, Apple is listed on Nasdaq, while McDonald's Corporation on the NYSE. It's kind of unusual to find companies that are listed on multiples exchanges.</p>
+<p>Why, for example, Apple decided to get listed on Nasdaq instead of NYSE? I don't know, of course. In general, stock exchanges requires a fee for a company to be listed, and each stock exchange has its own price. Also, a company must meet the stock exchange's standards in order to become listed — for example NYSE is known to be oriented to well established companies, while Nasdaq tends to attract smaller and growth-oriented companies.</p>
+<p>The table below reports some noteworthy differences between the two most famous stock exchanges in the world. You may notice how the NYSE is more demanding in terms of fees and company's value.</p>
+<table>
+<thead><tr>
+<th>NYSE</th>
+<th>Nasdaq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maximum yearly fee of $500,000.</td>
+<td>Yearly fee of around $27,000.</td>
+</tr>
+<tr>
+<td>Entry fee up to $250,000.</td>
+<td>Entry fee from $50,000 to $75,000.</td>
+</tr>
+<tr>
+<td>The company must have issued a minimum of 1,100,000 shares to 400 shareholders at least.</td>
+<td>The company must have publicly traded at least 1,250,000 shares, with a minimum bid price of $4.</td>
+</tr>
+</tbody>
+</table>
+<h2>Two types of stock markets</h2>
+<p>Stock markets can be grouped into two main clusters: <strong>dealer markets</strong> and <strong>auction markets</strong>. What's the difference?</p>
+<h3>Auction markets</h3>
+<p>The NYSE is an example of an auction market. In an auction market people who want to trade don't buy from/sell to one another directly. They do it through one <strong>specialist</strong>, a guy (or a firm), member of the stock exchange, that acts as the gatekeeper for incoming orders to buy and sell. Their main function is to process the orders by matching buyers with sellers and make sure the transactions flow smoothly. They also provide an interface for other entities who, in turn, provide and interface for the private investor, as we will see later. Despite their importance, the number of specialists has declined, thanks to electronic trading.</p>
+<h3>Dealer markets</h3>
+<p>The Nasdaq is an example of a dealer market. A dealer market is made up by many professionals (or firms) called <strong>dealers</strong>, who buy and sell stuff with their own money. In a dealer market people trade through dealers. Unlike the monolithic specialist in the auction market, dealers in dealer markets are numerous. Their role is basically the same of a specialist, but they trade for their own business and don't belong to the stock exchange. Unlike a specialist they have customers, because they are actual companies, so that they can provide support to their investor clients.</p>
+<h3>Specialists and dealers are market makers</h3>
+<p>Whether they work in a dealer market or in an auction market, those figures are also known as <strong>market makers</strong>: entities that stand ready to buy and sell a particular stock on a continuous basis. Their daily job is to constantly handle a very large number of securities ready to be traded. They ensure market transactions are as smooth and continuous as possible. You can think of them as pools, or <em>buffers</em> if you like the IT analogy; thanks to their massive amount of securities they generate liquidity, that is leveling potential huge gap prices, providing the ability to trade any number of stocks anytime. They are said to "make the market" for this very reason. Later on we will see how they operate in detail.</p>
+<h2>How stock trading works</h2>
+<p>A stock exchange is like a big warehouse in which people buy and sell stocks. Each buy order must match to a sell order, and vice versa; the operation is done through computers or humans. As said before, some exchanges work like on an actual trading floor (physical), and others match buyers to sellers electronically (virtual); some others are dealer markets, other auction markets. Anyway, every stock market is based on two important concepts: the <strong>supply and demand rule</strong> and the <strong>bid/ask prices</strong>.</p>
+<h3>Supply and demand rule</h3>
+<p>A stock market follows the supply and demand rules of any other market on this planet. The abundance of shares (<strong>supply</strong>) is balanced by how much people want to pay for them (<strong>demand</strong>). Those market forces make the stock prices change every day. If more people want to buy a stock (demand) than sell it (supply), then the price moves up. Conversely, if more people want to sell a stock rather than buy it, there would be greater supply than demand: the price would fall.</p>
+<p>The supply and demand rule also answers the mythical question on what actually drives stock prices. Except for the price defined during the <a href="https://www.internalpointers.com/post/stock">IPO process</a>, everything is ruled by traders' choices.</p>
+<h3>Bid/ask prices</h3>
+<p>In the stock market buyers and sellers define what price they are willing to buy or sell their items. Buyers define the <strong>bid price</strong> and the <strong>bid size</strong>, namely how much they are willing to pay and the maximum number of stocks they are willing to buy. Sellers define the <strong>ask price</strong> and the <strong>ask size</strong>, namely how much they are willing to earn and the maximum number of stocks they are willing to sell.</p>
+<p>Bid and ask are usually written as:</p>
+<pre><code>Bid: &lt;bid-price&gt; x&lt;bid-size&gt;
+Ask: &lt;ask-price&gt; x&lt;ask-size&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code>Bid: 100.10 x200
+Ask: 100.20 x150
+</code></pre>
+<p>Suppose we are in the middle of trading session of some Disney shares. A string like <code>Bid: 100.10 x200</code> means that there are potential buyers for up to 200 Disney shares at $100.10. But that's only the <em>highest</em> priced currently bid: <em>there are many others potential buyers in line behind with lower bid prices</em>. So that bid you're seeing is actually the best bid price at that moment.</p>
+<p>Conversely, a string like <code>Ask: 100.20 x150</code> means that there are potential sellers for up to 150 Disney shares at $100.20. That's only the <em>lowest</em> price currently asked: <em>there are many others potential sellers in line behind with higher ask prices</em>. The ask you're seeing is actually the best ask price at that moment.</p>
+<p>A transaction takes place when either a potential buyer is willing to pay the asking price, or a potential seller is willing to accept the bid price, or else they meet in the middle if both buyers and sellers change their orders. Then the price of that last trade becomes the <strong>current stock price</strong>, the big one you will see in any stock chart out there.</p>
+<p>Bid and ask price values offer a useful insight of what the market thinks about the company. In general, the smaller the difference between the bid and ask price (i.e. the <strong>bid-ask spread</strong>), the more actively traded the security. The most actively traded stocks show a bid-ask spread of few pennies, but it tends to rise during times of market trouble: traders don't want to pay above a certain level, and sellers don't want to accept low prices. Taking care of the bid-ask spread can save you more than one headache if you are trading thinly traded stocks, as we well see in a minute.</p>
+<p>Also the bid-ask size can be useful: a larger ask size than bid size means that at that moment, there are more sellers than buyers and thus a downward pressure on the stock's price. Or vice versa.</p>
+<h3>The role of market makers</h3>
+<p>There are times when people buy when nobody is queuing to sell, and time when they sell when nobody is queuing to buy. How is that possible? This is where market makers come in. Their job is to make bids and offers for their accounts in the absence of public buy or sell orders; that ensures smooth and continuous market transactions.</p>
+<p>When a trader buys something nobody is queuing to sell, market makers sell that stock to the trader from their own portfolio. Conversely when a trader sells something nobody is queuing to buy, market makers buy that stock from that trader and adds it to their own portfolio. In doing so, market orders are continuously moving, eradicating sudden surges and ditches due to buying and selling inequality.</p>
+<p>Imagine a market without market makers, where Company XYZ has just announced fantastic earnings. You want to buy XYZ stocks but investors who are already holding XYZ stocks are not selling. You want to attract a seller, so you begin to bid higher and higher for until at last, a seller is moved to selling the stock. That way the price has skyrocketed.</p>
+<p>Consider again a sudden bad news released from XYZ company: everyone is rushing to sell XYZ stocks. You'd like to sell it too, but nobody is buying. In order to attract a buyer, you start to push the price lower and lower until at last, the price bottoms out worthless.</p>
+<h2>How private investors trade stocks</h2>
+<p>Suppose that today you want to become an Disney shareholder by buying N shares of that company: you know you can't just walk into your favorite stock exchange and start trading on the floor. This activity is carried out by <strong>brokers</strong>, the interface between you and the whole market.</p>
+<h3>The role of the broker and the different types of orders</h3>
+<p>We encountered this figure in <a href="https://www.internalpointers.com/post/stock">chapter 1</a>: whether they are individuals or complex brokerage firms, a broker's task is to place investment orders on your behalf, for a fee. They are licensed to trade stocks through the exchange, both on the trading floor or by phone/electronically.</p>
+<p>The first thing to do is to call your broker and tell her you want to buy N shares of Disney; you can do that by phone or by clicking on the "buy" button of your broker's app, that's the same thing. Anyway, you will face an important decision: what type of order should you place? There are several types of order available, let's recap the most common ones:</p>
+<ul>
+<li><p><strong>market order</strong> — this is very common and very easy for the broker. Here you are willing to take whatever price is presented to you when your order is executed. Suppose the current price of a Disney share is $100 and then you decide to place a market order. Since the actual order takes a few seconds to be executed, by that time the market price may have changed, say to $102: that's the final price that will be applied. You should take care of market orders with less actively traded stocks (higher bid-ask spread): you might end up paying more than you're comfortable with, since the price range is wider;</p>
+</li>
+<li><p><strong>limit order</strong> — you purchase the shares when they are less than or equal to (≤) a specified price, defined by you. An important feature of limit orders: <em>they are not guaranteed to be executed</em>. If the specified price is never met, the order is not filled and you miss the trade. A limit order protects your wallet while trading less liquid stocks: you won't end up paying more or selling for less than you're willing to;</p>
+</li>
+<li><p><strong>stop order</strong> — you purchase the shares when they are greater than or equal to (≥) a specified price. Except for the inverted logic, they work exactly as a limit order.</p>
+</li>
+</ul>
+<h2>Beyond the wall of brokers</h2>
+<p>Now that the order has been placed, you are basically done with it. But that's just the tip of the iceberg; between your click on the "buy" button and the actual stock in your basket, dozens of hidden operations take place. Now the broker has to choose the best way to execute the trade. In general they face two main routes: <strong>principal trading</strong> or <strong>agency trading</strong>.</p>
+<h3>Principal Trading and Agency Trading</h3>
+<p>Many brokers not only act as middlemen, they also hold securities like you do in order to make money. This is called <strong>principal trading</strong>: they trade for themselves. When you ask them for those N shares of Disney, they might take a look in their pool of securities and check if they have what you want. If so, the brokers will fetch from their inventory those N shares and sell them to you.</p>
+<p>There's another obvious yet cool option: <strong>agency trading</strong>. Here brokers dive into the sea of stock exchanges to buy what you're asking for. This is where the figure of the market maker comes in, that acts as an interface between the broker and the real stock market. At this point the broker fills that order by interacting with the market makers, engaging the trader-vs-market-makers dance we have seen before.</p>
+<p>Anyway brokers are obligated by law to give each of their investors the best possible order execution, whether they select the stocks from their bag or from stock exchanges. This is not just a fancy marketing promise: it's a SEC rule in the U.S.</p>
+<h2>Sources</h2>
+<p>Wikipedia - <em>London Stock Exchange Group</em> (<a href="https://en.wikipedia.org/wiki/London_Stock_Exchange_Group">link</a>)<br>
+Investopedia - <em>Stocks Basics: How Stocks Trade</em> (<a href="http://www.investopedia.com/university/stocks/stocks3.asp">link</a>)<br>
+Investopedia - <em>The NYSE And Nasdaq: How They Work</em> (<a href="http://www.investopedia.com/articles/basics/03/103103.asp">link</a>)<br>
+Investopedia - <em>Getting To Know The Stock Exchanges</em> (<a href="http://www.investopedia.com/articles/basics/04/092404.asp">link</a>)<br>
+Investopedia - <em>The Basics Of The Bid-Ask Spread</em> (<a href="http://www.investopedia.com/articles/trading/121701.asp">link</a>)<br>
+Investopedia - <em>A Look At Primary And Secondary Markets</em> (<a href="http://www.investopedia.com/articles/02/101102.asp">link</a>)<br>
+Investopedia - <em>Understanding Order Execution</em> (<a href="http://www.investopedia.com/articles/01/022801.asp">link</a>)<br>
+Investopedia - <em>Trading Floor</em> (<a href="http://www.investopedia.com/terms/t/trading_floor.asp">link</a>)<br>
+Investopedia - <em>Specialist</em> (<a href="http://www.investopedia.com/terms/s/specialist.asp">link</a>)<br>
+U.S. News - <em>Nasdaq vs. NYSE: Why Companies Choose One Over the Other</em> (<a href="http://money.usnews.com/investing/articles/2016-08-05/nasdaq-vs-nyse-why-companies-choose-one-over-the-other">link</a>)<br>
+PFHub - <em>Functioning of The Stock Market</em> (<a href="http://www.pfhub.com/functioning-of-the-stock-market/">link</a>)<br>
+The Motley Fool - <em>How do bid-ask prices work in stock trading?</em> (<a href="http://www.fool.com/answers/faq/bid-ask-prices/">link</a>)<br>
+Amigobulls - <em>Nasdaq Vs NYSE: What Is The Difference?</em> (<a href="http://amigobulls.com/articles/nasdaq-vs-nyse?p=n">link</a>)<br>
+The Balance - <em>Stock Trading for Beginners</em> (<a href="https://www.thebalance.com/stock-trading-for-beginners-357633">link</a>)<br>
+The Balance - <em>What is a Market Maker and How do They Make Money</em> (<a href="https://www.thebalance.com/what-is-a-market-maker-and-how-do-they-make-money-4053753">link</a>)<br>
+Money @ HowStuffWorks - <em>How Online Trading Works</em> (<a href="http://money.howstuffworks.com/personal-finance/online-banking/online-trading.htm">link</a>)<br>
+Investing Answers - <em>Bid Price</em> (<a href="http://www.investinganswers.com/financial-dictionary/stock-market/bid-price-1250">link</a>)<br>
+Money @ StackExchange - <em>Can someone explain a stock's “bid” vs. “ask” price relative to “current” price?</em> (<a href="http://money.stackexchange.com/questions/1063/can-someone-explain-a-stocks-bid-vs-ask-price-relative-to-current-price">link</a>)<br>
+Money @ StackExchange - <em>Why are there so many stock exchanges in the world?</em> (<a href="http://money.stackexchange.com/questions/71835/why-are-there-so-many-stock-exchanges-in-the-world">link</a>)<br>
+WiseGEEK - <em>What is a Dealer Market?</em> (<a href="http://www.wisegeek.com/what-is-a-dealer-market.htm">link</a>)<br>
+SEC - <em>Market Maker</em> (<a href="https://www.sec.gov/answers/mktmaker.htm">link</a>)<br>
+SEC - <em>Trade Execution</em> (<a href="https://www.sec.gov/investor/pubs/tradexec.htm">link</a>)<br>
+SEC - <em>Best Execution</em> (<a href="https://www.sec.gov/answers/bestex.htm">link</a>)<br>
+Optiontradingpedia.com - <em>Who Are Market Makers?</em> (<a href="http://www.optiontradingpedia.com/market_makers.htm">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+							</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/most-important-metrics-stock-investments">The most important metrics for stock investments</a>
+					</div>
+				</div>
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

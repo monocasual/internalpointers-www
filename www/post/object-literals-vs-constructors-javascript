@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Object literals vs constructors in JavaScript - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="I want to use JavaScript in a more object-oriented way.">
+		<meta name="keywords" content="Javascript,OOP">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Object literals vs constructors in JavaScript" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/object-literals-vs-constructors-javascript" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="I want to use JavaScript in a more object-oriented way." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/object-literals-vs-constructors-javascript" />
+<meta name="twitter:title" content="Object literals vs constructors in JavaScript" />
+<meta name="twitter:description" content="I want to use JavaScript in a more object-oriented way." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 20, 2016 
+								• updated on November 13, 2017  
+								• ID 39 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Object literals vs constructors in JavaScript</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>I want to use JavaScript in a more object-oriented way.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>JavaScript is, quite surprisingly, an object-oriented programming language that can be confusing when it comes to object creation. In this article I want to sort it out for good.</p>
+<h2>Literals and constructors</h2>
+<p>In JavaScript there are two ways to create an object: the <strong>constructor function</strong> or the <strong>literal notation</strong>. Take a look below:</p>
+<pre><code class="lang-javascript">// constructor function
+function Website() {};
+
+// literal notation
+var Website = {};
+</code></pre>
+<p>Either way you have just created a JavaScript object called <code>Website</code>. The main difference here is what you can do with it. With the constructor function notation you create an object that can be instantiated into multiple instances (with the <code>new</code> keyword), while the literal notation delivers a single object, like a <a href="https://en.wikipedia.org/wiki/Singleton_pattern">singleton</a>.</p>
+<h2>Defining methods and properties</h2>
+<p>Objects in JavaScript have methods and properties, whether they are built with the constructor function or with the literal notation. Let's see how to define them:</p>
+<pre><code class="lang-javascript">// constructor function
+function Website() {
+    this.url = &#39;http://www.internalpointers.com&#39;;
+    this.printUrl = function() {
+        console.log(this.url);
+    };
+};
+
+// literal notation
+var Website = {
+    &#39;url&#39;: &#39;http://www.internalpointers.com&#39;,
+    &#39;printUrl&#39;: function() {
+        console.log(this.url);
+    }
+};
+</code></pre>
+<h2>Using the objects</h2>
+<p>Besides the syntax, the two objects differ in how you use them. If the object has been created with the constructor function, you must instantiate it first. On the other hand the literal-notated one is ready for use:</p>
+<pre><code class="lang-javascript">// constructor function
+var InternalPointers = new Website();
+InternalPointers.printUrl();
+
+// literal notation
+Website.printUrl();
+</code></pre>
+<h3>Where's the constructor of literal notation?</h3>
+<p>It is clear that with the literal notation you <em>can't</em> have a constructor, namely you can't initialize your object unless you add a custom <code>init()</code> function. Instead, with the constructor function you can pass additional parameters to the object through the built-in constructor, like that:</p>
+<pre><code class="lang-javascript">// constructor function
+function Website(protocol) {
+    this.protocol = protocol;
+    this.url = this.protocol + &#39;://www.internalpointers.com&#39;;
+    this.printUrl = function() {
+        console.log(this.url);
+    };
+};
+
+var InternalPointersHttp  = new Website(&#39;http&#39;);
+var InternalPointersHttps = new Website(&#39;https&#39;);
+InternalPointersHttp.printUrl();   // http://www.internalpointers.com
+InternalPointersHttps.printUrl();  // https://www.internalpointers.com
+</code></pre>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Instantiation versus singleton approach</h2>
+<p>The previous snippet reveals another important property: with the constructor function you can instantiate how many objects you want, and they will be all unique. With the literal notation you always deal with the original object (which is a singleton, remember?), even if you define a new variable with the object as value:</p>
+<pre><code class="lang-javascript">// literal notation
+var original = { 
+    &#39;property&#39; : &#39;original&#39; 
+}
+
+console.log(original.property); // &#39;original&#39;
+
+var clone = original;
+clone.property = &#39;clone&#39;;
+
+console.log(original.property); // &#39;clone&#39; &gt;:(
+</code></pre>
+<h2>What about private and public stuff</h2>
+<p>Having private members with the literal notation is quite a pain in the ass, so let me leave it aside for now. Just think of literal-notated objects as lightweight containers where all members are public. For constructor functions things are easier, thanks to the concept of <a href="http://javascriptissexy.com/understand-javascript-closures-with-ease/">closure</a>. This is how you set up a constructor function with a couple of private members:</p>
+<pre><code class="lang-javascript">// constructor function
+function Website() {
+
+    // private members
+    var privateUrl = &#39;http://www.internalpointers.com&#39;;
+    var privatePrint = function() {  
+        console.log(privateUrl);
+    };
+
+    // public members
+    this.printUrl = function() {
+        privatePrint();
+    };
+};
+
+var InternalPointers = new Website();
+InternalPointers.printUrl();               // &#39;http://www.internalpointers.com&#39;
+InternalPointers.privatePrint();           // TypeError: InternalPointers.privatePrint is not a function
+console.log(InternalPointers.privateUrl);  // undefined
+</code></pre>
+<h2>Sources</h2>
+<p>Envato Tuts - <em>The Basics of Object-Oriented JavaScript</em> (<a href="http://code.tutsplus.com/tutorials/the-basics-of-object-oriented-javascript--net-7670">link</a>)<br>
+Stackoverflow - <em>Should I be using object literals or constructor functions?</em> (<a href="http://stackoverflow.com/questions/4859800/should-i-be-using-object-literals-or-constructor-functions">link</a>)<br>
+Stackoverflow - <em>How to add private variable to this Javascript object literal snippet?</em> (<a href="http://stackoverflow.com/questions/1396294/how-to-add-private-variable-to-this-javascript-object-literal-snippet">link</a>)<br>
+MDN - <em>Object</em> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">link</a>)<br>
+Douglas Crockford - <em>Private Members in JavaScript</em> (<a href="http://www.crockford.com/javascript/private.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/javascript">Javascript</a>
+				 • 								<a class="ip-tag" href="/tag/oop">OOP</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Matt</span> on 
+							<span class="date">December 17, 2018 at 21:44</span>
+						</div> 
+						<div class="body">Great, thanks for putting clear explanation together!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Foo</span> on 
+							<span class="date">February 19, 2019 at 23:26</span>
+						</div> 
+						<div class="body">What about `Object.create(ObjectLiteral);` as a means to create instances from literal objects?  Or IIFE closures oc builder functions which create/init/return object literals, and what about the implications of using prototype with new instantiaton vs builder pattern, and what about cloning/injecting/extending other objects into a closure to simulate prototypical inheritance by sharing members or further prototype mangling.  There are more than "Just 2 Ways".  There are at the very least, 3.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">gamma</span> on 
+							<span class="date">December 02, 2019 at 16:36</span>
+						</div> 
+						<div class="body">Sending you some physical claps from Australia.<br />
+<br />
+Started out with JS as a kid and have just tried to pick it up again after learning OOP. This clears so much up for me.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Hey</span> on 
+							<span class="date">December 03, 2019 at 12:42</span>
+						</div> 
+						<div class="body">thank you very much. It helped me a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">gignu</span> on 
+							<span class="date">February 28, 2020 at 22:17</span>
+						</div> 
+						<div class="body">Thx, great article, makes a lot more sense now the whole topic!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dave Weese</span> on 
+							<span class="date">September 05, 2020 at 16:06</span>
+						</div> 
+						<div class="body">Actually you don't have to instantiate separately at all:<br />
+<br />
+var website = new function( param ){ var private_data = param; <br />
+... etc } (5);<br />
+<br />
+An arg at the end of the function definition means the function executes (and presumably returns something useful) immediately, thus silly looking IIFE syntax is never needed.<br />
+<br />
+Later you could go : var x = new website(12); and create new instances as needed;<br />
+<br />
+Because you can and generally should return either this, an object literal that defines a specific api or a function that itself returns an object (the most flexible and powerful method), the class syntax in ECMA 6 is redundant and only adds confusion to capability that has been in the language for years.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jatan</span> on 
+							<span class="date">February 25, 2021 at 17:57</span>
+						</div> 
+						<div class="body">Thanks so much for clearing this up. Much love :)</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

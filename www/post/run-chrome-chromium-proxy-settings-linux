@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Run Chrome/Chromium with proxy settings on Linux - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="And dealing with the dull fact that &quot;your system is not supported&quot;.">
+		<meta name="keywords" content="Chrome,Chromium,Linux,proxy">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Run Chrome/Chromium with proxy settings on Linux" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/run-chrome-chromium-proxy-settings-linux" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="And dealing with the dull fact that &quot;your system is not supported&quot;." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/run-chrome-chromium-proxy-settings-linux" />
+<meta name="twitter:title" content="Run Chrome/Chromium with proxy settings on Linux" />
+<meta name="twitter:description" content="And dealing with the dull fact that &quot;your system is not supported&quot;." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 24, 2015 
+								• updated on June 10, 2016  
+								• ID 7 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Run Chrome/Chromium with proxy settings on Linux</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>And dealing with the dull fact that "your system is not supported".</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></p>
+<p>If you open the "Proxy Settings" window on Chrome and Chromium for Linux, a discouraging message shows up:</p>
+<blockquote><p>When running Chromium under a supported desktop environment, the system proxy settings will be used. However, either your system is not supported or there  was a problem launching your system configuration.</p>
+<p>But you can still configure via the command line. Please see <code>man chromium</code> for more information on flags and environment variables.</p>
+</blockquote>
+<p>Fair enough: Chrome and Chromium cannot read environment parameters I set up for my proxy, so the solution lies in the command line. What follows is the generic option flag for when you invoke Chrome/Chromium from the terminal:</p>
+<pre><code class="lang-nohighlight">--proxy-server=&lt;scheme&gt;=&lt;uri&gt;[:&lt;port&gt;][;...] | &lt;uri&gt;[:&lt;port&gt;] | &quot;direct://&quot;
+</code></pre>
+<p>This tells Chrome/Chromium to use a custom proxy configuration. You can specify a custom proxy configuration in several ways. The most common one is providing a semi-colon-separated mapping of list scheme to url/port pairs. For example:</p>
+<pre><code class="lang-nohighlight">--proxy-server=&quot;http=minimal.proxy:80;https=super.proxy:3128&quot;
+</code></pre>
+<p>Of course you want to bypass proxy for when you connect to localhost. Here comes another parameter (generic version):</p>
+<pre><code class="lang-nohighlight">--proxy-bypass-list=(&lt;trailing_domain&gt;|&lt;ip-address&gt;)[:&lt;port&gt;][;...]
+</code></pre>
+<p>This tells Chrome/Chromium to bypass any specified proxy for the given semi-colon-separated list of hosts. This flag works only if the previously seen <code>--proxy-server</code> option is set, of course. Example:</p>
+<pre><code class="lang-nohighlight">--proxy-bypass-list=&quot;192.168.56.100:8080;127.0.0.1:8080;*.google.com&quot;
+</code></pre>
+<p>As you can see, wildcards are supported as well.</p>
+<h2>Sources</h2>
+<p>Chromium.org - <em>Network Settings</em> (<a href="https://www.chromium.org/developers/design-documents/network-settings">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/chrome">Chrome</a>
+				 • 								<a class="ip-tag" href="/tag/chromium">Chromium</a>
+				 • 								<a class="ip-tag" href="/tag/linux">Linux</a>
+				 • 								<a class="ip-tag" href="/tag/proxy">proxy</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

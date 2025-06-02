@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>An introduction to virtual memory - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="...and the crucial role it plays in modern operating systems.">
+		<meta name="keywords" content="OS,memory,hardware,software">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="An introduction to virtual memory" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-virtual-memory" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/introduction-virtual-memory.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="...and the crucial role it plays in modern operating systems." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-virtual-memory" />
+<meta name="twitter:title" content="An introduction to virtual memory" />
+<meta name="twitter:description" content="...and the crucial role it plays in modern operating systems." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/introduction-virtual-memory.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on April 27, 2020 
+								• updated on May 02, 2020  
+								• ID 80 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>An introduction to virtual memory</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>...and the crucial role it plays in modern operating systems.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>Computers are complex machines designed to perform a simple task: to run programs — browsers, text editors, web servers, video games, ... — that operate on data — photos, music, text files, databases and so on.</p>
+<p>When not in use, such programs and data live peacefully in the <strong>hard drive</strong>, the device responsible for keeping information alive even if your computer is turned off. Running an application means to ask the <strong>processor (a.k.a. Central Processing Unit or CPU)</strong> to read and execute the machine instructions that make up the computer program, along with any additional data processing.</p>
+<p>Hard drives store huge amount of information, yet they are terribly <em>slow</em>. Way slower than the processor: a CPU that reads instructions from a hard drive directly would become a serious bottleneck for the whole system. For this reason, the program and its data are first copied to the <strong>main memory (a.k.a. Random Access Memory or RAM)</strong>, another storage hardware component smaller than a hard drive but much faster, so that the processor can read instructions from there without speed penalties.</p>
+<p>The main memory can be seen as a long list of <em>cells</em>, each one containing some binary data and marked with a number called the <strong>memory address</strong>. Memory addresses span from 0 to N, based on the amount of main memory available in the system. The range of addresses used by a program is called the <strong>address space</strong>.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/memory.png" alt="Physical memory">
+<div class="caption">1. Two programs loaded in memory. Each cell is a memory address. Space between program A and program B might be used by other programs or data.</div>
+</div><h2>Usage of the main memory in early computers</h2>
+<p>In the beginning of the computer history (and also nowadays in <a href="https://en.wikipedia.org/wiki/Embedded_system">embedded systems</a>), programs had access to the <em>entire</em> main memory and its management was left to the programmer. Writing software for those machines was challenging: part of the developer's job was to devise a good way to manage RAM accesses and make sure that the whole program would not overflow the available memory.</p>
+<p>Things got trickier with the advent of <a href="https://www.internalpointers.com/post/gentle-introduction-multithreading">multitasking</a>, when multiple programs could run on the same computer. Programmers had to face new critical issues:</p>
+<ol>
+<li>memory layout — programs located in RAM after the first one would have their address space offset by a certain amount, no longer in the initial range 0 to N. An additional pain point to take care of during development;</li>
+<li><a href="https://en.wikipedia.org/wiki/Fragmentation_%28computing%29">memory fragmentation</a> — as things are moved back and forth to memory, the available space becomes fragmented into smaller and smaller chunks. This would make it harder to find available space to load new programs and data in memory;</li>
+<li>security — what if program A accidentally overwrites program B's memory? Or, even worse: what if it deliberately reads sensitive data from another program, such as passwords or credit card information?</li>
+</ol>
+<p>So it was pretty obvious to hardware architects in the early 1960s that a form of automatic memory management could significantly simplify programming and fix the more critical memory protection problem. Eventually they came up with what is known today as <strong>virtual memory</strong>.</p>
+<h2>Virtual memory in a nutshell</h2>
+<p>In virtual memory, a program does not have direct access to physical RAM. Instead, it interacts with an <em>illusory</em> address space called <strong>virtual address space</strong>. The operating system works together with the processor to provide such virtual address space and convert it, sooner or later, into the physical one.</p>
+<p>Every memory access is performed through a <strong>virtual address</strong> that does not refer to the actual physical location in memory. A program always reads or write the virtual address, and it's completely unaware of what is going on in the underlying hardware.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/virtual-memory.png" alt="Virtual to physical memory">
+<div class="caption">2. Two processes with their own virtual address spaces. Notice how the physical memory is not contiguous for process 2.</div>
+</div><h3>Benefits of the virtual memory</h3>
+<p>In the picture above you can see an example of virtual to physical translation in action, which reveals two main benefits of the virtual memory:</p>
+<ol>
+<li>each program has a virtual address space that starts from 0 — this simplifies a lot the programmer's life: no need to manually keep track of memory offsets anymore;  </li>
+<li>virtual memory is always contiguous, even if the underlying physical counterpart isn't — the operating system does the hard job of gathering the available pieces together into a single, uniform virtual memory chunk. </li>
+</ol>
+<p>The virtual memory mechanism also solves the problem of a limited RAM: every process is given the impression that it is working with an undefined amount of memory, often larger than the physical one. Moreover, the virtual memory guarantees <em>security</em>: program A can't read or write virtual memory assigned to program B without triggering an operating system error. We will see how all of this magic is possible in the following paragraphs.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Pages and frames: where it all begins</h2>
+<p>The virtual memory mechanism needs a place to store the mapping between virtual and physical addresses. That is, given a virtual address X, the system must be able to find the corresponding physical address Y. However, you can't save such information as a 1:1 relationship: it would require a database as big as the whole RAM!</p>
+<p>Modern virtual memory implementations overcome this problem (and many others) by interpreting the virtual and the physical memory as a long list of small, fixed-size chunks. The chunks of the virtual memory are called <strong>pages</strong> and the chunks of the physical one are called <strong>frames</strong>. The <strong>Memory Management Unit (MMU)</strong> is a hardware component in the CPU that stores the mapping information between pages and frames inside a special data structure called <strong>page table</strong>. A page table is like a database table where each row contains a page index and the frame index it corresponds to. Every running program has a page table in the MMU, as you can see in the picture below.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/04/virtual-memory/mmu-page-table-mapping.png" alt="MMU mapping in action">
+<div class="caption">3. The MMU mapping in action. Each cell is a process page or a physical memory frame. Some pages may not have a corresponding frame mapped: we will see why in the next paragraphs.</div>
+</div><h3>Converting pages to frames</h3>
+<p>A virtual address is made up of two things:</p>
+<ol>
+<li>a <em>page index</em>, that tells the page the virtual address belongs to;</li>
+<li>a <em>frame offset</em>, that tells the position of the physical address inside the frame; </li>
+</ol>
+<p>This information is enough for the MMU to perform the virtual to physical conversion. When a program reads or write a virtual address, it wakes up the MMU which in turn grabs the page index (1) and searches for the corresponding frame in the program's page table. Once the frame is found, the MMU makes use of the frame offset (2) to find the exact physical memory address and pass it back to the program. At this point the conversion is done: the program has a physical address in RAM to read or write through the virtual one.</p>
+<h2>Under the hood of virtual memory</h2>
+<p>While programs are provided with a continguous, clean and tidy virtual address space, both the operating system and the hardware are allowed to do crazy things in the background with data residing in the physical memory.</p>
+<p>For example, the operating system often delays loading parts of a program from the hard drive until the program attempts to use it. Some of the code will only be run during initialization or when a special condition occurs. A program's page table may be filled with entries that point to non-existing or not yet allocated frames. This case is depicted by the image 3. above, where the last two pages map to nowhere.</p>
+<p>Tricks like this one are completely transparent to the application, which keeps reading and writing its own virtual address space unaware of the background noise. However, sooner or later the program may want to access one of the virtual addresses that don't map to the RAM: what to do?</p>
+<h3>Page faults</h3>
+<p>A <strong>page fault</strong> (also known as <strong>page miss</strong>) occurs when a program accesses a virtual address on a page not currently mapped to a physical frame. More specifically, a page fault takes place when the page exists in the program's page table but points to a non-existent or not yet available frame in the physical memory.</p>
+<p>The MMU detects the page fault and redirects the message to the operating system, which will do its best to find a frame in the physical memory for the mapping. Most of the time this is a straightforward operation, unless the system is running out of RAM.</p>
+<h3>Paging, or when the physical memory is not enough</h3>
+<p><strong>Paging</strong> is another memory management trick: the operating system moves <em>some pages</em> to the hard drive, to make room for other programs or data when there is no more physical memory available. Sometimes it is also called <strong>swapping</strong>, although not 100% correct. Swapping is about moving the <em>entire</em> process to disk. Some operating systems do this too, when needed.</p>
+<p>Paging gives programs the illusion of an unlimited amount of available RAM. The operating system optimistically allows for a virtual memory address space larger than the physical one, knowing that data can be moved in and out the hard drive in case of need. Some systems (e.g. Windows) make use of a special file called <strong>paging file</strong> for this purpose. Others (e.g. Linux) have a dedicated hard drive partition called <strong>swap area</strong> (for historical reasons though, modern Linux performs paging instead of swapping).</p>
+<p>Unfortunately the hard drive is way slower than the main memory. So when a page fault occurs <em>and</em> the page was temporarily moved to the hard drive, the operating system has to read data from the sluggish medium and move it back to memory, causing a lag. All in all, less paging means a system that runs more efficiently.</p>
+<h3>Thrashing</h3>
+<p><strong>Thrashing</strong> occurs when the system spends more time in paging than running applications, triggered by a constant stream of page faults. This is an extreme corner case that happens if you are running too many programs that fill up the entire RAM and/or the paging area on the hard drive is unoptimized. The operating system tries to keep up with the large amount of page fault requests, constantly moving data between the hard drive and the physical memory, grinding the system to a halt. Thrashing can be avoided by increasing the amount of RAM, reducing the number of programs being run or again by adjusting the size of the swap file.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Memory protection</h2>
+<p>Virtual memory also provides <em>security</em> across running applications: your browser can't peep into your text editor's virtual memory and vice versa without triggering an error. The main purpose of memory protection is to prevent a process from accessing memory that doesn't belong to it.</p>
+<p>The memory protection mechanism is usually provided by the MMU and the page tables it manages, while other architectures may use different hardware strategies. When a program tries to access a portion of virtual memory it doesn't own, an <strong>invalid page fault</strong> is triggered. The MMU and the operating system catch the signal and raise a failure condition called <strong>segmentation fault</strong> (on Unix) or <strong>access violation</strong> (on Windows). The operating system usually kills the program in response.</p>
+<p>Segmentation faults and access violations are also often raised by mistake. Programming languages that perform manual memory management give you the ability to set aside portions of memory to be used to store program data: the operating system will provide you with a nice chunk of free memory (a.k.a. a <strong>buffer</strong>) to read and write according to your program's needs. However, nothing prevents you to read or write outside the buffer boundaries, accessing memory that doesn't belong to your program or simply doesn't exist. The operating system would detect the illegal access and raise the usual violation signal.</p>
+<h2>Read more</h2>
+<p>Virtual memory paves the road for many other interesting topics. For example, <a href="https://en.wikipedia.org/wiki/Memory-mapped_file"><strong>memory-mapped files</strong></a> are a powerful abstraction over the traditional way of reading and writing files. Instead of manually copying data into memory in order to operate on it, memory mapping allows a program to access a file directly from the hard drive as if it was already fully loaded in RAM. The virtual memory mechanism will take care of moving data from the hard drive to RAM as usual, when necessary. Memory-mapped files simplify the programmer's work and usually speed up file access operations. More information <a href="https://stackoverflow.com/questions/192527/what-are-the-advantages-of-memory-mapped-files">here</a>.</p>
+<p>Virtual memory also makes more difficult to reason about memory consumption. Suppose one of your programs is taking up 300 megabytes of memory: is it virtual or physical? Is part of that space paged to disk? And if it is, will the paging operations be fast enough? Also, tuning the paging file/swap area is an important step if you want to keep your system in a good shape. Operating systems provide many tools to measure and adjust memory: more information <a href="https://superuser.com/questions/437918/how-do-i-find-whats-eating-up-all-of-my-systems-memory-not-superfetch">here</a> and <a href="https://www.linux.com/training-tutorials/5-commands-checking-memory-usage-linux/">here</a>.</p>
+<h2>Sources</h2>
+<p>Computer Hope — <a href="https://www.computerhope.com/jargon/m/memory.htm">Memory</a><br>
+Peter J. Denning — <a href="http://160592857366.free.fr/joe/ebooks/ShareData/Before%20Memory%20was%20Virtual%20By%20Peter%20J.%20Denning%20from%20George%20Mason%20University.pdf">Before memory was virtual</a><br>
+Android Authority — <a href="https://www.youtube.com/watch?v=2quKyPnUShQ">What is virtual memory?</a><br>
+Kernel.org — <a href="https://www.kernel.org/doc/html/latest/admin-guide/mm">Memory Management</a><br>
+Operating Systems: Three Easy Pieces — <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/vm-paging.pdf">Chapter 18: Paging</a><br>
+Philippe's Oppermann — <a href="https://os.phil-opp.com/paging-introduction">Introduction to Paging</a><br>
+Computer Science from the Bottom Up — <a href="https://www.bottomupcs.com/chapter05.xhtml">Chapter 6. Virtual Memory</a><br>
+Dr. John T. Bell — <a href="https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/9_VirtualMemory.html">Operating systems, Virtual Memory</a><br>
+StackOverflow — <a href="https://stackoverflow.com/questions/24358105/do-modern-oss-use-paging-and-segmentation/">Do modern OS's use paging and segmentation?</a><br>
+StackOverflow — <a href="https://stackoverflow.com/questions/19031902/what-is-thrashing-why-does-it-occur">What is thrashing? Why does it occur?</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Memory_address">Memory address</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Paging">Paging</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Address_space">Address space</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Virtual_memory">Virtual memory</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Virtual_address_space">Virtual address space</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Thrashing_%28computer_science%29">Thrashing</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Segmentation_fault">Segmentation fault</a><br>
+ITPro Today — <a href="https://www.itprotoday.com/cloud-computing/paging-peformance">Paging Performance</a><br>
+Aleph One — <a href="http://phrack.org/issues/49/14.html">Smashing The Stack For Fun And Profit</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/os">OS</a>
+				 • 								<a class="ip-tag" href="/tag/memory">memory</a>
+				 • 								<a class="ip-tag" href="/tag/hardware">hardware</a>
+				 • 								<a class="ip-tag" href="/tag/software">software</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Winston Smith</span> on 
+							<span class="date">April 29, 2020 at 09:00</span>
+						</div> 
+						<div class="body">Very good 101 on Virtual Memory. Some fundamentals are worthy to know, although they have been happening behind the scene and self-managed for decades.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anonymous</span> on 
+							<span class="date">May 08, 2020 at 02:18</span>
+						</div> 
+						<div class="body">Excellent write up, very easy to read and helpful for somebody with limited knowledge of the subject.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rohit Bhat</span> on 
+							<span class="date">May 08, 2020 at 05:46</span>
+						</div> 
+						<div class="body">Great article! Helped me understand lot of behind the scene stuff which I wasn’t knowing earlier. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ziad Hilal</span> on 
+							<span class="date">May 09, 2020 at 05:59</span>
+						</div> 
+						<div class="body">What a fantastic write up, thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Youmoo</span> on 
+							<span class="date">May 12, 2020 at 03:51</span>
+						</div> 
+						<div class="body">This article has been translated into Chinese. The link is https://mp.weixin.qq.com/s/I2vbhaE8MmwnFBlfPRq33w<br />
+<br />
+Thank you for this amazing intro.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">AprenderBigData</span> on 
+							<span class="date">July 24, 2020 at 12:25</span>
+						</div> 
+						<div class="body">Thank you for the article!! Sometimes we need to get back to the basics</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">astrovax</span> on 
+							<span class="date">October 11, 2020 at 21:51</span>
+						</div> 
+						<div class="body">wow this is really a nice article made me understand alot :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bella</span> on 
+							<span class="date">August 22, 2021 at 19:31</span>
+						</div> 
+						<div class="body">Why did older operating system not have virtual memory functionality?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 27, 2021 at 10:36</span>
+						</div> 
+						<div class="body">@Bella I guess they were simpler systems back then, where only one program could run at a time.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

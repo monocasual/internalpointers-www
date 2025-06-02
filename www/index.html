@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Internal Pointers - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="I hear and I forget. I see and I remember. I write and I understand.">
+		<meta name="keywords" content="mathematics, IT, informatics, information technology, computing, psychology, music, finance, science">
+		<meta name="copyright" content="2015-2022 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Internal Pointers" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.internalpointers.com" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="I hear and I forget. I see and I remember. I write and I understand." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com" />
+<meta name="twitter:title" content="Internal Pointers" />
+<meta name="twitter:description" content="I hear and I forget. I see and I remember. I write and I understand." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+			</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+	<div class="ip-container">
+
+		<div class="ip-intro">
+			<p class="ip-intro__quote">
+			  I hear and I forget. I see and I remember. I write and I understand.
+			</p>
+			<p class="ip-text-right">
+			  — Triangles, June 2019
+			</p>
+		</div>
+
+		<div class="ip-category-list">
+			<div class="ip-category-list__title">
+			  <p>categories</p>
+			</div>
+						<a class="ip-category" href="/category/artificial-intelligence">Artificial intelligence</a>
+				 • 						<a class="ip-category" href="/category/finance">Finance</a>
+				 • 						<a class="ip-category" href="/category/statistics">Statistics</a>
+				 • 						<a class="ip-category" href="/category/mathematics">Mathematics</a>
+				 • 						<a class="ip-category" href="/category/social-media">Social media</a>
+				 • 						<a class="ip-category" href="/category/programming">Programming</a>
+				 • 						<a class="ip-category" href="/category/informatics">Informatics</a>
+									</div>
+
+		<div class="ip-post-group-list">
+			<div class="ip-post-group-list__title">
+			  <p>articles series</p>
+			</div>
+						<div class="ip-post-group-list__post">
+				<a class="title" href="/post-group/networking-101">Networking 101</a>
+				<p class="description">The magic behind computers linked to each other that exchange information. Explored from the ground up.</p>
+			</div>
+						<div class="ip-post-group-list__post">
+				<a class="title" href="/post-group/black-art-concurrency">The black art of concurrency</a>
+				<p class="description">A series about machines that do more than one thing at a time, their philosophy, what technologies are available and how to get the best out of them.</p>
+			</div>
+						<div class="ip-post-group-list__post">
+				<a class="title" href="/post-group/adventures-stock-market">Adventures in stock markets</a>
+				<p class="description">Everything I wanted to know about public companies, their shares and what one can do with them.</p>
+			</div>
+					</div>
+
+		<div class="ip-post-list">
+			<div class="ip-post-list__title">
+			  <p>latest articles</p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/programming-unicode-gentle-introduction">Programming with Unicode: a gentle introduction</a></h2>
+				<p class="intro">How not to get lost in a multilingual world.  <span class="info">written on June 18, 2022</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a></h2>
+				<p class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes.  <span class="info">written on January 01, 2022</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/network-programming-beginners-overview">Network programming for beginners: introduction to sockets </a></h2>
+				<p class="intro">A theoretical look at one of the most popular programming tools for exchanging data over computer networks.  <span class="info">written on September 10, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/split-commit-into-smaller-ones-git">How to split a commit into smaller ones in Git </a></h2>
+				<p class="intro">A quick and easy way powered by git rebase.  <span class="info">written on August 09, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a></h2>
+				<p class="intro">One of the most important, high-level protocols in the Internet Protocol Suite.  <span class="info">written on August 03, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/introduction-ip-internet-protocol">Introduction to IP: the Internet Protocol</a></h2>
+				<p class="intro">From routing to IP addressing, a look at the protocol that gives life to the Internet. <span class="info">written on June 07, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a></h2>
+				<p class="intro">The official rules that allow computers to communicate over the Internet. <span class="info">written on April 27, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/understanding-internet">Understanding the Internet </a></h2>
+				<p class="intro">“Is that thing still around?” — Homer Simpson <span class="info">written on March 04, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/introduction-computer-networks">Introduction to computer networks  </a></h2>
+				<p class="intro">A bird's-eye view on the art of resource sharing from one computer to another.  <span class="info">written on January 24, 2021</span></p>
+			</div>
+						<div class="ip-post-list__post">
+				<h2><a href="/post/writing-custom-iterators-modern-cpp">Writing a custom iterator in modern C++</a></h2>
+				<p class="intro">An experimental Forward Iterator written from scratch to boost up hand-made containers. <span class="info">written on December 13, 2020</span></p>
+			</div>
+					</div>
+
+	</div>
+</div>
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2022 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

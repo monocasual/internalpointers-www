@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Understanding the meaning of lvalues and rvalues in C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A lightweight introduction to a couple of basic C++ features that act as a foundation for bigger structures.">
+		<meta name="keywords" content="C++">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Understanding the meaning of lvalues and rvalues in C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A lightweight introduction to a couple of basic C++ features that act as a foundation for bigger structures." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/understanding-meaning-lvalues-and-rvalues-c" />
+<meta name="twitter:title" content="Understanding the meaning of lvalues and rvalues in C++" />
+<meta name="twitter:description" content="A lightweight introduction to a couple of basic C++ features that act as a foundation for bigger structures." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 15, 2016 
+								• updated on February 26, 2020  
+								• ID 42 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Understanding the meaning of lvalues and rvalues in C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A lightweight introduction to a couple of basic C++ features that act as a foundation for bigger structures.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>I have been struggling with the concepts of <em>lvalue</em> and <em>rvalue</em> in C++ since forever. I think that now is the right time to understand them for good, as they are getting more and more important with the evolution of the language.</p>
+<p>Once the meaning of lvalues and rvalues is grasped, you can dive deeper into advanced C++ features like <em>move semantics</em> and <em>rvalue references</em> (more on that in future articles).</p>
+<h2>Lvalues and rvalues: a friendly definition</h2>
+<p>First of all, let's keep our heads away from any formal definition. In C++ an <em>lvalue</em> is something that points to a specific memory location. On the other hand, a <em>rvalue</em> is something that doesn't point anywhere. In general, rvalues are temporary and short lived, while lvalues live a longer life since they exist as variables. It's also fun to think of lvalues as <em>containers</em> and rvalues as <em>things contained in the containers</em>. Without a container, they would expire.</p>
+<p>Let me show you some examples right away.</p>
+<pre><code class="lang-c++">int x = 666;   // ok
+</code></pre>
+<p>Here <code>666</code> is an rvalue; a number (technically a <em>literal constant</em>) has no specific memory address, except for some temporary register while the program is running. That number is assigned to <code>x</code>, which is a variable. A variable has a specific memory location, so its an lvalue. C++ states that an assignment requires an lvalue as its left operand: this is perfectly legal.</p>
+<p>Then with <code>x</code>, which is an lvalue, you can do stuff like that:</p>
+<pre><code class="lang-c++">int* y = &amp;x;   // ok
+</code></pre>
+<p>Here I'm grabbing the the memory address of <code>x</code> and putting it into <code>y</code>, through the address-of operator <code>&amp;</code>. It takes an lvalue argument and produces an rvalue. This is another perfectly legal operation: on the left side of the assignment we have an lvalue (a variable), on the right side an rvalue produced by the address-of operator.</p>
+<p>However, I can't do the following:</p>
+<pre><code class="lang-c++">int y;
+666 = y; // error!
+</code></pre>
+<p>Yeah, that's obvious. But the technical reason is that <code>666</code>, being a literal constant — so an rvalue, doesn't have a specific memory location. I am assigning <code>y</code> to nowhere.</p>
+<p>This is what GCC tells me if I run the program above:</p>
+<pre><code class="lang-nolang">error: lvalue required as left operand of assignment
+</code></pre>
+<p>He is damn right; the left operand of an assigment always require an lvalue, and in my program I'm using an rvalue (<code>666</code>).</p>
+<p>I can't do that either:</p>
+<pre><code class="lang-c++">int* y = &amp;666; // error!
+</code></pre>
+<p>GCC says:</p>
+<pre><code class="lang-nolang">error: lvalue required as unary &#39;&amp;&#39; operand`
+</code></pre>
+<p>He is right again. The <code>&amp;</code> operator wants an lvalue in input, because only an lvalue has an address that <code>&amp;</code> can process.</p>
+<h2>Functions returning lvalues and rvalues</h2>
+<p>We know that the left operand of an assigment must be an lvalue. Hence a function like the following one will surely throw the <code>lvalue required as left operand of assignment</code> error:</p>
+<pre><code class="lang-c++">int setValue()
+{
+    return 6;
+}
+
+// ... somewhere in main() ...
+
+setValue() = 3; // error!
+</code></pre>
+<p>Crystal clear: <code>setValue()</code> returns an rvalue (the temporary number <code>6</code>), which cannot be a left operand of assignment. Now, what happens if a function returns an lvalue instead? Look closely at the following snippet:</p>
+<pre><code>int global = 100;
+
+int&amp; setGlobal()
+{
+    return global;    
+}
+
+// ... somewhere in main() ...
+
+setGlobal() = 400; // OK
+</code></pre>
+<p>It works because here <code>setGlobal</code> returns a reference, unlike <code>setValue()</code> above. A reference is something that points to an existing memory location (the <code>global</code> variable) thus is an lvalue, so it can be assigned to. Watch out for <code>&amp;</code> here: it's not the address-of operator, it defines the type of what's returned (a reference).</p>
+<p>The ability to return lvalues from functions looks pretty obscure, yet it is useful when you are doing advanced stuff like implementing some overloaded operators. More on that in future chapters.</p>
+<h2>Lvalue to rvalue conversion</h2>
+<p>An lvalue may get converted to an rvalue: that's something perfectly legit and it happens quite often. Let's think of the addition <code>+</code> operator for example. According to the C++ specifications, it 
+takes two rvalues as arguments and returns an rvalue.</p>
+<p>Let's look at the following snippet:</p>
+<pre><code class="lang-c++">int x = 1;
+int y = 3;
+int z = x + y;   // ok
+</code></pre>
+<p>Wait a minute: <code>x</code> and <code>y</code> are lvalues, but the addition operator wants rvalues: how come? The answer is quite simple: <code>x</code> and <code>y</code> have undergone an implicit <strong>lvalue-to-rvalue conversion</strong>. Many other operators perform such conversion — subtraction, addition and division to name a few.</p>
+<h2>Lvalue references</h2>
+<p>What about the opposite? Can an rvalue be converted to lvalue? Nope. It's not a technical limitation, though: it's the programming language that has been designed that way.</p>
+<p>In C++, when you do stuff like</p>
+<pre><code class="lang-c++">int y = 10;
+int&amp; yref = y;
+yref++;        // y is now 11
+</code></pre>
+<p>you are declarying <code>yref</code> as of type <code>int&amp;</code>: a reference to <code>y</code>. It's called an <strong>lvalue reference</strong>. Now you can happily change the value of <code>y</code> through its reference <code>yref</code>.</p>
+<p>We know that a reference must point to an existing object in a specific memory location, i.e. an lvalue. Here <code>y</code> indeed exists, so the code runs flawlessly.</p>
+<p>Now, what if I shortcut the whole thing and try to assign <code>10</code> directly to my reference, without the object that holds it?</p>
+<pre><code class="lang-c++">int&amp; yref = 10;  // will it work?
+</code></pre>
+<p>On the right side we have a temporary thing, an rvalue that needs to be stored somewhere in an lvalue.</p>
+<p>On the left side we have the reference (an lvalue) that <em>should</em> point to an existing object. But being <code>10</code> a numeric constant, i.e. without a specific memory address, i.e. an rvalue, the expression clashes with the very spirit of the reference.</p>
+<p>If you think about it, that's the forbidden conversion from rvalue to lvalue. A volatile numeric constant (rvalue) should become an lvalue in order to be referenced to. If that would be allowed, you could alter the value of the numeric constant through its reference. Pretty meaningless, isn't it? Most importantly, what would the reference point to once the numeric value is gone?</p>
+<p>The following snippet will fail for the very same reason:</p>
+<pre><code class="lang-c++">void fnc(int&amp; x)
+{
+}
+
+int main()
+{
+    fnc(10);  // Nope!
+    // This works instead:
+    // int x = 10;
+    // fnc(x);
+}
+</code></pre>
+<p>I'm passing a temporary rvalue (<code>10</code>) to a function that takes a reference as argument. Invalid rvalue to lvalue conversion. There's a workaround: create a temporary variable where to store the rvalue and then pass it to the function (as in the commented out code). Quite inconvenient when you just want to pass a number to a function, isn't it?</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Const lvalue reference to the rescue</h2>
+<p>That's what GCC would say about the last two code snippets:</p>
+<pre><code class="lang-nolang">error: invalid initialization of non-const reference of type &#39;int&amp;&#39; from an rvalue of type &#39;int&#39;
+</code></pre>
+<p>GCC complains about the reference not being <strong>const</strong>, namely a <strong>constant</strong>. According to the language specifications, <em>you are allowed to bind a const lvalue to an rvalue</em>. So the following snippet works like a charm:</p>
+<pre><code class="lang-c++">const int&amp; ref = 10;  // OK!
+</code></pre>
+<p>And of course also the following one:</p>
+<pre><code class="lang-c++">void fnc(const int&amp; x)
+{
+}
+
+int main()
+{
+    fnc(10);  // OK!
+}
+</code></pre>
+<p>The idea behind is quite straightforward. The literal constant <code>10</code> is volatile and would expire in no time, so a reference to it is just meaningless. Let's make the reference itself a constant instead, so that the value it points to can't be modified. Now the problem of modifying an rvalue is solved for good. Again, that's not a technical limitation but a choice made by the C++ folks to avoid silly troubles.</p>
+<p>This makes possible the very common C++ idiom of accepting values by constant references into functions, as I did in the previous snipped above, which avoids unnecessary copying and construction of temporary objects.</p>
+<p>Under the hood the compiler creates an hidden variable for you (i.e. an lvalue) where to store the original literal constant, and then bounds that hidden variable to your reference. That's basically the same thing I did manually in a couple of snippets above. For example:</p>
+<pre><code class="lang-c++">// the following...
+const int&amp; ref = 10;
+
+// ... would translate to:
+int __internal_unique_name = 10;
+const int&amp; ref = __internal_unique_name;
+</code></pre>
+<p>Now your reference points to something that exists for real (until it goes out of scope) and you can use it as usual, except for modifying the value it points to:</p>
+<pre><code class="lang-c++">const int&amp; ref = 10;
+std::cout &lt;&lt; ref &lt;&lt; &quot;\n&quot;;   // OK!
+std::cout &lt;&lt; ++ref &lt;&lt; &quot;\n&quot;; // error: increment of read-only reference ‘ref’
+</code></pre>
+<h2>Conclusion</h2>
+<p>Understanding the meaning of lvalues and rvalues has given me the chance to figure out several of the C++'s inner workings. C++11 pushes the limits of rvalues even further, by introducing the concept of <em>rvalue references</em> and <em>move semantics</em>, where — surprise! — rvalues too are modifiable. I will restlessly dive into that minefield <a href="https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners">in one of my next articles.</a></p>
+<h2>Sources</h2>
+<p>Thomas Becker's Homepage - <em>C++ Rvalue References Explained</em> (<a href="http://thbecker.net/articles/rvalue_references/section_01.html">link</a>)<br>
+Eli Bendersky's website - <em>Understanding lvalues and rvalues in C and C++</em> (<a href="http://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c">link</a>)<br>
+StackOverflow - <em>Rvalue Reference is Treated as an Lvalue?</em> (<a href="http://stackoverflow.com/questions/28483250/rvalue-reference-is-treated-as-an-lvalue">link</a>)<br>
+StackOverflow - <em>Const reference and lvalue</em> (<a href="http://stackoverflow.com/questions/22845167/const-reference-and-lvalue">link</a>)<br>
+CppReference.com - <em>Reference declaration</em> (<a href="http://en.cppreference.com/w/cpp/language/reference">link</a>)</p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ru</span> on 
+							<span class="date">March 11, 2018 at 00:57</span>
+						</div> 
+						<div class="body">Thank you so much for the explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alfredo from Mexico</span> on 
+							<span class="date">April 22, 2018 at 01:32</span>
+						</div> 
+						<div class="body">Thank you for the explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rajeev from bangalore</span> on 
+							<span class="date">November 20, 2018 at 13:10</span>
+						</div> 
+						<div class="body">Superb explanation, simple neat and clean way to explain , good going</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sameer</span> on 
+							<span class="date">November 20, 2018 at 16:55</span>
+						</div> 
+						<div class="body">Such a beautiful explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thang Bui</span> on 
+							<span class="date">December 24, 2018 at 05:33</span>
+						</div> 
+						<div class="body">Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Raj</span> on 
+							<span class="date">February 14, 2019 at 05:55</span>
+						</div> 
+						<div class="body">Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">qiang.lu</span> on 
+							<span class="date">March 18, 2019 at 06:38</span>
+						</div> 
+						<div class="body">basic but clearly introduction, it help me to review those knowledge i had ten years ago:)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">TT</span> on 
+							<span class="date">April 17, 2019 at 21:15</span>
+						</div> 
+						<div class="body">Very nice and clear explanation! Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">anastasiia_kos</span> on 
+							<span class="date">April 29, 2019 at 10:39</span>
+						</div> 
+						<div class="body">Thanks for such a clear and concise explanation of this topic!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andong Zhan</span> on 
+							<span class="date">May 04, 2019 at 20:00</span>
+						</div> 
+						<div class="body">Thanks for the explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anil Patil</span> on 
+							<span class="date">May 05, 2019 at 19:40</span>
+						</div> 
+						<div class="body">Very clear explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Hareesh Vutla</span> on 
+							<span class="date">May 10, 2019 at 02:06</span>
+						</div> 
+						<div class="body">Thanks for a very nice explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Camilo Jiménez</span> on 
+							<span class="date">May 10, 2019 at 03:12</span>
+						</div> 
+						<div class="body">Thanks, a Little bit longer than i usually find a answer, but it's super clear.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Arsin</span> on 
+							<span class="date">May 30, 2019 at 21:34</span>
+						</div> 
+						<div class="body">Many thanks. I learned a lot about the rvalues references!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Wubin</span> on 
+							<span class="date">June 03, 2019 at 22:20</span>
+						</div> 
+						<div class="body">Great answer!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">James</span> on 
+							<span class="date">June 11, 2019 at 02:26</span>
+						</div> 
+						<div class="body">Thanks for this post! Super easy to read, informative, and exactly what I was looking for.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mash</span> on 
+							<span class="date">June 12, 2019 at 23:33</span>
+						</div> 
+						<div class="body">Well presented!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Arun</span> on 
+							<span class="date">June 21, 2019 at 20:19</span>
+						</div> 
+						<div class="body">Thank you for this. I attempted to understand this several times but never gave it the attention it deserved. Thanks for the simplicity and the references, appreciate it.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sean</span> on 
+							<span class="date">June 29, 2019 at 05:28</span>
+						</div> 
+						<div class="body">Good explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Prasad Sardeshmukh</span> on 
+							<span class="date">July 23, 2019 at 18:14</span>
+						</div> 
+						<div class="body">Thanks a lot for the details.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Youssef</span> on 
+							<span class="date">July 27, 2019 at 21:07</span>
+						</div> 
+						<div class="body">Thank you for the clear and easy to follow explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shivkumar</span> on 
+							<span class="date">August 07, 2019 at 15:31</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kyle</span> on 
+							<span class="date">August 07, 2019 at 19:36</span>
+						</div> 
+						<div class="body">Very well written. Thank you so much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Chau</span> on 
+							<span class="date">August 09, 2019 at 09:34</span>
+						</div> 
+						<div class="body">Thank you so much. It's so crystal clear</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">guo</span> on 
+							<span class="date">August 10, 2019 at 07:57</span>
+						</div> 
+						<div class="body">> Can an rvalue be converted to lvalue? Nope. <br />
+<br />
+What about: <br />
+> int&& value = 123; ?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Hindounette</span> on 
+							<span class="date">August 12, 2019 at 16:54</span>
+						</div> 
+						<div class="body">Thank you for the explanations ! Also thank you for making it crystal clear ! It is indeed easy to understand !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sandy</span> on 
+							<span class="date">August 13, 2019 at 06:56</span>
+						</div> 
+						<div class="body">No one could explain lvalue/rvalue simpler than this. Thank you bro!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 14, 2019 at 12:22</span>
+						</div> 
+						<div class="body">@guo that's a rvalue reference. I wrote about it here: https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Swati</span> on 
+							<span class="date">August 21, 2019 at 08:09</span>
+						</div> 
+						<div class="body">Thank you so much for the amazing article. Very nicely explained. Would like to read more of your articles! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kusuma K V</span> on 
+							<span class="date">August 25, 2019 at 08:36</span>
+						</div> 
+						<div class="body">Thank You for a very clear and easy to understand kind of explanation of the internal working. It helped a lot.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">atong</span> on 
+							<span class="date">August 30, 2019 at 20:09</span>
+						</div> 
+						<div class="body">thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Muhammad Farhan</span> on 
+							<span class="date">September 07, 2019 at 12:39</span>
+						</div> 
+						<div class="body">Indeed you gave us an amazing insight of C++ by explaining these l and r values. Thank you !!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ying</span> on 
+							<span class="date">October 11, 2019 at 18:45</span>
+						</div> 
+						<div class="body">Nice, clear, simple.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">James</span> on 
+							<span class="date">October 16, 2019 at 08:36</span>
+						</div> 
+						<div class="body">Thank you for the explanation, it is very helpful!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rathinavelu (rathinavelu@gmail.com)</span> on 
+							<span class="date">November 03, 2019 at 12:26</span>
+						</div> 
+						<div class="body">C++ has a lot more Sir, for example  glvalue, prvalue, xrvalue in addition to rvalue and lvalue. https://en.cppreference.com/w/cpp/language/value_category</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Maloy</span> on 
+							<span class="date">November 05, 2019 at 22:01</span>
+						</div> 
+						<div class="body">Thank you for this explanation. Very helpful.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anurag</span> on 
+							<span class="date">November 10, 2019 at 17:05</span>
+						</div> 
+						<div class="body">Very simple and insightful explanation </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">David</span> on 
+							<span class="date">November 12, 2019 at 15:40</span>
+						</div> 
+						<div class="body">you said "firts of all" instead of "First of all"</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 13, 2019 at 11:42</span>
+						</div> 
+						<div class="body">@David typo fixed. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gan</span> on 
+							<span class="date">November 19, 2019 at 09:43</span>
+						</div> 
+						<div class="body">As a beginner of C++, I think this is very helpful.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">blackBeard</span> on 
+							<span class="date">November 22, 2019 at 01:03</span>
+						</div> 
+						<div class="body">WOW, such great explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">lvalueBRO</span> on 
+							<span class="date">November 29, 2019 at 11:09</span>
+						</div> 
+						<div class="body">Hey man that was a crystal clear explanation.. didn't got this superb explanation anywhere in the books and teachers .. love it </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">gak</span> on 
+							<span class="date">December 06, 2019 at 15:28</span>
+						</div> 
+						<div class="body">Great Explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">rValueVoodoo</span> on 
+							<span class="date">December 17, 2019 at 10:56</span>
+						</div> 
+						<div class="body">Great Article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">eman</span> on 
+							<span class="date">December 24, 2019 at 07:38</span>
+						</div> 
+						<div class="body">Thank you for this article with high readability!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Manish Sogi</span> on 
+							<span class="date">December 25, 2019 at 05:26</span>
+						</div> 
+						<div class="body">Great Content!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bharanidharan Subramani</span> on 
+							<span class="date">December 26, 2019 at 10:41</span>
+						</div> 
+						<div class="body">Very Excellent explanations. Great Work. Thanks for making understanding the concepts in clear crystal way. Your explanation are going like a nail in tree.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bharat</span> on 
+							<span class="date">January 07, 2020 at 10:16</span>
+						</div> 
+						<div class="body">Excellent explanation!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mngl</span> on 
+							<span class="date">January 16, 2020 at 21:22</span>
+						</div> 
+						<div class="body">awesome</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amisha patel</span> on 
+							<span class="date">January 21, 2020 at 17:04</span>
+						</div> 
+						<div class="body">An excellent and concise as well discrete explanation !!<br />
+thanks allot...<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amisha patel</span> on 
+							<span class="date">January 21, 2020 at 17:19</span>
+						</div> 
+						<div class="body">woww</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Zhen Wang</span> on 
+							<span class="date">January 24, 2020 at 08:22</span>
+						</div> 
+						<div class="body">An excellent explanation. Just one suggestion that it's better to say prvalue instead of rvalue.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mousumi</span> on 
+							<span class="date">January 27, 2020 at 09:09</span>
+						</div> 
+						<div class="body">Excellent explanation with example</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tanya Kejriwal</span> on 
+							<span class="date">January 27, 2020 at 22:11</span>
+						</div> 
+						<div class="body">Very nice and simple explanation. The flow of the article made it so much easier to understand. The code snippets helped too. Thanks! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ill</span> on 
+							<span class="date">January 30, 2020 at 23:49</span>
+						</div> 
+						<div class="body">Wow I've been coding in C++ for so many years and I still get confused by this sometimes.  The last part about const& helped me understand why I was getting a compiler error in code I knew should compile.  Duh, make my function argument be const& instead of & like I usually do.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">alok gupta</span> on 
+							<span class="date">February 07, 2020 at 07:45</span>
+						</div> 
+						<div class="body">thanks...great explaination</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sona</span> on 
+							<span class="date">February 12, 2020 at 19:46</span>
+						</div> 
+						<div class="body">Excellent explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sona</span> on 
+							<span class="date">February 12, 2020 at 19:47</span>
+						</div> 
+						<div class="body">Excellent explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tom Sherlock</span> on 
+							<span class="date">February 16, 2020 at 18:14</span>
+						</div> 
+						<div class="body">Could we then say that<br />
+ lvalue is the contained value and <br />
+rvalue is the uncontained value?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">An Mai</span> on 
+							<span class="date">February 19, 2020 at 00:49</span>
+						</div> 
+						<div class="body">This is excellent! Thank you so much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dragan</span> on 
+							<span class="date">February 24, 2020 at 00:03</span>
+						</div> 
+						<div class="body">Nice and clear</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">February 26, 2020 at 11:45</span>
+						</div> 
+						<div class="body">@Tom Sherlock why not! and thanks for catching the typos :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rénald</span> on 
+							<span class="date">March 16, 2020 at 01:59</span>
+						</div> 
+						<div class="body">Thanks a lot, and btw I learnt more about the use of const keyword for function parameters ;)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">newraozx</span> on 
+							<span class="date">April 01, 2020 at 14:35</span>
+						</div> 
+						<div class="body">The Best expiation I have got ever.... thank you for this </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Osama Mhiri</span> on 
+							<span class="date">April 02, 2020 at 18:46</span>
+						</div> 
+						<div class="body">thanks a lot, you are great !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">junaid</span> on 
+							<span class="date">April 02, 2020 at 20:03</span>
+						</div> 
+						<div class="body">very good explaination<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Aman Prajapati</span> on 
+							<span class="date">April 19, 2020 at 05:41</span>
+						</div> 
+						<div class="body">Very nice explanation!!!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">D</span> on 
+							<span class="date">April 19, 2020 at 11:47</span>
+						</div> 
+						<div class="body">great explanation !!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">epic</span> on 
+							<span class="date">April 19, 2020 at 21:27</span>
+						</div> 
+						<div class="body">Very clear explanation, keep up the good work!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vincent</span> on 
+							<span class="date">April 30, 2020 at 03:01</span>
+						</div> 
+						<div class="body">Absolutely brilliant! So clear, precise and concise. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sami</span> on 
+							<span class="date">May 02, 2020 at 04:43</span>
+						</div> 
+						<div class="body">thank you so much. I appreciate it. Very well-explained!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">FiLL</span> on 
+							<span class="date">May 05, 2020 at 17:37</span>
+						</div> 
+						<div class="body">Thank you for explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">biggalicious</span> on 
+							<span class="date">May 06, 2020 at 01:20</span>
+						</div> 
+						<div class="body">Awesome!!!!!!!!!!! More please. Greatly appreciated i would be yessir</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">H</span> on 
+							<span class="date">May 16, 2020 at 17:31</span>
+						</div> 
+						<div class="body">perfectly explained, thanks a bunch :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ibra</span> on 
+							<span class="date">May 22, 2020 at 04:55</span>
+						</div> 
+						<div class="body">great contribute to the community, this is the way how the whole humanity grows, congrats!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tobi</span> on 
+							<span class="date">May 29, 2020 at 10:49</span>
+						</div> 
+						<div class="body">Great writeup.<br />
+Please, do for xvalue, glvalue, prvalue</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Fubini</span> on 
+							<span class="date">June 04, 2020 at 16:31</span>
+						</div> 
+						<div class="body">Thank you from Germany! Nice and clean explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">just_a_random</span> on 
+							<span class="date">June 04, 2020 at 19:26</span>
+						</div> 
+						<div class="body">clear and concise, just what I like! thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">anonymous</span> on 
+							<span class="date">June 07, 2020 at 08:39</span>
+						</div> 
+						<div class="body">amazing explanation!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">nimbustrr</span> on 
+							<span class="date">June 07, 2020 at 09:39</span>
+						</div> 
+						<div class="body">great details</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">scrat</span> on 
+							<span class="date">June 07, 2020 at 13:46</span>
+						</div> 
+						<div class="body">Excellent article. Nice explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">dilip</span> on 
+							<span class="date">June 07, 2020 at 22:29</span>
+						</div> 
+						<div class="body">can you explain about int &&a = 5; // a legal statement, why</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles </span> on 
+							<span class="date">June 11, 2020 at 10:21</span>
+						</div> 
+						<div class="body">@dilip that's an rvalue reference (double ampersand). More information here: https://internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Chris</span> on 
+							<span class="date">June 11, 2020 at 18:22</span>
+						</div> 
+						<div class="body">Thanks for helping me on this topic, your explanation is crystal clear and easy to follow !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Trent Di</span> on 
+							<span class="date">June 25, 2020 at 03:17</span>
+						</div> 
+						<div class="body">Excellent article! <br />
+<br />
+"The ability to return lvalues from functions looks pretty obscure, yet it is useful when you are doing advanced stuff like implementing some overloaded operators. More on that in future chapters.". Has this been written? :D</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">June 28, 2020 at 11:48</span>
+						</div> 
+						<div class="body">Thank you Trent Di! The chapter hasn't been written yet... hold tight! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Porco</span> on 
+							<span class="date">July 04, 2020 at 03:42</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anirudh</span> on 
+							<span class="date">July 28, 2020 at 20:29</span>
+						</div> 
+						<div class="body">Excellent explanation! Nice and clear! Thank You!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">NULL</span> on 
+							<span class="date">August 05, 2020 at 04:52</span>
+						</div> 
+						<div class="body">Thanks a lot! Your explanation is very clear and detailed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Opel</span> on 
+							<span class="date">August 08, 2020 at 07:19</span>
+						</div> 
+						<div class="body">Thank you for the to the point explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">rishi</span> on 
+							<span class="date">August 11, 2020 at 14:44</span>
+						</div> 
+						<div class="body">really a well explained article.........eagerly waiting for more </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sachin</span> on 
+							<span class="date">August 12, 2020 at 12:36</span>
+						</div> 
+						<div class="body">Great explanation, now i know cpp better!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Neeraj Sharma</span> on 
+							<span class="date">August 15, 2020 at 13:17</span>
+						</div> 
+						<div class="body">Very nicely explained. Thoroughly enjoyed. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Prateek </span> on 
+							<span class="date">August 15, 2020 at 15:36</span>
+						</div> 
+						<div class="body">This was much needed!! Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Khang</span> on 
+							<span class="date">August 16, 2020 at 12:22</span>
+						</div> 
+						<div class="body">Such an awesome and understandable explaination, thank you so much !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thang Nguyen</span> on 
+							<span class="date">August 22, 2020 at 04:44</span>
+						</div> 
+						<div class="body">Excellent article!<br />
+<br />
+I try to explain the l-value and r-value in the example: http://codepad.org/e5YyvIDI<br />
+<br />
+But I received an error on line 38, but line 37 is OK. Can you help me to explain the problems?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shubham Sharma</span> on 
+							<span class="date">August 25, 2020 at 20:23</span>
+						</div> 
+						<div class="body">Amazing!!!!  That's the best explanation ever.<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Abhirath</span> on 
+							<span class="date">September 10, 2020 at 12:59</span>
+						</div> 
+						<div class="body">Finally understood what they mean :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">tin1254</span> on 
+							<span class="date">September 26, 2020 at 19:12</span>
+						</div> 
+						<div class="body">Detailed explanation with easy and intuitive to understand examples!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">nnammee_yaknow</span> on 
+							<span class="date">October 11, 2020 at 03:34</span>
+						</div> 
+						<div class="body">Thank you so much so detailed God Bless<br />
+<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Lung</span> on 
+							<span class="date">November 28, 2020 at 14:20</span>
+						</div> 
+						<div class="body">You just saved my life. Thank you so much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nurul TA</span> on 
+							<span class="date">December 05, 2020 at 02:04</span>
+						</div> 
+						<div class="body">Good explanation. Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">A human</span> on 
+							<span class="date">December 06, 2020 at 19:07</span>
+						</div> 
+						<div class="body">I didn't know that i can use r-value with a const l-value reference. This saved me a countless time on my project. Thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Art</span> on 
+							<span class="date">December 06, 2020 at 20:43</span>
+						</div> 
+						<div class="body">Nice one - thanks for the write up!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">sagar kumar sahoo</span> on 
+							<span class="date">December 10, 2020 at 10:23</span>
+						</div> 
+						<div class="body">very beautifully explained, wish to read more of your articles</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">extabl</span> on 
+							<span class="date">January 02, 2021 at 12:43</span>
+						</div> 
+						<div class="body">Great explanation. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">seb</span> on 
+							<span class="date">January 03, 2021 at 22:41</span>
+						</div> 
+						<div class="body">thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tobi</span> on 
+							<span class="date">January 13, 2021 at 14:43</span>
+						</div> 
+						<div class="body">Amazing explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ashima</span> on 
+							<span class="date">January 20, 2021 at 15:33</span>
+						</div> 
+						<div class="body">Well explained! Thanks :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ravi</span> on 
+							<span class="date">January 27, 2021 at 16:19</span>
+						</div> 
+						<div class="body">Easy to understand</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shubham Shinde</span> on 
+							<span class="date">February 03, 2021 at 17:27</span>
+						</div> 
+						<div class="body">Very well Explained...!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Olivier Delbeke</span> on 
+							<span class="date">February 07, 2021 at 12:10</span>
+						</div> 
+						<div class="body">Great ! Thanks ! I finally understood this !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yossi Koren</span> on 
+							<span class="date">February 14, 2021 at 11:29</span>
+						</div> 
+						<div class="body">Thanks for the clear description!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daniel</span> on 
+							<span class="date">February 15, 2021 at 06:18</span>
+						</div> 
+						<div class="body">AWESOME EXPLANATION!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yaz</span> on 
+							<span class="date">February 19, 2021 at 23:36</span>
+						</div> 
+						<div class="body">One of the bests explanation I've seen on this topic !! Thanks a lot :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">toilet roll</span> on 
+							<span class="date">February 21, 2021 at 05:38</span>
+						</div> 
+						<div class="body">why does GCC have to be male? And you say lvalues point to a memory location but they are likely to be stored in a register<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tawhid from bd</span> on 
+							<span class="date">March 07, 2021 at 00:15</span>
+						</div> 
+						<div class="body">Thank you.. Great explanation.. It was truly superb </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">John</span> on 
+							<span class="date">March 08, 2021 at 13:27</span>
+						</div> 
+						<div class="body">You should write a book, very clear. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ding</span> on 
+							<span class="date">March 21, 2021 at 03:39</span>
+						</div> 
+						<div class="body">This is the best explanation I have ever seen, the way that you start with the design dillema then go into how it's solved by introducing new concepts is the best way to understand a complex concept in depth. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Digvijay</span> on 
+							<span class="date">March 23, 2021 at 05:20</span>
+						</div> 
+						<div class="body">Great explanation. Thanks....!!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Evan</span> on 
+							<span class="date">April 06, 2021 at 21:21</span>
+						</div> 
+						<div class="body">Adding on to the list of comments - Absolutely amazing article. I'm just starting to learn cpp and have been confused when coming across these terms lvalue and rvalue. This information is presented in a clear an intuitive manner. The synapses really clicked when I realized that an "lvalue" must be on the left side and a "right" value on the right :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mike</span> on 
+							<span class="date">April 23, 2021 at 09:18</span>
+						</div> 
+						<div class="body">Thanks, very clear!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Brian</span> on 
+							<span class="date">May 18, 2021 at 06:09</span>
+						</div> 
+						<div class="body">Very clear explanation, thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Aurelien</span> on 
+							<span class="date">May 25, 2021 at 14:38</span>
+						</div> 
+						<div class="body">Amazing, thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Chenfu</span> on 
+							<span class="date">May 30, 2021 at 06:06</span>
+						</div> 
+						<div class="body">Saved my day, thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">santosh </span> on 
+							<span class="date">May 31, 2021 at 19:51</span>
+						</div> 
+						<div class="body">Very good explanation. Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Philippe L</span> on 
+							<span class="date">June 04, 2021 at 20:32</span>
+						</div> 
+						<div class="body">Great reminder of C++ programmer of old, that needs sometimes to get his memory refreshed with basic theory.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Zhao</span> on 
+							<span class="date">June 15, 2021 at 04:29</span>
+						</div> 
+						<div class="body">Thank you very much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amit Saonerkar</span> on 
+							<span class="date">June 26, 2021 at 07:56</span>
+						</div> 
+						<div class="body">Great explaination! Really internals which are never explained anywhere</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Max</span> on 
+							<span class="date">August 10, 2021 at 17:35</span>
+						</div> 
+						<div class="body">Perfect explanation of this complex idiom. Keeps us moving forward</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Deto</span> on 
+							<span class="date">August 11, 2021 at 12:29</span>
+						</div> 
+						<div class="body">What an explaination! Keep doing thing my friend!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Benjamin</span> on 
+							<span class="date">August 30, 2021 at 13:45</span>
+						</div> 
+						<div class="body">So clear and simply explained, thank you for that!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">JP</span> on 
+							<span class="date">August 31, 2021 at 22:34</span>
+						</div> 
+						<div class="body">Amazing article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">elyulien</span> on 
+							<span class="date">September 12, 2021 at 21:04</span>
+						</div> 
+						<div class="body">Thank you, thank you, thank you very much, finally after a long time could understand this</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">M</span> on 
+							<span class="date">September 17, 2021 at 16:13</span>
+						</div> 
+						<div class="body">Thanks, it is amazing!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Troy</span> on 
+							<span class="date">September 23, 2021 at 08:03</span>
+						</div> 
+						<div class="body">Very thorough explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Haj</span> on 
+							<span class="date">October 05, 2021 at 17:25</span>
+						</div> 
+						<div class="body">Very nice!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ali</span> on 
+							<span class="date">October 14, 2021 at 15:36</span>
+						</div> 
+						<div class="body">Thanx ...just when i needed it most</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">yamero</span> on 
+							<span class="date">October 18, 2021 at 15:06</span>
+						</div> 
+						<div class="body">Wow, just wow. Such a simple explanation of a concept thats been bugging me for so long. Bro you are a genius.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amanu</span> on 
+							<span class="date">October 19, 2021 at 18:48</span>
+						</div> 
+						<div class="body">This was what I need, Thanks for detailed explanations!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">David</span> on 
+							<span class="date">November 06, 2021 at 12:08</span>
+						</div> 
+						<div class="body">Thank you, perfect explanations and tricky cases that may be asked in an interview</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">iremc</span> on 
+							<span class="date">November 07, 2021 at 15:08</span>
+						</div> 
+						<div class="body">That was quite helpful for my exam. Thanks a lott !!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alireza</span> on 
+							<span class="date">November 14, 2021 at 22:01</span>
+						</div> 
+						<div class="body">you solved me one of my very first questions since I started to learn c++. Thanks a lot.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">David</span> on 
+							<span class="date">November 22, 2021 at 16:09</span>
+						</div> 
+						<div class="body"> Thanks a lott !!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">omar</span> on 
+							<span class="date">December 08, 2021 at 18:08</span>
+						</div> 
+						<div class="body">Best explanation I found so far </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">thanks</span> on 
+							<span class="date">December 09, 2021 at 20:00</span>
+						</div> 
+						<div class="body">This was very helpful. It felt like someone made this concept just to be mean. This made it... palatable.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dat_$tix</span> on 
+							<span class="date">December 27, 2021 at 19:51</span>
+						</div> 
+						<div class="body">Very cool explanation!! :D Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Issac</span> on 
+							<span class="date">December 29, 2021 at 04:26</span>
+						</div> 
+						<div class="body">Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">alison</span> on 
+							<span class="date">January 04, 2022 at 22:30</span>
+						</div> 
+						<div class="body">great explanation!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">teonik</span> on 
+							<span class="date">January 09, 2022 at 14:08</span>
+						</div> 
+						<div class="body">Great post! (Referring to GCC as "he" was a nice touch hehe)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">EL jos</span> on 
+							<span class="date">February 08, 2022 at 21:11</span>
+						</div> 
+						<div class="body">Une très bonne explication </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Abhay</span> on 
+							<span class="date">February 26, 2022 at 07:54</span>
+						</div> 
+						<div class="body">clear thoughts, very nice</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">TT</span> on 
+							<span class="date">April 07, 2022 at 07:15</span>
+						</div> 
+						<div class="body">Well explained and good for C++ dummies</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">interestingLSY</span> on 
+							<span class="date">April 13, 2022 at 14:27</span>
+						</div> 
+						<div class="body">WoW, Great Explanation!<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vicky Nguyen</span> on 
+							<span class="date">May 23, 2022 at 19:23</span>
+						</div> 
+						<div class="body">Great explanation! It all makes sense now. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sky</span> on 
+							<span class="date">May 29, 2022 at 05:39</span>
+						</div> 
+						<div class="body">Awesome, good explanation :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Acnoo</span> on 
+							<span class="date">June 06, 2022 at 16:03</span>
+						</div> 
+						<div class="body">Thank you for your excellent work! It helps a lot for me !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">JS</span> on 
+							<span class="date">June 11, 2022 at 12:12</span>
+						</div> 
+						<div class="body">Brilliantly articulated, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elroy</span> on 
+							<span class="date">June 19, 2022 at 14:26</span>
+						</div> 
+						<div class="body">Thank you so much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Famous</span> on 
+							<span class="date">June 30, 2022 at 14:52</span>
+						</div> 
+						<div class="body">This is sooooooo gooood!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sajjad</span> on 
+							<span class="date">July 25, 2022 at 20:31</span>
+						</div> 
+						<div class="body">Your explanation was so straightforward and understandable. Thank you so much :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">moona</span> on 
+							<span class="date">July 28, 2022 at 12:01</span>
+						</div> 
+						<div class="body">thanks you!  I'm new to cpp and your explanation really helps me a lot</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jimmy</span> on 
+							<span class="date">July 29, 2022 at 15:05</span>
+						</div> 
+						<div class="body">Excellent and easy to understand explanation and example. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ND</span> on 
+							<span class="date">July 31, 2022 at 10:52</span>
+						</div> 
+						<div class="body">Best explanation of rvalue and lvalue that I have ever come across.You are an amazing writer!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rudi</span> on 
+							<span class="date">July 31, 2022 at 11:53</span>
+						</div> 
+						<div class="body">Thanks for the clear explanation. Really helped the concept click into place.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Isaac Ge</span> on 
+							<span class="date">August 18, 2022 at 14:53</span>
+						</div> 
+						<div class="body">I comprehend the universe.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">trungkientran</span> on 
+							<span class="date">September 04, 2022 at 16:55</span>
+						</div> 
+						<div class="body">Great explanation. save me many hours</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kevin</span> on 
+							<span class="date">September 29, 2022 at 22:57</span>
+						</div> 
+						<div class="body">Great explanation, helped me understand the concept. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Iman</span> on 
+							<span class="date">October 14, 2022 at 16:12</span>
+						</div> 
+						<div class="body">Great, Easy to understand and very useful explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">FieryDreamer</span> on 
+							<span class="date">October 15, 2022 at 09:27</span>
+						</div> 
+						<div class="body">Thanks. Unexpectedly found a simple and concise explanation. A rare find on the internet these days.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bryan from Taiwan</span> on 
+							<span class="date">October 28, 2022 at 08:13</span>
+						</div> 
+						<div class="body">Thanks a lot. After watching your explanation, I finally got what my OOP professor was talking about</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jing</span> on 
+							<span class="date">November 01, 2022 at 13:32</span>
+						</div> 
+						<div class="body">Wow! Really thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">HuyMai</span> on 
+							<span class="date">November 18, 2022 at 07:19</span>
+						</div> 
+						<div class="body">Great explanation. I have tired of hearing formal explanation and big words, terms rather than this friendly, informal way of explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ray Taffy Molelekeng</span> on 
+							<span class="date">November 27, 2022 at 15:44</span>
+						</div> 
+						<div class="body">Thanks a million.  In a very simply way, you have driven the concept at home.  This has helped me quickly resolve a number of problems was facing. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Deivid</span> on 
+							<span class="date">December 04, 2022 at 21:30</span>
+						</div> 
+						<div class="body">OMG! Thanks a lot! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Metin Genc</span> on 
+							<span class="date">December 11, 2022 at 23:21</span>
+						</div> 
+						<div class="body">As clear as the sky is blue</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andrii</span> on 
+							<span class="date">December 15, 2022 at 17:16</span>
+						</div> 
+						<div class="body">Many thanks, I finally understood the difference between rvalue and lvalue</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">danny</span> on 
+							<span class="date">January 20, 2023 at 03:30</span>
+						</div> 
+						<div class="body">Great Explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Name</span> on 
+							<span class="date">January 24, 2023 at 12:21</span>
+						</div> 
+						<div class="body">Nice explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Aksh Patel</span> on 
+							<span class="date">January 25, 2023 at 03:23</span>
+						</div> 
+						<div class="body">Dude. damn straightforward </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sarita</span> on 
+							<span class="date">January 30, 2023 at 16:29</span>
+						</div> 
+						<div class="body">Very awesome explaination</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">aelabid</span> on 
+							<span class="date">January 31, 2023 at 01:15</span>
+						</div> 
+						<div class="body">thank you for this great explanation , helped me and saved my time .. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dave</span> on 
+							<span class="date">February 07, 2023 at 15:59</span>
+						</div> 
+						<div class="body">Dzięki ziomek!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nomann</span> on 
+							<span class="date">February 18, 2023 at 08:11</span>
+						</div> 
+						<div class="body">Great tutorial, thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">DR</span> on 
+							<span class="date">March 03, 2023 at 16:03</span>
+						</div> 
+						<div class="body">Really helpful thanks ! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bhanu</span> on 
+							<span class="date">March 05, 2023 at 18:35</span>
+						</div> 
+						<div class="body">Great explanation! Now, I can understand some of the haunting compiler errors.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">adventurer</span> on 
+							<span class="date">March 13, 2023 at 12:14</span>
+						</div> 
+						<div class="body">Extremely pedagogical presentation. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Shubrah</span> on 
+							<span class="date">March 21, 2023 at 20:33</span>
+						</div> 
+						<div class="body">Wonderfully explained, makes me want to deep dive into cpp concepts.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">joe</span> on 
+							<span class="date">March 23, 2023 at 04:29</span>
+						</div> 
+						<div class="body">so clearly ,thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Quang</span> on 
+							<span class="date">March 30, 2023 at 16:45</span>
+						</div> 
+						<div class="body">Comprehensive explaination, i finally get a good grasp of this convoluted concept.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Haj</span> on 
+							<span class="date">June 04, 2023 at 07:25</span>
+						</div> 
+						<div class="body">Very nice!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Xirlemin</span> on 
+							<span class="date">July 19, 2023 at 03:28</span>
+						</div> 
+						<div class="body">Thanks, great job!<br />
+<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">RC</span> on 
+							<span class="date">July 26, 2023 at 02:55</span>
+						</div> 
+						<div class="body">This literally just unlocked something I've always had issues of grasping. It even made me realize *why* they are called lvalue or rvalue - or, well, a general rule of thumb that will help me remember.<br />
+Right-value and Left-value as in - which side of the '=' you would typically see it on.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">longlongago</span> on 
+							<span class="date">August 13, 2023 at 15:04</span>
+						</div> 
+						<div class="body">Your explanation is god damn clear! Thanks a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Teapod1de</span> on 
+							<span class="date">August 15, 2023 at 07:39</span>
+						</div> 
+						<div class="body">this is really good , l like it!! and i post it in my twitter  to make it more popular</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">NJ</span> on 
+							<span class="date">November 30, 2023 at 10:23</span>
+						</div> 
+						<div class="body">Can you not use "he" for GCC?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daniel</span> on 
+							<span class="date">December 21, 2023 at 04:18</span>
+						</div> 
+						<div class="body">THANK YOU!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author"> </span> on 
+							<span class="date">January 03, 2024 at 22:53</span>
+						</div> 
+						<div class="body">Thanks, I really needed that reminder.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Janat</span> on 
+							<span class="date">January 08, 2024 at 20:55</span>
+						</div> 
+						<div class="body">Thank you very much!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Republic</span> on 
+							<span class="date">February 02, 2024 at 07:42</span>
+						</div> 
+						<div class="body">Thanks a lot! Great explanation.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

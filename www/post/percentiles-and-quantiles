@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Percentiles and quantiles - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Basic tools to split and analyze data sets.">
+		<meta name="keywords" content="data,quantiles,percentiles,set">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Percentiles and quantiles" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/percentiles-and-quantiles" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Basic tools to split and analyze data sets." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/percentiles-and-quantiles" />
+<meta name="twitter:title" content="Percentiles and quantiles" />
+<meta name="twitter:description" content="Basic tools to split and analyze data sets." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on August 06, 2015 
+								• ID 10 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Percentiles and quantiles</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Basic tools to split and analyze data sets.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<h2>Quantiles</h2>
+<p>Any set of data, arranged in ascending or descending order, can be divided into various parts, also known as <em>partitions</em> or <em>subsets</em>, regulated by <em>quantiles</em>. Quantile is a generic term for those values that divide the set into partitions of size <em>n</em>, so that each part represents 1/n of the set. Quantiles are not the partition itself, they are the numbers that define the partition. You can think of them as a sort of numeric boundary.</p>
+<p>There are various kind of quantiles, like the <em>quartiles</em> (watch out for the different letter!) which divide a list of numbers into quarters. They are also known as <em>4-quantiles</em>. The list of type of quantiles is quite big; you can also have 3-quartiles, 5-quartiles, 6-quartiles up to 1000-quantiles (and above, I guess). It all depends of the size of your data and what you have to do with it.</p>
+<p>What follows is an example with quartiles, where <em>x</em> is a set of numbers:</p>
+<p>§
+x = {5, 6_1, 9, 11_2, 13, 20_3, 26}
+§</p>
+<ul>
+<li>first quartile, or Q1 = 6</li>
+<li>second quartile, or Q2 = 11</li>
+<li>third quartile, or Q3 = 20</li>
+</ul>
+<p>The second quartile always corresponds to the <a href="http://internalpointers.com/post/averages-mean-median-mode-range">median</a> of the set <em>x</em>.</p>
+<h2>Percentiles</h2>
+<p><em>Percentiles</em> are quite similar to quantiles: they split your set, but only into two partitions. For a generic k<sup>th</sup> percentile, the lower partition contains <em>k</em> % of the data, and the upper partition contains the rest of the data, which amounts to 100 - <em>k</em> %, because the total amount of data is 100%. Of course <em>k</em> can be any number between 0 and 100.</p>
+<h3>How to compute percentiles - the percentile ranking</h3>
+<p>Say I have the usual set of numbers:</p>
+<p>§
+x = {1, 2, 4, 5, 5, 5, 6, 6, 6, 7, 8, 8, 8, 9, 10, 11, 13, 14, 14, 18, 20, 20, 21}
+§</p>
+<p>and I want to compute the <em>percentile ranking</em> of a specific number at position <em>n</em>, for example 13. In <em>x</em>, the number at position 13 is 8. I can use the generic formula:</p>
+<p>§
+"percentile(n)" = "number of values below n" / "size of set x" * 100
+§</p>
+<p>which turns into:</p>
+<p>§
+"percentile(13)" = 12 / 23 * 100 ~~ 52.1
+§</p>
+<p>In words, the number at position 13 splits the set in two parts: the lower one contains approximately 52.1% of the data, while the upper one contains approximately 47.9% of the data. I can also say that the number at position 13 is approximately the <em>52.1th percentile</em> of the set, namely the value that divides the data so that approximately 52.1% is below it.</p>
+<h3>How to compute percentiles - the value at <em>r</em> %</h3>
+<p>This is actually the opposite question. Given a set of numbers, I want to know the position <em>n</em> of that number that gives me a percentile ranking <em>r</em> (or the <em>r</em>-th percentile). Given the previous data set, I want to know what value exists at percentile ranking of - say - 40% (or at the 40th percentile). I can use the generic formula:</p>
+<p>§
+n = r / 100 * ("size of set x" + 1)
+§</p>
+<p>which is:</p>
+<p>§
+n = 40 / 100 * (23 + 1) ~~ 9.6
+§</p>
+<p>It tells me that the number I'm looking for lies roughly in the 9.6th position of my set, between 6 and 7. Unfortunately I'm working with a discrete set of numbers and I don't have such a 9.6th value in there. I can easily approximate it, since 9,6 means "a little bit more than 9 and a half" and I pick up the 10th position, which corresponds to the number 7.</p>
+<p>In words, the 40th percentile in <em>x</em> is the number at position 10 (7 in my data set).</p>
+<h2>Sources</h2>
+<p>Wikipedia - <em>Quantile</em> (<a href="https://en.wikipedia.org/wiki/Quantile">link</a>)<br>
+Math Is Fun - <em>Quartiles</em> (<a href="https://www.mathsisfun.com/data/quartiles.html">link</a>)<br>
+Dummies.com - <em>How to Calculate Percentiles in Statistics</em> (<a href="http://www.dummies.com/how-to/content/how-to-calculate-percentiles-in-statistics.html">link</a>)<br>
+StatisticsLectures.com - <em>Percentiles and Quartiles</em> (<a href="https://www.youtube.com/watch?v=Snf6Wpn-L4c">link, video</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/data">data</a>
+				 • 								<a class="ip-tag" href="/tag/quantiles">quantiles</a>
+				 • 								<a class="ip-tag" href="/tag/percentiles">percentiles</a>
+				 • 								<a class="ip-tag" href="/tag/set">set</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Introduction to IP: the Internet Protocol - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="From routing to IP addressing, a look at the protocol that gives life to the Internet.">
+		<meta name="keywords" content="networks,internet,tcp/ip,IP,IP address,routing">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Introduction to IP: the Internet Protocol" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-ip-internet-protocol" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-internet-protocol.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="From routing to IP addressing, a look at the protocol that gives life to the Internet." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-ip-internet-protocol" />
+<meta name="twitter:title" content="Introduction to IP: the Internet Protocol" />
+<meta name="twitter:description" content="From routing to IP addressing, a look at the protocol that gives life to the Internet." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-internet-protocol.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 07, 2021 
+								• updated on September 04, 2021  
+								• ID 90 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Introduction to IP: the Internet Protocol</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>From routing to IP addressing, a look at the protocol that gives life to the Internet.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-computer-networks">Introduction to computer networks  </a>
+							</span> —
+							<span class="intro">A bird's-eye view on the art of resource sharing from one computer to another. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-internet">Understanding the Internet </a>
+							</span> —
+							<span class="intro">“Is that thing still around?” — Homer Simpson</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>
+							</span> —
+							<span class="intro">The official rules that allow computers to communicate over the Internet.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+							</span> —
+							<span class="intro">One of the most important, high-level protocols in the Internet Protocol Suite. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/network-programming-beginners-overview">Network programming for beginners: introduction to sockets </a>
+							</span> —
+							<span class="intro">A theoretical look at one of the most popular programming tools for exchanging data over computer networks. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a>
+							</span> —
+							<span class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. </span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<p>Welcome to the 4th episode of the <a href="https://internalpointers.com/post-group/networking-101">Networking 101 series</a>! In the previous article, <a href="https://internalpointers.com/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>, I explored the set of rules known as the <strong>TCP/IP protocol</strong> that brings the Internet to life.</p>
+<p>The TCP/IP protocol is a <em>collection of protocols</em> that determines how the Internet should work. The TCP/IP name comes from two of the most important protocols it contains: the <strong>Transmission Control Protocol (TCP)</strong> and the <strong>Internet Protocol (IP)</strong>. In this article I want to investigate the latter.</p>
+<h2>The Internet Protocol: key ideas</h2>
+<p>The Internet Protocol is a set of rules that determine how data should travel across computers over a network and reach the correct destination. You can find the original document <a href="https://datatracker.ietf.org/doc/html/rfc791">here</a> published by the <strong>Internet Engineering Task Force (IETF)</strong>, along with additional corrections and fixes (<a href="https://datatracker.ietf.org/doc/html/rfc1349">here</a>, <a href="https://datatracker.ietf.org/doc/html/rfc2474">here</a> and <a href="https://datatracker.ietf.org/doc/html/rfc6864">here</a>). It is a low-level protocol, as it belongs to the Network layer in the TCP/IP protocol stack:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/ip-protocol-in-stack.png" alt="Internet Protocol in TCP/IP stack">
+<div class="caption">1. The Internet Protocol belongs to layer 2 of the TCP/IP protocol stack.</div>
+</div><p>The Internet Protocol introduces two important networking concepts:</p>
+<ul>
+<li><strong>routing</strong> — the process of delivering data from one device to another by selecting the right path across one or more networks. A device connected to a network that sends or receives messages through the Internet Protocol is called <strong>host</strong>;</li>
+<li><strong>IP address</strong> — a special number assigned to each host on the network, used to send data to the right place.</li>
+</ul>
+<p>The two concepts above go hand in hand: let's take a deeper look.</p>
+<h2>Internet Protocol part one — Routing</h2>
+<p>Routing is the ability of a computer network to dispatch messages around, say from computer A to computer B. As seen in <a href="https://internalpointers.com/post/understanding-internet">chapter #2</a> of this series, the Internet is a huge entity made by billions of computers connected together through cables: the Internet Protocol defines how a message should travel across those computers to reach its destination.</p>
+<p>More precisely, the Internet is a global network made of several smaller networks, which in turn contain hosts. <strong>Routers</strong> are special computers located on the edges of those networks, acting like gatekeepers for packages that enter or exit. Routers do the hard work of picking up the message you want to send and move it in the right direction. The message is passed from one router to another until the destination (i.e. the host) is reached.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/computers-networks.png" alt="Two computers over two different networks">
+<div class="caption">2. Two computers in different networks want to exchange information. White dots are routers. A message might need to traverse multiple networks (i.e. routers) in order to reach the destination.</div>
+</div><p>The physical path between computer A and computer B is filled with routers. A package that needs to traverse one or more networks will inevitably pass through all the networks' routers and get redirected by them, until the target host is reached. The Internet Protocol describes how routers should do such redirection job as efficiently as possible.</p>
+<h3>Routing tables</h3>
+<p>In the picture above you can notice there is more than one way for a message to reach the destination. Routers are able to choose the shortest path, and also adjust it if the network is overloaded — in case many other computers are trying to exchange data at the same time — or if there is a network malfunction somewhere along the way.</p>
+<p>Part of this magic is performed through <strong>routing tables</strong>, special databases stored into routers. Routing tables define the path a message should take to reach every destination that the router is responsible for. When a router receives a message, it parses it to understand its intended destination, then it determines where to route the message based on the information located in its routing tables.</p>
+<h2>Anatomy of a message: datagrams</h2>
+<p>In the <a href="https://internalpointers.com/post/introduction-tcp-ip-protocol">third chapter of this series</a> I mentioned how the TCP/IP protocol stack wants the data to be split into <em>chunks</em>: the Internet Protocols calls those chunks <strong>datagrams</strong>, or also <strong>Internet Protocol packets</strong>. Datagrams are generated by programs from upper layers in the TCP/IP protocol stack that make use of the Internet Protocol.</p>
+<p>A datagram is made of two parts:</p>
+<ul>
+<li><strong>header</strong> — contains routing information: source address, destination address and many other technical details;</li>
+<li><strong>payload</strong> — a portion of the message to be sent.</li>
+</ul>
+<p>I previously said that routers dispatch messages. They actually deal with datagrams: when a datagram arrives, the router parses the datagram header in order to understand where to route it. It then matches the destination address to its routing table and act accordingly: if the recipient belongs to its network, the router passes the datagram to that specific host, otherwise the datagram is forwarded to a different router in another network.</p>
+<p>I will investigate all the fields a datagram header consists of in future chapters of this series, when I will get my hands dirty with network programming. For now it is interesting to note the presence of the <strong>Time-to-live (TTL)</strong> field (renamed <strong>Hop limit</strong> more recently) that determines how long a datagram should float around the Internet before being destroyed. When the datagram arrives at a router, the router decrements the TTL field by one unit. When the TTL field hits zero, the router discards the datagram. This is useful to prevent datagrams from going in circles forever on the Internet.</p>
+<h3>Fragmentation</h3>
+<p>Different networks allow different datagram lengths, in bytes: some want short datagrams, some others allow the maximum size available (65,535 bytes). A fat datagram needs to be split up into smaller ones when it traverses a network that doesn't understand big datagrams. Such mechanism is called <strong>fragmentation</strong> and is supported by the Internet Protocol. A bunch of fields in the datagram header keep track of the number of sub-datagram a datagram has been split into and are used by the receiver to later reassemble the information.</p>
+<h2>The Internet Protocol is connectionless</h2>
+<p>Sending data in Internet Protocol is conceptually simple: generate a datagram, then pass it to a router that will address it where needed. Rinse and repeat for every datagram your message is made of. Also, no connection needs to be established in advance in order to talk to a router: just send it the datagram and you're done. For this reason the Internet Protocol is a form of <strong>connectionless</strong> communication.</p>
+<p>In connectionless communication datagrams are sent without first ensuring that the recipient is available and ready to receive them: datagrams might arrive in a different order than expected. Or might not arrive at all, in case there are misconfigured or malfunctioning routers along the way. For this reason the Internet Protocol is almost never used directly, rather as a foundation for other protocols — for example the TCP + IP combo — where fancier connections are required. I will explore the improvements of the TCP protocol in the next chapter of this series.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2></a>Internet Protocol part two — the IP address</h2>
+<p>The IP address is the second key concept introduced by the Internet Protocol. An IP address is a 32-bit number where each 8-bit segment is separated by a dot (<code>.</code>). Those segments are called <strong>octets</strong>. For example: <code>000100001.01100000.10111011.00000010</code>. Since binary is difficult to read, IP addresses are often represented in the <strong>dot-decimal</strong> notation, where each octet is expressed as a decimal number that ranges from 0 to 255. For example, the binary IP address above becomes <code>33.96.187.2</code>.</p>
+<p>Every host in a network has an IP address. For example, the computer where this website is stored has an IP address of <code>107.170.164.113</code>. IP addresses are used to uniquely identify hosts over a network and allow information to be sent between them. You can think of an IP address as the address written over an envelope.</p>
+<p>When a datagram travels over the Internet, it contains in its header the IP addresses of both the source and the destination. Routers parse the datagram header, read those addresses and redirect the datagram accordingly.</p>
+<h3><a id="ip-address-4-vs-6"></a>IP address version 4 vs. version 6</h3>
+<p>The IP address seen above is known as <strong>IP version 4</strong>, or <strong>IPv4</strong> for brevity. Since an IPv4 address is a 32-bit binary number (4 octets, [texi]4\times8 = 32[texi]), the maximum amount of unique IP addresses is [texi]2^{32}[texi] — around <em>four billions</em>. Apparently a big number, but not enough for the modern, ever-expanding Internet and the devices that every day want to connect to it.</p>
+<p>For this reason, IETF engineers introduced another format known as <strong>IP version 6</strong> (<strong>IPv6</strong>), a 128-bit number where each 16-bit segment is separated by a colon (<code>:</code>). The segments are called <strong>hextets</strong> and are usually written as four hexadecimal digits. For example, <code>2001:0db8:0000:0000:0000:8a2e:0370:7334</code> and <code>1327:7e23:249e:6ee7:400e:e531:c62d:47b1</code> are both valid IPv6 addresses. An IPv6 address written in binary format would be too large to read.</p>
+<p>Using the IPv6 format allows for [texi]2^{128}[texi] addresses, a number that is even difficult to imagine. The Internet infrastructure is slowly adopting the new IPv6 format, while it will still be possible to use existing IPv4 addresses for the foreseeable future due to backward compatibility.</p>
+<h2>How are IP addresses assigned?</h2>
+<p>Routers are responsible for assigning IP addresses to hosts that join their networks. When you connect your device to the Internet through your <a href="https://internalpointers.com/post/understanding-internet#networks">Internet Service Provider (ISP)</a>, one of the ISP routers assigns an IP address to <em>your</em> router, which can be seen as a host in the ISP network. Such IP address is visible from any part of the Internet and is called <strong>public address</strong>. At the same time, your router assigns another IP address to your device, visible only inside your local network. This IP address is called <strong>private address</strong>.</p>
+<h2>IP addresses: networks and hosts</h2>
+<p>Imagine you live in France and want to send a letter to a friend in Italy through the physical mail service: while writing the address, you will add the string <code>Italy</code> to determine the country of destination. Such information will be used by the postal service to <em>optimize</em> the routing: there is no need to send your letter to Asia if it is addressed to Europe, after all. This will prevent your package from floating around the wrong offices or taking unnecessarily long routes, which would increase the delivery time.</p>
+<p>The same logic applies to the Internet, which is seen by the Internet Protocol as a big hierarchical structure of networks and hosts. A network is like the country in a physical postal service, while the host is the street address. In computer's terms, the network is the portion of the Internet in which the device is located, while the host is the device itself within that network. This information is extremely useful to optimize how datagrams flow across Internet routers, as seen in the example above.</p>
+<p>The network and the host information is contained in the IP address. More specifically, a portion of the address called <strong>network prefix</strong> marks the network, the remaining part for the host is known as <strong>host identifier</strong>. All hosts on a network have the same network prefix. The <strong><a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Classless Inter-Domain Routing (CIDR)</a> notation</strong> is the modern way to specify which part of the IP address is used for the  network prefix and which one is used for the host identifier.</p>
+<p>The CIDR notation looks like this:</p>
+<pre><code>[IP address]/[mask]
+</code></pre>
+<p>Where <code>[IP address]</code> can be both IPv4 or IPv6 and <code>[mask]</code> — the <strong>network mask</strong> — tells the number of bits in the IP address reserved for the network, while the rest is for the host. The two numbers are separated by a slash ('/'). For example, an IPv4 address written as <code>33.96.187.2/24</code> means that the first 24 bits — the <code>33.96.187</code> part, usually written as <code>33.96.187.0</code> — represent the network prefix, while <code>2</code> is the host identifier. The same logic applies to IPv6.</p>
+<p>An IP address written in CIDR notation also tells you how many hosts can exist in a specific network. In the example above <code>33.96.187.2/24</code>, 8 bits are reserved for the host identifier, which means up to [texi]2^{8} = 256[texi] hosts in that network.</p>
+<p>You usually don't see IP addresses written in the CIDR notation because you don't need it as an Internet user. However, the CIDR-ed version is always passed to routers: they unpack the IP address as specified by the network mask, grab the network information and route the datagrams to the right location. Operating systems too need to know this information to determine if a datagram should be sent to other hosts on the same network or to the outside world.</p>
+<h3>Subnetting</h3>
+<p>The concept of network mask seen above exists to allow the creation of <strong>subnetworks</strong>, a practice known as <strong>subnetting</strong>. Subnetting is the process of splitting up a network into two or more networks. This is done physically by installing new routers to mark the boundaries of the new subnetworks, and logically on the IP address by using some bits from the host part as a new network prefix, as seen in the picture below:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/06/network4/subnetting.png" alt="Subnetting">
+<div class="caption">3. Example of subnetting: the host identifier part is being used as a new subnetwork prefix + host identifier.</div>
+</div><p>Subnetting is done by network administrators to create new, smaller networks out of existing ones. The operation brings several benefits. For example, subnetting improves the network performances: when a network is subnetted, different devices communicate with different routers rather than having all devices connected to a central router, which might become busy. Subnetting also increases security and reliability: subnetworks are isolated, so a problem in a specific subnetwork won't propagate to others.</p>
+<p>Subnetting was also used back in the IPv4-only days to optimize the small number of addresses available, especially in enterprises networks. The huge amount of IP addresses available with IPv6 has fixed the problem for good.</p>
+<h2>Where is the Internet Protocol implemented?</h2>
+<p>The Internet Protocol is about the software side of the Internet, like any other protocol in the TCP/IP protocol stack: it is designed to be hardware independent and may be implemented on top of any physical technology. As a consequence, all the instructions and requirements outlined by the Internet Protocol are implemented into operating systems that run on routers and user devices.</p>
+<h2>What's next</h2>
+<p>Many other protocols use the Internet Protocol as a foundation: the most important one is TCP as I have mentioned multiple times throughout this article. In the next episode of this series I want to explore such protocol from a theoretical point of view. Then I will get my hands dirty with network programming, to put in practice what we have found so far. Stay tuned!</p>
+<h2>Sources</h2>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc791">RFC791 — Internet Protocol specification</a><br>
+<a href="https://www.cloudflare.com/learning/network-layer/what-is-a-router/">Cloudflare — What is a router?</a><br>
+<a href="https://www.cloudflare.com/learning/network-layer/internet-protocol/">Cloudflare — What is the Internet Protocol?</a><br>
+<a href="https://www.youtube.com/watch?v=9JXcU6BSqwU">System Engineer @ YouTube — Routed vs Routing Protocols</a><br>
+<a href="https://security.stackexchange.com/a/44068/84512">Security.stackexchange — With IPv6 do we need to use NAT any more?</a><br>
+<a href="https://en.wikipedia.org/wiki/IPv4_address_exhaustion">Wikipedia — IPv4 address exhaustion</a><br>
+<a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia — Classless Inter-Domain Routing</a><br>
+<a href="https://en.wikipedia.org/wiki/Subnetwork">Wikipedia — Subnetwork</a><br>
+<a href="https://en.wikipedia.org/wiki/IP_address">Wikipedia — IP address</a><br>
+<a href="https://en.wikipedia.org/wiki/IP_header">Wikipedia — IP header</a><br>
+<a href="https://en.wikipedia.org/wiki/IP_routing">Wikipedia — IP routing</a><br>
+<a href="https://en.wikipedia.org/wiki/Router_%28computing%29">Wikipedia — Router (computing)</a><br>
+<a href="https://en.wikipedia.org/wiki/Routing_protocol">Wikipedia — Routing protocol</a><br>
+<a href="https://en.wikipedia.org/wiki/Connectionless_communication">Wikipedia — Connectionless communication</a><br>
+<a href="https://docs.microsoft.com/en-us/troubleshoot/windows-client/networking/tcpip-addressing-and-subnetting">Microsoft — Understand TCP/IP addressing and subnetting basics</a><br>
+<a href="https://www.internetsociety.org/deploy360/ipv6/faq">Internet Society — Frequently Asked Questions (FAQ) on IPv6 adoption and IPv4 exhaustion</a><br>
+<a href="https://www.cisco.com/c/en/us/support/docs/ip/routing-information-protocol-rip/13790-8.html">Cisco — Host and Subnet Quantities</a><br>
+<a href="https://www.computernetworkingnotes.com/ip-tutorials/ip-address-network-address-and-host-address-explained.html">Computer Networking Notes — IP address, Network address, and Host address Explained</a><br>
+<a href="https://www.enterprisenetworkingplanet.com/standards-protocols/networking-101-understanding-subnets-and-cidr">Enterprise Networking Planet — Networking 101: Understanding Subnets and CIDR</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/networks">networks</a>
+				 • 								<a class="ip-tag" href="/tag/internet">internet</a>
+				 • 								<a class="ip-tag" href="/tag/tcp-ip">tcp/ip</a>
+				 • 								<a class="ip-tag" href="/tag/ip">IP</a>
+				 • 								<a class="ip-tag" href="/tag/ip-address">IP address</a>
+				 • 								<a class="ip-tag" href="/tag/routing">routing</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Logging in Python with sub-modules and configuration files - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good.">
+		<meta name="keywords" content="Python,logging">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Logging in Python with sub-modules and configuration files" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/logging-python-sub-modules-and-configuration-files" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/logging-python-sub-modules-and-configuration-files" />
+<meta name="twitter:title" content="Logging in Python with sub-modules and configuration files" />
+<meta name="twitter:description" content="Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 27, 2015 
+								• updated on January 20, 2019  
+								• ID 4 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Logging in Python with sub-modules and configuration files</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Dealing with the Logging package in Python requires to understand a couple of concepts. I start with a little bit of boring theory. Since this is an ongoing research, you may find some mistakes here and there. I will update this article as my discovery continues.</p>
+<h2>The concept of hierarchy</h2>
+<p>In Python you print logs with instances of the <code>Logger</code> class. Loggers are hierachical objects, organized by a sort of namespace tree. They reflect the structure of your app and the various modules/packages you import. The root of the hierarchy is called <strong>the root logger</strong> (or <strong>root</strong> for brevity): you typically deal with it in your application's entry point (e.g. <code>main()</code>).</p>
+<p>Thanks to that hierarchy, you can define which logger should output its stuff or enable/disable the entire chain completely. In a common scenario you create a logger for each module/package of your app and use it right away to print messages, without any initial setup. They are the child loggers, after all. Then you configure how the entire family of loggers works in the root logger (e.g. in your <code>main()</code> entry point).</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Loggers, handlers, filters, formatters</h2>
+<p>While logging in Python, there are basically four objects working together. The <strong>logger</strong> is what you call when you actually want to print a message somewhere. A <strong>handler</strong> grabs that message and redirects it to a particular destination: console output, file, network and so on. A <strong>formatter</strong> defines the layout of each message string. Finally a <strong>filter</strong> gives you the ability to specify what to log, and what to mute, instead. I've never had the urge to use a filter, so I will leave it out for now. Configuring a logger means to tell those four objects how they should interact.</p>
+<h2>Import and call a logger in a module</h2>
+<p>I'm writing a very simple app, which is composed of a <code>main.py</code> and a <code>core.py</code> module, and I want to log some messages. The first step is importing the logging module and initialize an object.</p>
+<pre><code class="lang-python"># core.py
+
+import logging
+log = logging.getLogger(__name__)
+</code></pre>
+<p>I have just created a logger based on the module's fully qualified name (<code>__name__</code>). This is a common best practice and you should stick with it. Now I can start logging with the following methods:</p>
+<pre><code class="lang-python">#core.py
+
+def do_something():
+  log.debug(&#39;debug message&#39;)
+  log.info(&#39;info message&#39;)
+  log.warning(&#39;warning message&#39;)
+  log.error(&#39;error message&#39;)
+  log.critical(&#39;critical message&#39;)
+  log.log(&#39;log message&#39;)
+  log.exception(&#39;exception message&#39;)
+</code></pre>
+<p>The next step is to configure the logger so that I can actually output those messages wherever needed.</p>
+<h2>Configure the logger via INI file</h2>
+<p>The Logging configuration occurs right in my <code>main.py</code> file, using a sub-module called <code>logging.config</code>. Remember: I'm configuring the root logger now, because I am at the top level of my application.</p>
+<pre><code class="lang-python"># main.py
+
+import core
+import logging.config
+
+logging.config.fileConfig(&#39;/path/to/my/configuration.ini&#39;)
+core.do_something()
+</code></pre>
+<p>I import my <code>core</code> module (and use it) and <code>logging.config</code>, telling it where to retrieve the configuration file. That's basically it: we are done with <code>main.py</code>.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>The configuration file</h2>
+<p>This is the part I found to be the most tricky. First of all you have to define your four logging objects (actually three: I leave out the filter).</p>
+<pre><code class="lang-ini">[loggers]
+keys=root,core
+
+[handlers]
+keys=consoleHandler
+
+[formatters]
+keys=defaultFormatter
+</code></pre>
+<p>I'm just giving some names here: I have two loggers, <strong>root</strong> and <strong>core</strong> (the one in my <code>core.py</code> module, remember?), a handler I called <strong>consoleHandler</strong> and a formatter <strong>defaultFormatter</strong>. I invented those names. Root logger must be always defined in this file, otherwise Python complains about it.</p>
+<p>Now, for each logger, I define some properties:</p>
+<pre><code class="lang-ini">[logger_root]
+handlers=consoleHandler
+
+[logger_core]
+handlers=consoleHandler
+level=DEBUG
+qualname=core
+propagate=0
+</code></pre>
+<p>First of all, take care of the syntax <code>[logger_&lt;your-logger-name&gt;]</code>. For the root logger I choose to handle it with <strong>consoleHandler</strong>. I do the same for the <strong>core</strong> logger, but I also define:</p>
+<ul>
+<li>the debug <strong>level</strong>;</li>
+<li>the <strong>qualname</strong> - the name used by the application to get the logger. In my case is <strong>core</strong>, as I did in <code>core.py</code> with the instruction <code>logging.getLogger(__name__)</code>, and there <code>__name__</code> corresponds to <strong>core</strong>;</li>
+<li><strong>propagate</strong> - if true, events logged by this logger will be passed to the upper level.</li>
+</ul>
+<p>We are done with the loggers. Now I proceed to configure the formatter and the handler:</p>
+<pre><code class="lang-ini">[handler_consoleHandler]
+class=logging.StreamHandler
+formatter=defaultFormatter
+args=(sys.stdout,)
+
+[formatter_defaultFormatter]
+format=%(levelname)s %(asctime)s %(filename)s - %(message)s
+</code></pre>
+<p>The same syntax applies here: <code>[handler_&lt;your-handler-name&gt;]</code> and <code>[formatter_&lt;your-formatter-name&gt;]</code>.</p>
+<p>My <strong>consoleHandler</strong> uses:</p>
+<ul>
+<li>the <strong>class</strong> <code>logging.StreamHandler</code> to output the messages. That class simply redirects any string to the console;</li>
+<li>my <strong>defaultFormatter</strong> as a <strong>formatter</strong>;</li>
+<li><strong>args</strong> as the list of arguments to the constructor for the handler class. In my example I want to print to the standard ouput. </li>
+</ul>
+<p>Finally my <strong>defaultFormatter</strong> formats the strings according to my needs.</p>
+
+<h2>Logging from the <code>__main__</code> module</h2>
+
+<p>When you run a Python script as <code>python script.py</code>, the file you feed into the Python interpreter is a module itself and its fully qualified name is <code>__main__</code>. This is why it is also called the <strong>main module</strong>. So if you want to print log messages from the main module you need to include it too in the configuration file, like this:</p>
+
+<pre><code class="lang-ini">[loggers]
+keys=root,main,[...]
+
+[...]
+
+[logger_main]
+handlers=consoleHandler
+level=DEBUG
+qualname=__main__
+propagate=0
+</code></pre>
+
+<p>It took me a while to figure it out!</p>
+
+<h2>Useful links</h2>
+<p>List of handlers and their parameters: <a href="https://docs.python.org/3.4/library/logging.handlers.html">https://docs.python.org/3.4/library/logging.handlers.html</a><br>
+List of formatting parameters: <a href="https://docs.python.org/3.4/library/logging.html#logrecord-attributes">https://docs.python.org/3.4/library/logging.html#logrecord-attributes</a><br>
+List of debug levels: <a href="https://docs.python.org/3.4/howto/logging.html#when-to-use-logging">https://docs.python.org/3.4/howto/logging.html#when-to-use-logging</a></p>
+
+<h2>Sources</h2>
+<p>Antonym.org - A real Python logging example (<a href="http://antonym.org/2005/03/a-real-python-logging-example.html">link</a>)<br>
+Pythonlibrary.org - Python 101: An Intro to logging (<a href="http://www.blog.pythonlibrary.org/2012/08/02/python-101-an-intro-to-logging/">link</a>)<br>
+Eric.themoritzfamily.com - Learning Python logging (<a href="http://eric.themoritzfamily.com/learning-python-logging.html">link</a>)<br>
+Docs.python.org - Logging HowTo (<a href="https://docs.python.org/3.4/howto/logging.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/python">Python</a>
+				 • 								<a class="ip-tag" href="/tag/logging">logging</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dan Wray</span> on 
+							<span class="date">November 30, 2018 at 23:30</span>
+						</div> 
+						<div class="body">Hi, thanks for posting this.<br />
+<br />
+I had tried several logging setups with Flask before finding a suitable logging solution, and this one that you've presented here works a charm! :)<br />
+<br />
+Cheers!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Floris</span> on 
+							<span class="date">February 05, 2020 at 16:55</span>
+						</div> 
+						<div class="body">Great article!!!  Very clear explanation of not just what to configure but also why to configure it that way. Thank you for sharing!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jamie</span> on 
+							<span class="date">January 28, 2023 at 02:10</span>
+						</div> 
+						<div class="body">Super helpful and well written. Thanks for the work. </div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

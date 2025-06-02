@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Network programming for beginners: introduction to sockets  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A theoretical look at one of the most popular programming tools for exchanging data over computer networks. ">
+		<meta name="keywords" content="internet,network programming,socket">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Network programming for beginners: introduction to sockets " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/network-programming-beginners-overview" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/network-programming-beginners-introduction-socket.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A theoretical look at one of the most popular programming tools for exchanging data over computer networks. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/network-programming-beginners-overview" />
+<meta name="twitter:title" content="Network programming for beginners: introduction to sockets " />
+<meta name="twitter:description" content="A theoretical look at one of the most popular programming tools for exchanging data over computer networks. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/network-programming-beginners-introduction-socket.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 10, 2021 
+								• updated on November 17, 2021  
+								• ID 93 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Network programming for beginners: introduction to sockets </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A theoretical look at one of the most popular programming tools for exchanging data over computer networks. </p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-computer-networks">Introduction to computer networks  </a>
+							</span> —
+							<span class="intro">A bird's-eye view on the art of resource sharing from one computer to another. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-internet">Understanding the Internet </a>
+							</span> —
+							<span class="intro">“Is that thing still around?” — Homer Simpson</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>
+							</span> —
+							<span class="intro">The official rules that allow computers to communicate over the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-ip-internet-protocol">Introduction to IP: the Internet Protocol</a>
+							</span> —
+							<span class="intro">From routing to IP addressing, a look at the protocol that gives life to the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+							</span> —
+							<span class="intro">One of the most important, high-level protocols in the Internet Protocol Suite. </span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a>
+							</span> —
+							<span class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. </span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>Welcome to the 6th episode of the <a href="https://internalpointers.com/post-group/networking-101">Networking 101 series</a>! I've spent the last five chapters talking about the theory behind computer networks, from the Internet history to some of the most important Internet protocols out there. Now it's time for me to explore one of the many practical sides of networking: <strong>network programming</strong>.</p>
+<h2>Network programming in a nutshell</h2>
+<p>Network programming is about writing computer programs that talk to eachother over a computer network. The world is full of such type of programs: for example, the web browser you are using to read this website is a piece of software that connects to a remote computer where the data is stored and grabs the text content to display on your screen.</p>
+<p>The browser and the web server can do their networking job thanks to the operating systems they run on, where all the necessary network protocols have been implemented. The operating system's parts that provide network functionality are called <strong>sockets</strong>.</p>
+<h2>Understanding sockets</h2>
+<p>A socket is an abstraction over a communication flow. Concretely, sockets are programming objects provided by the operating system that allow your programs to send and receive data. There are two types of sockets in the programming world:</p>
+<ol>
+<li><p><strong>network sockets</strong> — they are used to exchange data between programs <em>over a network</em>, or in other words between two remote hosts;</p>
+</li>
+<li><p><strong>Unix Domain sockets</strong> — also known as UNIX sockets, they are used to exchange data between programs running <em>on the same machine</em> (i.e. in the same host). This is a form of <a href="https://en.wikipedia.org/wiki/Inter-process_communication"><strong>Inter-Process Communication (IPC)</strong></a>.</p>
+</li>
+</ol>
+<p>This article is about network programming, so I will focus only on the first type. However, sockets in modern operating systems support both styles: changing the socket type is just a matter of configuration, as we will see shortly.</p>
+<h2>What does a socket look like?</h2>
+<p>A socket is an object that you create, configure and on which invoke some functions to send or receive data. For example, the pseudo-code below shows how to send a piece of text (<code>Hi there</code>) through a fictional socket:</p>
+<pre><code>Socket socket(...configuration...)                 (1)
+socket.connect(...address of a remote host...)     (2)
+socket.send("Hi there")                            (3)
+socket.close()
+</code></pre>
+<p>A socket is first created and configured (1), then it is used to establish a connection to a remote host (2) and to send the message (3). Sockets are the foundation to more complex programs that send and receive data: we will see some examples of what you can do with them in the last part of this article.</p>
+<h2>Socket implementations</h2>
+<p>The example above is just pseudo-code: actual sockets come with the operating system, so they are written in low-level languages (C, mostly). Their programming interface (API) however — the socket object layout, how to initialize it, the function names, ... — is very similar to the pseudo-code above. In fact, such API style is known as the <strong>Berkeley sockets interface</strong>, sometimes also called <strong>POSIX sockets</strong> or <strong>BSD sockets</strong>.</p>
+<p>All modern operating systems implement the Berkeley socket interface, but not all of them stick to the original specifications. Also, using sockets provided by the operating system forces you to write low-level code. That's why most of the time you want to use the networking abstractions provided by higher-level programming languages. For example, the <a href="https://doc.rust-lang.org/std/net/index.html"><code>std::net</code> module</a> in Rust, the <a href="https://docs.oracle.com/en/java/javase/16/docs/api/jdk.net/jdk/net/package-summary.html"><code>jdk.net</code> package</a> in Java or the <a href="https://www.boost.org/doc/libs/1_77_0/doc/html/boost_asio.html">Boost.Asio library</a> for C++.</p>
+<p>Python is interesting: its <a href="https://docs.python.org/3/library/socket.html"><code>socket</code> module</a> is the translation of the Berkeley sockets interface into Python's object-oriented style. The advantage is that you work with the original API without all the headaches of manual memory management required by the C language. For this reason I will be using Python and the <code>socket</code> module for my network programming experiments in the next chapters of this series.</p>
+<h2>Configuring a socket</h2>
+<p>As mentioned earlier, a socket must be configured before use. You have to specify the <strong>socket family</strong>, the <strong>socket type</strong> and the optional <strong>protocol</strong>. Those properties define the nature of the socket and its behavior. Let's take a deeper look.</p>
+<h3>The <strong>socket family</strong></h3>
+<p>Determines whether you want a socket that works over the Internet or a local one. More specifically, you can have <strong>IPv4-based</strong> sockets, <strong>IPv6-based</strong> sockets or <strong>UNIX</strong> sockets.</p>
+<p>A socket configured as IPv4 or IPv6 can exchange data with remote hosts. The former works with IP addresses version 4, the latter works with <a href="https://internalpointers.com/post/introduction-ip-internet-protocol#ip-address-4-vs-6">IP addresses version 6</a>. A socket configured as UNIX is used to exchange data between programs on the same machine. Windows, a non-UNIX operating system, recently <a href="https://devblogs.microsoft.com/commandline/af_unix-comes-to-windows/">added support for the UNIX socket type</a>.</p>
+<h3>The <strong>socket type</strong></h3>
+<p>Determines the type of communication you want to establish. Here the choice boils down to three types: <strong>stream sockets</strong> for <em>connection-oriented</em> protocols such as the <a href="https://internalpointers.com/post/introduction-tcp-transmission-control-protocol">Transmission Control Protocol (TCP)</a>; <strong>datagram sockets</strong> for <em>connectionless</em> protocols such as the <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">User Datagram Protocol</a>; <strong>raw sockets</strong> for low-level communication protocols such as the <a href="https://internalpointers.com/post/introduction-ip-internet-protocol">Internet Protocol</a>.</p>
+<p>With stream or datagram sockets you are using popular protocols already implemented for you by the operating system. Raw sockets instead allow to do whatever you want: you can implement your own protocols, generate custom IP packets, <a href="https://en.wikipedia.org/wiki/Packet_analyzer">intercept network traffic</a> or just mess around by sending invalid data to other computers.</p>
+<p>Raw sockets are powerful and might cause harm if used for malicious purposes. This is probably the reason why <a href="https://docs.microsoft.com/en-us/windows/win32/winsock/tcp-ip-raw-sockets-2?redirectedfrom=MSDN#limitations-on-raw-sockets">raw sockets on Windows are in read-only mode</a>: you can't send data with them.</p>
+<h3>The <strong>protocol</strong></h3>
+<p>This piece of information is often optional, as sockets can automatically determine how to behave given the family and the type described above. For example a stream, IPv6-based socket is automatically prepared for a TCP-over-IPv6 transmission. Even better, the Berkeley sockets API includes some utility functions to determine the right parameters for the socket configuration given the address you want to connect to.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>What you can do with sockets</h2>
+<p>As a designer, you can do whatever you want with sockets. However, socket-based programs usually end up being <strong>clients</strong> or <strong>servers</strong>. Clients establish the connection to servers, which in turn listen to clients and exchange data with them.</p>
+<p>For example, the browser you are using to read this article is a client: it talks to a remote server that contains the web page to be displayed. Both the browser and the server make use of sockets under the hood for the actual data transmission.</p>
+<p>The pseudo-code snippet I've shown you before is a client. Let me put it back here for clarity:</p>
+<pre><code>Socket socket(...configuration...)
+socket.connect(...address of a remote host...)
+socket.send("Hi there")
+socket.close()
+</code></pre>
+<p>A server is different in that usually it waits for new clients coming in. Here's a pseudo-code example of a server that replies back to clients with the <code>Welcome</code> string:</p>
+<pre><code>Socket socket(...configuration...)
+socket.bind(...address...)               (1)
+socket.listen()                          (2)
+while (...some condition...):
+    client = socket.accept()             (3)
+    client.send("Welcome")
+socket.close()
+</code></pre>
+<p>Beyond the usual configuration, the Berkeley sockets API wants to <em>bind</em> the socket object to an address (1). This means that your program will react when it receives data from a client with a certain IP address, for example.</p>
+<p>What you can define in the <code>...address...</code> part actually varies between the protocol in use. For example in a TCP connection you also have to specify the <a href="https://internalpointers.com/post/introduction-tcp-transmission-control-protocol#client-server-model">port</a> a client can connect to, and if you don't pass any IP address in it your server will accept connections from any client.</p>
+<p>The socket is then instructed to <em>listen</em> (2), to make it accept incoming connection requests from clients. Finally, the program waits for new clients to come in with the <code>accept()</code> function (3). From this point on, the server has established a connection with a client and can send data to it. The picture below shows the API calls involved in a typical scenario of a client and a server talking to eachother.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/09/network6/client-server-calls.png" alt="Client-server workflow">
+<div class="caption">1. A client-server conversation and the API calls involved.</div>
+</div><h2>Blocking versus non-blocking sockets</h2>
+<p>The <code>accept()</code> function in the server pseudo-code above is <strong>blocking</strong>: the <code>while</code> loop doesn't make any progress until a new client arrives. In other words: your program is stuck waiting for new connections.</p>
+<p>The same logic applies to the <code>connect()</code> function in the client example: no progress is made until a connection is established. Sockets are blocking by default, but you can put them into <strong>non-blocking</strong> mode during the configuration stage.</p>
+<p>With non-blocking sockets the functions mentioned above return immediately without waiting. This is especially useful for servers that need to handle thousands of connections at the same time, or more generally when you want to write programs that don't get stuck waiting for external events.</p>
+<p>Non-blocking programs are faster, but your code becomes a little bit more complicated as you are entering the realm of <strong>asynchronous programming</strong>. Choosing blocking versus non-blocking mode is usually a trade-off between performance and programming complexity.</p>
+<h2>Byte ordering problems</h2>
+<p>When communicating across a network, you may encounter computers with a different architecture than yours. <strong>Byte ordering</strong> is what changes the most: how data is stored in memory.</p>
+<p>Take the hexadecimal number <code>0xA4FFBC01</code> for example: some computers store the most significant byte (<code>A4</code>) <em>before</em> the less significant byte (<code>01</code>), so that the number in memory appears as it is written (<code>A4 FF BC 01</code>). This way of storing numbers matches how us humans write things down and is called <strong>big endian</strong>. The standard byte ordering in networking is big endian and for this reason it is also known as <strong>network byte order</strong>.</p>
+<p>Some computers do the opposite instead: they store the most significant byte (<code>A4</code>) <em>after</em> the less significant byte (<code>01</code>),  so that the number in memory appears flipped (<code>01 BC FF A4</code>). This byte ordering is called <strong>little endian</strong>, known as <strong>host byte order</strong> in the networking jargon.</p>
+<p>So, exchanging data between two computers with different byte ordering requires an adjustment. The trick is to convert data to network byte order before sending it, and convert it to host byte order on arrival. This is done through some utility functions that come with the Berkeley sockets API such as the <code>hton*</code> and <code>ntoh*</code> families: they read as <code>host-to-network</code> and <code>network-to-host</code> and perform the byte conversion for you.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>What's next</h2>
+<p>This article wanted to be a lightweight overview of the Berkeley sockets API. In the next one I will write a small client that downloads a web page from a web server. The experiment will help us understand how to set up a socket, how the send/receive mechanism works and many other nuances of TCP, the protocol the web is based on.</p>
+<h2>Sources</h2>
+<p><a href="https://en.wikipedia.org/wiki/Network_socket">Wikipedia — Network socket</a><br>
+<a href="https://en.wikipedia.org/wiki/Unix_domain_socket">Wikipedia — Unix domain socket</a><br>
+<a href="https://en.wikipedia.org/wiki/Computer_network_programming">Wikipedia — Computer network programming</a><br>
+<a href="https://en.wikipedia.org/wiki/Berkeley_sockets">Wikipedia — Berkeley sockets</a><br>
+<a href="https://stackoverflow.com/questions/22897972/unix-vs-bsd-vs-tcp-vs-internet-sockets">StackOverflow — Unix vs BSD vs TCP vs Internet sockets?</a><br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/winsock/tcp-ip-raw-sockets-2">Microsoft — TCP/IP Raw Sockets</a><br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/winsock/porting-socket-applications-to-winsock">Microsoft — Porting Socket Applications to Winsock</a><br>
+<a href="https://realpython.com/python-sockets/">Socket Programming in Python</a><br>
+<a href="https://docs.python.org/3/library/socket.html">Python manual — socket: Low-level networking interface</a><br>
+<a href="https://beej.us/guide/bgnet/">Beej's Guide to Network Programming</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/internet">internet</a>
+				 • 								<a class="ip-tag" href="/tag/network-programming">network programming</a>
+				 • 								<a class="ip-tag" href="/tag/socket">socket</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">nour</span> on 
+							<span class="date">November 04, 2021 at 13:45</span>
+						</div> 
+						<div class="body">That's really amazing i hope you continue the serie , Thank you so much !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">November 09, 2021 at 10:38</span>
+						</div> 
+						<div class="body">Thanks @nour, more good stuff is coming soon!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">iumyx</span> on 
+							<span class="date">November 15, 2021 at 11:15</span>
+						</div> 
+						<div class="body">Please continue. Your posts are really easy to understand </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">iumyx</span> on 
+							<span class="date">November 23, 2021 at 10:00</span>
+						</div> 
+						<div class="body">I have a little question: When client sends a request, and server calls receive(x) with x is the amount of bytes. So when client sends a super big request that exceeded x bytes, how will the server handle that? Where will the exceeded bytes go </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">December 03, 2021 at 13:32</span>
+						</div> 
+						<div class="body">@iumyx that's a great question, I will try to answer it in the next episode!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">kool</span> on 
+							<span class="date">March 07, 2022 at 23:42</span>
+						</div> 
+						<div class="body">you are great</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

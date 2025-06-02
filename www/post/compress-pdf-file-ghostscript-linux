@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Compress a PDF file with Ghostscript on Linux - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="How to reduce the size of a PDF that originated from a scanned document.">
+		<meta name="keywords" content="pdf,Ghostscript">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Compress a PDF file with Ghostscript on Linux" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/compress-pdf-file-ghostscript-linux" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="How to reduce the size of a PDF that originated from a scanned document." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/compress-pdf-file-ghostscript-linux" />
+<meta name="twitter:title" content="Compress a PDF file with Ghostscript on Linux" />
+<meta name="twitter:description" content="How to reduce the size of a PDF that originated from a scanned document." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 16, 2017 
+								• updated on September 16, 2017  
+								• ID 57 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Compress a PDF file with Ghostscript on Linux</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>How to reduce the size of a PDF that originated from a scanned document.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>I have just scanned a bunch of physical pages into a PDF and the result is a pretty big file. Without any advanced OCR processing, the scanned pages are stored as plain images rather than text, which increase the overall size of the output.</p>
+<p>Browsing the web I've come up with the following <a href="https://www.ghostscript.com/">Ghostscript</a> command that compresses and optimizes the original file into a gray-scaled version of it. The result is a printer-friendly PDF file, i.e. the resolution is set to 300 dpi, but you can change it along the way.</p>
+<pre><code>gs \
+-sDEVICE=pdfwrite \
+-dCompatibilityLevel=1.4 \
+-dPDFSETTINGS=/printer \
+-dBATCH \
+-dNOPAUSE \
+-dQUIET \
+-sProcessColorModel=DeviceGray \
+-sColorConversionStrategy=Gray \
+-dOverrideICC \
+-sOutputFile=output.pdf \
+input.pdf
+</code></pre>
+<h2>The parameters in detail</h2>
+<p><code>-sDEVICE=pdfwrite</code> selects which output device Ghostscript should use. I want to print to a PDF file, so I'm using <code>pdfwrite</code>.</p>
+<p><code>-dCompatibilityLevel=1.4</code> generates a PDF version 1.4. You may want to change this according to your needs. <a href="https://www.prepressure.com/pdf/basics/version">Here's a list of all PDF versions</a>.</p>
+<p><code>-dPDFSETTINGS=/printer</code> sets the image quality for printers (i.e. 300 dpi). Choose <code>/screen</code> if you want to scale it down to 72 dpi: you will obtain additional compression (but the file will look ugly if printed on paper).</p>
+<p><code>-dBATCH -dNOPAUSE</code>: Ghostscript will process the input file(s) without interaction. It will quit on completion.</p>
+<p><code>-dQUIET</code> mutes routine information comments on standard output.</p>
+<p><code>-sProcessColorModel=DeviceGray</code> is the color model to use during conversion.</p>
+<p><code>-sColorConversionStrategy=Gray</code> instructs Ghostscript to produce a grayscaled output.</p>
+<p><code>-dOverrideICC</code>: since the color has changed, <code>-dOverrideICC</code> updates the color profile accordingly.</p>
+<p><code>-sOutputFile=output.pdf</code>: where to save the output file.</p>
+<p><code>input.pdf</code>: the original file to process.</p>
+<h2>Additional notes</h2>
+<p>The above command should work on Windows and OS X as well, as long as Ghostscript is installed.</p>
+<p>PDF version 1.5 seems to feature a better image compression. I should look into that more closely.</p>
+<h2>Sources</h2>
+<p>Ghostscript - <em>How to use Ghostscript</em> (<a href="https://www.ghostscript.com/doc/current/Use.htm">link</a>)<br>
+GitHub gist - <em>Compress PDF files with ghostscript</em> (<a href="https://gist.github.com/firstdoit/6390547">link</a>)<br>
+Stackoverflow - <em>How to convert a PDF to grayscale from command line avoiding to be rasterized?</em> (<a href="https://stackoverflow.com/questions/20128656/how-to-convert-a-pdf-to-grayscale-from-command-line-avoiding-to-be-rasterized">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/pdf">pdf</a>
+				 • 								<a class="ip-tag" href="/tag/ghostscript">Ghostscript</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yago</span> on 
+							<span class="date">March 30, 2019 at 01:47</span>
+						</div> 
+						<div class="body">Awesome</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">abdan</span> on 
+							<span class="date">June 19, 2019 at 12:34</span>
+						</div> 
+						<div class="body">How do we do the opposite, ie. how to uncompress PDF file by using Ghostscript ?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Antonio Nicasio</span> on 
+							<span class="date">March 12, 2020 at 17:08</span>
+						</div> 
+						<div class="body">quick question is possible to increase the images inside in PDF to 300dpi with -dPDFSETTINGS=/printer or need todo something else?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 21, 2020 at 10:37</span>
+						</div> 
+						<div class="body">@Antonio Nicasio I think the -dPDFSETTINGS=/printer flag should be OK for your needs. I've never tried upscaling/upsampling, though...</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

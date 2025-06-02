@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Experimenting naive EUR/USD algo-trading - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="What happens when you blindly trade with a very dumb script in the year range 2000-2015.">
+		<meta name="keywords" content="EUR/USD,trading,algo-trading">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Experimenting naive EUR/USD algo-trading" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/experimenting-naive-eur-usd-algo-trading" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="What happens when you blindly trade with a very dumb script in the year range 2000-2015." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/experimenting-naive-eur-usd-algo-trading" />
+<meta name="twitter:title" content="Experimenting naive EUR/USD algo-trading" />
+<meta name="twitter:description" content="What happens when you blindly trade with a very dumb script in the year range 2000-2015." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 08, 2016 
+								• updated on June 08, 2016  
+								• ID 37 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Experimenting naive EUR/USD algo-trading</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>What happens when you blindly trade with a very dumb script in the year range 2000-2015.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Recently I wanted to do an experiment with algorithmic trading with the EUR/USD cross pair. However, instead on focusing on winning strategies and super-fancy mathematical models I decided to start from an unsophisticated approach. I built a very naive robot that just trade at a specific hour of the day and quits if any gains or losses occur.</p>
+<p>More specifically, this is what my algorithm does for each day of the year:</p>
+<ol>
+<li>start buying at hour X;</li>
+<li>if the price exceeds a stop loss, a take profit or a new day comes in, close the trade. Go on otherwise;</li>
+<li>store gains/losses.</li>
+</ol>
+<p>Definitely a naive approach here, and that's exactly what I wanted.</p>
+<h2>Running the tests</h2>
+<p>First of all I downloaded historical data from histdata.com in a range from year 2000 to year 2015. Then I defined three variables:</p>
+<ul>
+<li><code>START_HOUR</code> - when to start trading;</li>
+<li><code>STOP_LOSS</code> (in pip) - stop trading if value goes below (loss);</li>
+<li><code>TAKE_PROFIT</code> (in pip) - stop trading if value goes above (gain).</li>
+</ul>
+<p>I played with those three variables, by tweaking the values and varying the stop loss/take profit range. I restricted the experiments from 9 am to 11 am because, given <a href="http://internalpointers.com/post/volatility-analysis-eur-usd-currency-pair-2000-2015">my previous analysis on EUR/USD volatility</a>, that period seems to be the most lively, in terms of trading activity.</p>
+<h2>Marvelling at the results</h2>
+<p>I run my tests from year 2000 to 2015. What follows are the results in form of raw numeric outcomes.</p>
+<pre><code>START_HOUR  = 9                 START_HOUR  = 9
+TAKE_PROFIT = 0.0006            TAKE_PROFIT = 0.0007
+STOP_LOSS   = -0.0003           STOP_LOSS   = -0.0004
+
+2000: losses=92  gains=59       2000: losses=81  gains=70
+2001: losses=131 gains=91       2001: losses=111 gains=111
+2002: losses=123 gains=77       2002: losses=96  gains=104
+2003: losses=152 gains=103      2003: losses=134 gains=121
+2004: losses=158 gains=105      2004: losses=141 gains=122
+2005: losses=163 gains=96       2005: losses=145 gains=114
+2006: losses=171 gains=87       2006: losses=149 gains=109
+2007: losses=164 gains=95       2007: losses=149 gains=110
+2008: losses=151 gains=109      2008: losses=151 gains=109
+2009: losses=144 gains=115      2009: losses=134 gains=125
+2010: losses=168 gains=92       2010: losses=153 gains=106
+2011: losses=157 gains=103      2011: losses=153 gains=107
+2012: losses=169 gains=91       2012: losses=168 gains=92
+2013: losses=168 gains=91       2013: losses=159 gains=100
+2014: losses=174 gains=84       2014: losses=170 gains=88
+2015: losses=156 gains=103      2015: losses=150 gains=109
+
+----------------------------------------------------------
+
+START_HOUR  = 9                 START_HOUR  = 9
+TAKE_PROFIT = 0.0008            TAKE_PROFIT = 0.0009
+STOP_LOSS   = -0.0005           STOP_LOSS   = -0.0006
+
+2000: losses=85  gains=66       2000: losses=85  gains=66
+2001: losses=119 gains=103      2001: losses=119 gains=103
+2002: losses=100 gains=100      2002: losses=100 gains=100
+2003: losses=129 gains=126      2003: losses=129 gains=126
+2004: losses=142 gains=121      2004: losses=142 gains=121
+2005: losses=151 gains=108      2005: losses=151 gains=108
+2006: losses=153 gains=105      2006: losses=153 gains=105
+2007: losses=148 gains=111      2007: losses=148 gains=111
+2008: losses=149 gains=111      2008: losses=149 gains=111
+2009: losses=142 gains=117      2009: losses=142 gains=117
+2010: losses=163 gains=96       2010: losses=163 gains=96
+2011: losses=163 gains=97       2011: losses=164 gains=96
+2012: losses=164 gains=96       2012: losses=159 gains=101
+2013: losses=156 gains=103      2013: losses=160 gains=99
+2014: losses=170 gains=88       2014: losses=166 gains=91
+2015: losses=150 gains=109      2015: losses=147 gains=112
+
+----------------------------------------------------------
+
+START_HOUR  = 10                START_HOUR  = 10
+TAKE_PROFIT = 0.0006            TAKE_PROFIT = 0.0007
+STOP_LOSS   = -0.0003           STOP_LOSS   = -0.0004
+
+2000: losses=97  gains=54       2000: losses=89  gains=62
+2001: losses=141 gains=81       2001: losses=136 gains=86
+2002: losses=121 gains=79       2002: losses=109 gains=91
+2003: losses=165 gains=89       2003: losses=145 gains=109
+2004: losses=160 gains=102      2004: losses=161 gains=101
+2005: losses=154 gains=106      2005: losses=146 gains=114
+2006: losses=147 gains=111      2006: losses=140 gains=118
+2007: losses=166 gains=93       2007: losses=153 gains=106
+2008: losses=152 gains=108      2008: losses=136 gains=124
+2009: losses=150 gains=109      2009: losses=141 gains=118
+2010: losses=164 gains=96       2010: losses=149 gains=110
+2011: losses=162 gains=98       2011: losses=159 gains=101
+2012: losses=164 gains=96       2012: losses=162 gains=98
+2013: losses=145 gains=114      2013: losses=145 gains=114
+2014: losses=151 gains=107      2014: losses=149 gains=109
+2015: losses=144 gains=115      2015: losses=146 gains=113
+
+----------------------------------------------------------
+
+START_HOUR  = 10                START_HOUR  = 10
+TAKE_PROFIT = 0.0008            TAKE_PROFIT = 0.0009
+STOP_LOSS   = -0.0005           STOP_LOSS   = -0.0006
+
+2000: losses=93  gains=58       2000: losses=93  gains=58
+2001: losses=141 gains=81       2001: losses=141 gains=81
+2002: losses=109 gains=91       2002: losses=109 gains=91
+2003: losses=142 gains=111      2003: losses=142 gains=111
+2004: losses=155 gains=107      2004: losses=155 gains=107
+2005: losses=143 gains=117      2005: losses=143 gains=117
+2006: losses=149 gains=108      2006: losses=149 gains=108
+2007: losses=154 gains=105      2007: losses=154 gains=105
+2008: losses=140 gains=120      2008: losses=140 gains=120
+2009: losses=147 gains=112      2009: losses=147 gains=112
+2010: losses=160 gains=99       2010: losses=160 gains=99
+2011: losses=167 gains=93       2011: losses=167 gains=93
+2012: losses=163 gains=97       2012: losses=160 gains=100
+2013: losses=137 gains=122      2013: losses=140 gains=119
+2014: losses=151 gains=107      2014: losses=151 gains=102
+2015: losses=148 gains=111      2015: losses=147 gains=112
+
+----------------------------------------------------------
+
+START_HOUR  = 11                START_HOUR  = 11
+TAKE_PROFIT = 0.0006            TAKE_PROFIT = 0.0007
+STOP_LOSS   = -0.0003           STOP_LOSS   = -0.0004
+
+2000: losses=107 gains=43       2000: losses=107 gains=43
+2001: losses=127 gains=95       2001: losses=117 gains=105
+2002: losses=132 gains=66       2002: losses=112 gains=86
+2003: losses=164 gains=87       2003: losses=147 gains=104
+2004: losses=159 gains=102      2004: losses=138 gains=123
+2005: losses=165 gains=93       2005: losses=139 gains=119
+2006: losses=161 gains=97       2006: losses=146 gains=112
+2007: losses=158 gains=101      2007: losses=152 gains=107
+2008: losses=139 gains=121      2008: losses=130 gains=130
+2009: losses=155 gains=104      2009: losses=143 gains=116
+2010: losses=156 gains=104      2010: losses=142 gains=117
+2011: losses=159 gains=101      2011: losses=144 gains=116
+2012: losses=141 gains=119      2012: losses=130 gains=130
+2013: losses=160 gains=99       2013: losses=153 gains=106
+2014: losses=164 gains=94       2014: losses=157 gains=101
+2015: losses=154 gains=105      2015: losses=143 gains=116
+
+----------------------------------------------------------
+
+START_HOUR  = 11
+TAKE_PROFIT = 0.0008
+STOP_LOSS   = -0.0005
+
+2000: losses=105 gains=45
+2001: losses=121 gains=101
+2002: losses=113 gains=85
+2003: losses=147 gains=104
+2004: losses=148 gains=113
+2005: losses=146 gains=111
+2006: losses=145 gains=113
+2007: losses=153 gains=105
+2008: losses=137 gains=123
+2009: losses=149 gains=110
+2010: losses=153 gains=106
+2011: losses=142 gains=118
+2012: losses=129 gains=131
+2013: losses=152 gains=107
+2014: losses=157 gains=99
+2015: losses=140 gains=119
+</code></pre>
+<h3>Organizing data into charts</h3>
+<p>Below you can find the previous raw data organized in nicer charts. Each drawing shows one trading experiment. Stacked bars are gains (green) versus losses (red). Vertical axis contains the trading days, which are roughly 250 in each year. The number above each bar represents the gain/loss ratio: if greater than zero, gains overcome losses. Bars for years 2000, 2001 and 2002 are shorter because of some missing data.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/01-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 1">
+<div class="caption">Result 1</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/02-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 2">
+<div class="caption">Result 2</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/03-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 3">
+<div class="caption">Result 3</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/04-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 4">
+<div class="caption">Result 4</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/05-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 5">
+<div class="caption">Result 5</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/06-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 6">
+<div class="caption">Result 6</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/07-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 7">
+<div class="caption">Result 7</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/08-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 8">
+<div class="caption">Result 8</div>
+</div>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/09-eurusd-naive-algotrading-result.png" alt="Naive EUR/USD trading, chart Result 9">
+<div class="caption">Result 9</div>
+</div>
+
+<h3>Final considerations</h3>
+<p>I must admit I was definitely suprised by the results. Initially I thought that, being just random and dumb trading, every outcome would be a complete loss. However my experiments turned out to be victorious several times. Take a look for example at the chart of Result 2: in year 2002 the gain/loss ratio is 1.1, which means I was able to make actual money from my naive trading!</p>
+<p>Now, if you think of that experiment as a starting point, I guess what one should add in terms of strategies, heuristics and algorithms in order to raise those gain/loss ratios at least to 1.1, knowning that a complete dumb strategy like mine that can bring you close to a gain/loss ratio of ~0.5 (roughly the mean of all ratios).</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/eur-usd">EUR/USD</a>
+				 • 								<a class="ip-tag" href="/tag/trading">trading</a>
+				 • 								<a class="ip-tag" href="/tag/algo-trading">algo-trading</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Korcan</span> on 
+							<span class="date">November 10, 2019 at 23:29</span>
+						</div> 
+						<div class="body">great article !!!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to resize a VirtualBox disk - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="My VirtualBox guest OSes always run out of space.">
+		<meta name="keywords" content="VirtualBox">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to resize a VirtualBox disk" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/resize-virtualbox-disk" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="My VirtualBox guest OSes always run out of space." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/resize-virtualbox-disk" />
+<meta name="twitter:title" content="How to resize a VirtualBox disk" />
+<meta name="twitter:description" content="My VirtualBox guest OSes always run out of space." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 06, 2018 
+								• updated on September 23, 2018  
+								• ID 61 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to resize a VirtualBox disk</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>My VirtualBox guest OSes always run out of space.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>My daily task is to resize a VirtualBox disk, because I ran out of space in it. The operation takes place in two stages: resize the disk itself and then enlarge the primary partition.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>1. Increase the disk size</h2>
+<p>I'm going to use <code>VBoxManage</code>, a tool for managing VirtualBox via the command line. Open a terminal window and use it as follows:</p>
+<pre><code>VBoxManage modifyhd &lt;/path/to/your/disk.vdi&gt; --resize &lt;new size in MB&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code>VBoxManage modifyhd "/home/me/VirtualBox\ VMs/windows\ 7\ 64bit/windows\ 7\ 64bit.vdi" --resize 102400
+</code></pre>
+<p>Note: the path to the .vdi file must be absolute. If it contains spaces, wrap it up in quotes (as I did).</p>
+<p>For the gigabytes to megabytes conversion, I found a nice utility <a href="https://www.gbmb.org/gb-to-mb">here</a>.</p>
+<h2>2. Extend the partition to use the new space</h2>
+<p>Your disk is larger now, but not yet used by the operating system. It is time to use a partition manager to enlarge the primary partition in order to take advantage of the new space available.</p>
+<p>You can rely upon <a href="https://gparted.org/">GParted</a> for this kind of task. It works fine on Linux, Windows and Mac OS X partitions. On Windows Vista and newer you can also use the Disk Management tool shipped with the operating system utilities.</p>
+<h2>Sources</h2>
+<p>VirtualBox forum - <em>How to resize a Virtual Drive</em> (<a href="https://forums.virtualbox.org/viewtopic.php?f=35&amp;t=50661">link</a>)<br>
+VirtualBox site - <em>Chapter 8. VBoxManage</em> (<a href="https://www.virtualbox.org/manual/ch08.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/virtualbox">VirtualBox</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Richmond</span> on 
+							<span class="date">February 24, 2018 at 18:57</span>
+						</div> 
+						<div class="body">This was helpful, thanks. Newer VirtualBox versions add the "modifymedium" command. It's just a more modern version of it. More information: https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvdi</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">TrasherDK</span> on 
+							<span class="date">March 15, 2020 at 16:43</span>
+						</div> 
+						<div class="body">Being able to decrease a disk would be useful.<br />
+<br />
+Adding space on a Linux guest is as easy as mounting a disk to the area where space is needed.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

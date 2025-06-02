@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Android to Debian/Linux file transfer via MTP - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A painless tutorial on how to share files from and to your Android device.">
+		<meta name="keywords" content="Debian,Linux,MTP">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Android to Debian/Linux file transfer via MTP" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/android-debian-linux-file-transfer-via-mtp" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A painless tutorial on how to share files from and to your Android device." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/android-debian-linux-file-transfer-via-mtp" />
+<meta name="twitter:title" content="Android to Debian/Linux file transfer via MTP" />
+<meta name="twitter:description" content="A painless tutorial on how to share files from and to your Android device." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on October 01, 2016 
+								• updated on May 22, 2018  
+								• ID 44 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Android to Debian/Linux file transfer via MTP</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A painless tutorial on how to share files from and to your Android device.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p><strong><a href="https://en.wikipedia.org/wiki/Media_Transfer_Protocol">MTP</a></strong> stands for <strong>Media Transfer Protocol</strong>, a communication protocol used for moving files across portable devices. I never had the luck to make it work under the countless graphical file managers for Linux, so I decided to go the command-line way. For this purpose you will need a couple of small tools.</p>
+<ul>
+<li><a href="https://github.com/kiorky/jmtpfs">jmtpfs</a>, used for accessing MTP devices. It is based on <strong><a href="https://en.wikipedia.org/wiki/Filesystem_in_Userspace">FUSE</a></strong>, a type of filesystem implemented as a "simple" user program (Unix filesystems are traditionally implemented in the kernel); </li>
+<li><a href="http://man7.org/linux/man-pages/man1/fusermount.1.html">fusermount</a>, used for mounting and unmounting FUSE filesystems.</li>
+</ul>
+<h2>Preparing the filesystem</h2>
+<p>First of all connect via USB the device you want to grab files from. In my case — I'm working with a Nexus 5 phone — I also have to switch it to "file sharing mode", but your mileage may vary.</p>
+<p>Choose a directory where you want to temporarily mount your device's filesystem. You can use <code>/mnt</code>, or create a temporary directory in your home, like that:</p>
+<p><code>mkdir ~/android_mount</code></p>
+<p>Then invoke <em>jmtpfs</em>, so that it can mount to that directory <em>the first MTP device it finds</em>:</p>
+<p><code>jmtpfs ~/android_mount</code></p>
+<p>If everything goes well you should see some information on your device, plus a device detection message. In my case I had the following:</p>
+<pre><code>Device 0 (VID=18d1 and PID=4ee1) is a Google Inc (for LG Electronics/Samsung) Nexus 4/5/7/10 (MTP).
+Android device detected, assigning default bug flags
+</code></pre>
+<p>That's a good sign.</p>
+<h2>Browsing and unmounting</h2>
+<p>Now that the device filesystem is properly mounted, <code>cd</code> to your temporary directory (that is <code>~/android_mount</code>) and do your stuff. Once you're done, you have to unmount the filesystem. Using <em>fusermount</em> the operation is straightforward:</p>
+<p><code>fusermount -u ~/android_mount</code></p>
+
+<h2>Additional notes</h2>
+<p>For some obscure reason if I mount my device to any folder created under the <code>/tmp</code> directory (e.g. <code>/tmp/android_mount</code>), I am not able to browse it. What I get is the following error message:</p>
+<pre><code>fuse: bad mount point `android/': Input/output error</code></pre>
+<p>Simple solution in case you are facing this issue: just create your mount directory anywhere else.</p>
+
+<h2>Sources</h2>
+<p>Wikipedia - <em>Media Transfer Protocol</em> (<a href="https://en.wikipedia.org/wiki/Media_Transfer_Protocol">link</a>)<br>
+Wikipedia - <em>Filesystem in Userspace</em> (<a href="https://en.wikipedia.org/wiki/Filesystem_in_Userspace">link</a>)<br>
+Unix StackExchange - <em>What are the benefits and downsides to use FuseFS filesystems?</em> (<a href="http://unix.stackexchange.com/questions/4146/what-are-the-benefits-and-downsides-to-use-fusefs-filesystems">link</a>)<br>
+Manpages - <em>Fusermount</em> (<a href="http://man7.org/linux/man-pages/man1/fusermount.1.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/debian">Debian</a>
+				 • 								<a class="ip-tag" href="/tag/linux">Linux</a>
+				 • 								<a class="ip-tag" href="/tag/mtp">MTP</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yuber Vasquez</span> on 
+							<span class="date">April 10, 2018 at 20:51</span>
+						</div> 
+						<div class="body">Good post, thanks you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yuber Vasquez</span> on 
+							<span class="date">April 21, 2018 at 05:15</span>
+						</div> 
+						<div class="body">Hi, i use jmptfs ~/android_mount but a simple ls command take too long time, long and very long time.<br />
+Can you help me please how i can reduce this time?<br />
+thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">May 22, 2018 at 19:11</span>
+						</div> 
+						<div class="body">@Yuber Vasquez no idea, sorry! ls command runs pretty smooth on my environment, there could be many factors at play here...</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

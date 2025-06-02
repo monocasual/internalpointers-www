@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>An introduction to investment funds - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Shedding some light on investment funds, how they work and why one should (or should not) take them into account for investing purposes.">
+		<meta name="keywords" content="investment,fund">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="An introduction to investment funds" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-investment-funds" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Shedding some light on investment funds, how they work and why one should (or should not) take them into account for investing purposes." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-investment-funds" />
+<meta name="twitter:title" content="An introduction to investment funds" />
+<meta name="twitter:description" content="Shedding some light on investment funds, how they work and why one should (or should not) take them into account for investing purposes." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 02, 2016 
+								• updated on June 10, 2016  
+								• ID 25 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>An introduction to investment funds</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Shedding some light on investment funds, how they work and why one should (or should not) take them into account for investing purposes.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Investment funds are a type of financial instrument managed by a <em>fund manager</em>. You give her/him your money and the fund manager use it to buy and sell a pool of <em>securities</em> for you like stocks, bonds, commodities and so on with the aim of... making more money. You do not buy those securities directly, but "pieces" of the fund called <strong>units</strong>.</p>
+<p>Funds are a sort of collective investment; you are combining your money alongside other investors who want to invest in a specific fund. Such thing can bring advantages to everyone: by mixing your money with other people's, you can spread it between a wider range of securities than if you were investing alone.</p>
+<p>The presence of the fund managers should be another positive aspect of an investment fund. They do the hard work in choosing the right securities, studying the markets and buying/selling at the right time. Of course, in return for their support you have to pay a fee.</p>
+<p>You can make money from investment funds, basically in three ways:</p>
+<ul>
+<li>if the underlying securities yield something — fund managers will pay out nearly all those incomes to you;</li>
+<li>if the fund managers sell securities that have increased in price — same as above, you will take a piece of the pie. The profit that results from a sale of a security is called <em>capital gain</em>;</li>
+<li>if the securities increase in price but stay in the fund — the fund's value grows and you can sell it for a profit.</li>
+</ul>
+<p>Actually "investment fund" is a very broad term that includes tons of other financial instruments. Some alias are <em>investment pools</em>, <em>collective investment vehicles</em>, <em>collective investment schemes</em>, <em>managed funds</em>, or simply <em>funds</em>. Let's dig deeper!</p>
+<h2>So many types of investment funds in the world</h2>
+<p>There are tons of investment funds types out there, so welcome to the jungle. I personally like the macro-classification found on Wikipedia, that draws a line between those that may be bought by the public (in a <em>public offering</em>) and those that may be sold only to a small number of chosen investors (<em>non-public offering</em>).</p>
+<p>The difference between the two groups is that in a public offering you can go to your broker and buy whatever you want/can. In a private offering you usually have to be a "big player" like a bank or an insurance company — they are called <em>institutional investors</em>.</p>
+<p>The most famous funds in the public category are <strong>mutual funds</strong>, <strong>exchange-traded funds (ETF)</strong> and <strong>unit investments trusts (UIT)</strong>. For the private category there are <strong>hedge funds</strong> and <strong>private equity funds</strong>.</p>
+<p>What follows is a very broad and shallow overview of the different types of fund out there. In the future I will write more in-depth articles for each type of funds I'm interested in.</p>
+<h3>Mutual funds</h3>
+<p>They reflect the actual definition of investment funds I wrote in the beginning: a pool of securities mantained by the fund manager. They are so common that when people talk about investment funds they often refer to mutual funds. The fund managers actively trade the securities in their portfolio, which is usually made of dozens of diversified securities.</p>
+<h3>Exchange-traded funds (ETF)</h3>
+<p>The main feature of ETFs: they are traded like stocks on stock exchanges. ETFs are priced throughout the day and can be bought or sold anytime — if the markets are open. On the other hand, the other types of funds are usually priced once a day, after markets close.</p>
+<h3>Unit investments trusts (UIT)</h3>
+<p>UITs are quite similar to mutual funds: you buy units that you sell back at some point in the future. But a UIT, unlike a mutual fund, has a smaller diversified portfolio and does not actively trade it. A typical UIT fund can buy, say, 10 different types of stock and keep them quietly until the end of its life.</p>
+<p>Another feature of UITs is that they have a termination date, clearly defined when they get established. They also issue only a specific, fixed number of units: this make UITs a sort of <strong>closed-end funds</strong> described below.</p>
+<h3>Hedge funds</h3>
+<p>Hedge funds are the "underground side" of funds. They are not regulated by any agency (like the SEC of the United States) and that prevent them from being marketed in the world. Also they can't take money from public investors: you have to be an <em>accredited investor</em> (aka <em>sophisticated investor</em>), namely a person with lots of money, a bank or any other large corporation. There are no public agencies who watch your back, so you must know what you are doing.</p>
+<p>The core idea of an hedge fund is to gain high potential returns in a short period of time, with any tool available. The term "hedge" comes from a set of trading techniques where the fund manager tries to minimize any possible risk: this is an active style of management which implies greater fees for you to pay. Also, the company behind a hedge fund usually takes a percentage of the profits that comes from it.</p>
+<h3>Private equity funds</h3>
+<p>Like hedge funds, private equity funds are designed for accredited investors. A private equity fund invests directly in companies and other businesses: fund managers buy out a company and use that company's earnings to pay themselves back. They usually look to improve those companies with management changes or any other kind of optimization. For such purposes, fund managers often work together with a group of corporate experts. Obviously all those strategies require the private equity funds to be focused on the long-term gains and impose investors to stay in game for a minimum period of time — up to ten years in some cases!</p>
+<h2>Open-end versus closed-end funds</h2>
+<p>Another way of classifying investment funds could be by their internal mechanisms, namely how the fund managers deal with the pool of securities. Therefore two types of funds emerge: <strong>open-end</strong> and <strong>closed-end</strong> funds.</p>
+<h4>Open-end funds</h4>
+<p>The term <em>open-end</em> means that there are no restrictions in how many fund units you can buy. If the demand grows, the fund managers will issue more units by increasing its pool of securities, i.e. buying more stocks or bonds or commodities or anything else. Mutual funds are a typical example of open-end funds. In other countries outside the United States you may find the term <strong>SICAV</strong>: <em>société d'investissement à capital variable</em>, which translates to <em>investment company with variable capital</em>.</p>
+<h4>Closed-end funds</h4>
+<p>Unlike the open-end funds, a <em>closed-end</em> fund does not always offer its units. In other words, there are some restrictions in how may units you can buy. The fund manager builds the closed-end fund with a fixed number of securities and issues a fixed number of fund units at one time, during an initial public offering. The units are fixed because the number of underlying securities are fixed too! If you really want to buy some units, you have to trade them with another owner, because the fund manager won't buy more securities. The same mechanism applies also when you want to sell back your units: there must be someone who wants to buy them. Another non-US term for closed-end funds is <strong>SICAF</strong>: <em>société d'investissement à capital fixe</em> or <em>investment company with fixed capital</em>.</p>
+<h2>Investment styles and philosophies</h2>
+<p>Every investment fund's securities pool is selected and put together according to different "flavors", which turns out to be another good way of classifying them. Let's take a brief look at the most common types of investment funds' styles.</p>
+<h4>Money market funds</h4>
+<p>These funds tend to invest in safe stuff like government securities, certificates of deposit or commercial paper of companies. The core idea is to lower the level of risk and cash you out rather quickly.</p>
+<h4>Income funds</h4>
+<p>Looking for a stable income? These funds might help you. An income fund focuses on securities that pay high interests or dividends, instead of tring to grow the underlying pool's value. Income funds are meant to be kept for a long time.</p>
+<h4>Balanced funds</h4>
+<p>Their pool of securities is made of a mixture of stocks and bonds. They are also known as <em>hybrid funds</em> for such reason. They are one of the preferred options for prudent investors, providing a combination of safety and income.</p>
+<h4>Index funds</h4>
+<p>An index fund tries to replicate the composition and the performance of famous indexes, say for example the S&amp;P 500 (actually there is a index fund like that, the <em>S&amp;P 500 Index Fund</em>). The core idea of an index fund is to own every security in the original index. As result, there is much less work in maintaining it, which means lower fees for the investor.</p>
+<h4>Equity funds</h4>
+<p>Equities are the value of the shares issued by a company. So an equity fund is a fund that invests principally in stocks.</p>
+<h4>Growth/Value funds</h4>
+<p>Growth funds follow the opposite philosophy of value funds. The former invest in companies that are growing rapidly, usually with low/no dividends but with higher increases in fund's value. The latter invest in older, established businesses that pay dividends.</p>
+<h4>International/global funds</h4>
+<p>International funds invest in companies outside the U.S, while global funds include the entire world.</p>
+<h4>Sector funds</h4>
+<p>Sector funds invest mainly in a single sector such as gold, oil, financial services, health care and so on. They tend to be riskier and more volatile than other funds because they are less diversified.</p>
+<h4>Fund of funds (FOF)</h4>
+<p>A FOF is basically a fund that invests in other funds. They tend to increase diversification and thus reduce volatility, but introduce increased fees that you have to pay both to the FOF itself and to the underlying funds in it.</p>
+<h2>Sources</h2>
+<p>The Money Service Advice - <em>Types of investment</em> (<a href="https://www.moneyadviceservice.org.uk/en/categories/investment-types">link</a>)
+Wikipedia - <em>Investment fund</em> (<a href="https://en.wikipedia.org/wiki/Investment_fund">link</a>)
+Investopedia - <em>Mutual Fund Basics Tutorial</em> (<a href="http://www.investopedia.com/university/mutualfunds/">link</a>)
+The Investment Association - <em>Facts about funds</em> (<a href="http://www.theinvestmentassociation.org/all-about-investment/facts-about-funds/">link</a>)
+Theguardian - <em>Factsheet: Investment funds</em> (<a href="http://www.theguardian.com/money/2007/oct/25/investmentfunds">link</a>)
+Lifehacker - <em>The Many Different Types of Investments, and How They Work</em> (<a href="http://twocents.lifehacker.com/the-many-different-types-of-investments-and-how-they-w-1683582510">link</a>)
+Investment Fund Law Blog -<em>What are the different types of funds?</em> (<a href="http://www.investmentfundlawblog.com/resources/fund-basics/what-are-the-different-types-of-funds/">link</a>)
+Investopedia - <em>Mutual Funds: Different Types Of Funds</em> (<a href="http://www.investopedia.com/university/mutualfunds/mutualfunds1.asp">link</a>)
+Kahn Academy - <em>Open-End and Closed-End Mutual Funds</em> (<a href="https://www.youtube.com/watch?v=_ZJary7yZyU">video</a>)
+The Nest - <em>Unit Investment Trust Vs. Mutual Fund</em> (<a href="http://budgeting.thenest.com/unit-investment-trust-vs-mutual-fund-3897.html">link</a>)
+Wikinvest - <em>Private Equity</em> (<a href="http://www.wikinvest.com/concept/Private_Equity">link</a>)
+Sec.org - <em>Money Market Funds</em> (<a href="http://www.sec.gov/answers/mfmmkt.htm">link</a>)
+Morningstar - <em>What About Balanced Funds?</em> (<a href="http://news.morningstar.com/classroom2/course.asp?docId=4428&page=4&CN=">link</a>)
+Wikipedia - <em>Stock fund</em> (<a href="https://en.wikipedia.org/wiki/Stock_fund">link</a>)
+TheStreet - <em>International Funds Definition</em> (<a href="http://www.thestreet.com/topic/46561/international-funds.html">link</a>)
+InvestorWords - <em>Sector fund</em> (<a href="http://www.investorwords.com/4431/sector_fund.html">link</a>)
+Wikipedia - <em>Fund of Funds</em> (<a href="https://en.wikipedia.org/wiki/Fund_of_funds">link</a>)<br>
+Wikipedia - <em>SICAV</em> - (<a href="https://en.wikipedia.org/wiki/SICAV">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/investment">investment</a>
+				 • 								<a class="ip-tag" href="/tag/fund">fund</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

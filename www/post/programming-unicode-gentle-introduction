@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Programming with Unicode: a gentle introduction - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="How not to get lost in a multilingual world. ">
+		<meta name="keywords" content="C++,C++,character,multilanguage,Unicode,Java,Javascript,Python">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Programming with Unicode: a gentle introduction" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/programming-unicode-gentle-introduction" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/06/unicode/programming-unicode-gentle-introduction.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="How not to get lost in a multilingual world. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/programming-unicode-gentle-introduction" />
+<meta name="twitter:title" content="Programming with Unicode: a gentle introduction" />
+<meta name="twitter:description" content="How not to get lost in a multilingual world. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/06/unicode/programming-unicode-gentle-introduction.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 18, 2022 
+								• updated on July 03, 2022  
+								• ID 96 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Programming with Unicode: a gentle introduction</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>How not to get lost in a multilingual world. </p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>สวัสดีครับ! — If you can read that — <em>hello!</em> in Thai, your computer can display characters outside the standard Latin set we are all familiar with. Today any modern operating system supports multiple languages and writing programs that ship that feature has become quite easy. In this article I want to collect some useful wisdom for making software that speaks more than one language.</p>
+<h2>Understanding Unicode</h2>
+<p>Our journey starts with an introduction to the most important tool in multi-language support: the <strong>Unicode Standard</strong> — or <strong>Unicode</strong> in short. Born at the beginning of the 90s, Unicode is a specification that lists every character used by human languages on Earth and assigns each character <em>a unique number</em>. The result is an evolving document that you can browse online on the <a href="http://www.unicode.org/versions/latest/">Unicode official website</a> (the latest version is 14.0.0 as of this writing).</p>
+<p>In essence, Unicode is a <a href="https://www.unicode.org/charts/">collection of tables</a>, one for every language. Each table contains the list of characters that make up that language, plus the unique numbers assigned to them. For example, <a href="https://www.unicode.org/charts/PDF/U0000.pdf">this</a> is the table for Basic Latin characters, the same ones you find on this web page. <a href="https://www.unicode.org/charts/PDF/U0600.pdf">This</a> is for Arabic; <a href="https://www.unicode.org/charts/PDF/U13000.pdf">this</a> is for Egyptian Hieroglyphs; <a href="https://www.unicode.org/charts/PDF/U2200.pdf">this</a> is for mathematical operators an <a href="https://www.unicode.org/charts/PDF/U1F600.pdf">this</a> is for emoticons. Yes, Unicode covers also crazy stuff.</p>
+<h3>Basic Unicode terminology</h3>
+<p>Unicode lists <strong>characters</strong>, and each character is mapped to a unique number called <strong>code point</strong>. For example, in the picture below you can see the Unicode character <code>a</code> with its own code point:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/06/unicode/unicode-character-a.png" alt="Unicode character A">
+<div class="caption">1. The character <code>a</code> maps to Unicode <code>U+0061</code> code point.</div>
+</div><p>A code point is a hexadecimal number that ranges from 0 through 10FFFF (1,114,111 in decimal format). They are denoted as <code>U+[number]</code>, for example <code>U+0061</code> in the picture above. The current Unicode version lists 144,697 characters, roughly 13% of the available space.</p>
+<p>Some characters may have their own code point, but may also be generated by joining multiple code points together. For example, the character <code>é</code> (<a href="https://www.compart.com/en/unicode/U+00E9">Latin Small Letter E with Acute</a>) is both the <code>U+00E9</code> code point and the combination of <code>e</code> (<a href="https://www.compart.com/en/unicode/U+0065">Latin Small Letter E</a>) at code point <code>U+0065</code> with the <a href="https://www.compart.com/en/unicode/U+0301">Combining Acute Accent</a> at code point <code>U+0301</code>, as you can see in the picture below:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2022/06/unicode/unicode-character-e.png" alt="Unicode character é">
+<div class="caption">2. The character <code>é</code> maps to Unicode <code>U+00E9</code> code point but can also be composed by joining smaller units.</div>
+</div><p>This is one of the Unicode features that may hurt you when working with text in a programming language, as we will see in few paragraphs.</p>
+<h2>Teaching Unicode to machines</h2>
+<p>In computers, everything — music, movies, programs, text, ... — is made of binary data: a long stream of <code>0</code>s and <code>1</code>s. The problem: say you have a chunk of binary data like <code>0110100001101001</code> and you know it is a text string: how do you interpret it or display it to users correctly?</p>
+<p>A computer needs a <strong>character encoding</strong> in order to solve that problem. A character encoding is a way of mapping those <code>0</code>s and <code>1</code>s to something meaningful, so that the computer can interpret it and possibly display it in a way humans understand.</p>
+<p>Unicode has its own character encoding called <strong>Unicode Transformation Format (UTF)</strong>, which maps blocks of <code>0</code>s and <code>1</code>s to Unicode code points. If your operating system supports UTF, your computer can process and display any character available in the Unicode collection. For example, the text you are reading on this website is UTF-encoded. If you can read it, you are using a UTF-empowered operating system.</p>
+<p>The UTF encoding comes in three variants: <strong>UTF-8</strong>, <strong>UTF-16</strong> and <strong>UTF-32</strong>, where the trailing number corresponds to the minimum number of bits used for the encoding. UTF-32 is the most straightforward one: it always uses 32 bits (4 bytes) to store any Unicode character, even when not necessary because the Unicode point is small. UTF-16 and UTF-8 employ clever tricks to optimize the required bytes instead. For this reason they are known as <strong>variable-width encodings</strong>.</p>
+<p>The table below shows how the three different UTF variants encode <code>U+0065</code> (Latin Small Letter E):</p>
+<pre><code class="lang-nocode">U+0065 - Latin Small Letter E
+
+UTF-8:  65
+UTF-16: 00 65
+UTF-32: 00 00 00 65
+</code></pre>
+<p>Currently, UTF-8 is the most popular one. It is also the dominant encoding for the World Wide Web and Internet technologies. UTF-8 is probably what you want if your programs need to support Unicode.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Unicode in operating systems</h2>
+<p>One of the key roles of an operating system is to get keystrokes from the user and show text on screen: for this reason it must know how to deal with character encoding. All modern operating systems support UTF, as well as many other encodings that predate it.</p>
+<p>Specifically, Unix-based operating systems such as Linux and macOS use UTF-8. Windows uses UTF-16 internally, but modern versions added support for apps working with UTF-8.</p>
+<p>The character encoding to use is stored in the operating system's <strong>locale</strong>: a collection of user preferences such as the language to use, how to format numbers, dates, currency symbols and so on. Every operating system has tools to query the character encoding in the current locale (and the locale itself too, of course). For example, on Linux I can do it with the <code>locale charmap</code> command, which prints <code>UTF-8</code> as expected. You can change the operating system's locale, and so the character encoding, via the configuration tools.</p>
+<h3>How to display Unicode characters</h3>
+<p>Operating systems need <strong>fonts</strong> to display characters. A font is a file containing letters, symbols and other graphical elements that the operating system renders on screen. Those symbols are called <strong>glyphs</strong>. Some fonts are Unicode-compliant: they map glyphs to Unicode code points. You need to install a Unicode font if you want to display Unicode characters.</p>
+<p>For example, the <a href="https://en.wikipedia.org/wiki/Arial_Unicode_MS">Arial Unicode MS</a> is a proprietary Unicode font that contains Latin glyphs as well as many other eastern languages, which are not available in the standard <a href="https://en.wikipedia.org/wiki/Arial">Arial</a>. The <a href="https://en.wikipedia.org/wiki/GNU_Unifont">GNU Unifont</a> is a free Unicode font available on Linux and other open-source operating systems.</p>
+<p>Common font formats cannot contain more than 65,536 glyphs (16-bit), so no single Unicode font can include all the characters defined in the Unicode standard. Font developers overcome such limitation by shipping separate auxiliary fonts intended specifically for particular languages or symbols.</p>
+<p>If a font doesn't contain the glyph for the code point used in the document, you will typically see a question mark, a small box or some other placeholder.</p>
+<h3>Storing UTF-encoded files</h3>
+<p>Text files are saved to disk with a certain encoding. All modern editors support UTF: I'm writing this article in Visual Studio Code and I can save it either in UTF-8 or UTF-16, where UTF-8 is the default (not sure why UTF-32 is not available, though).</p>
+<p>Normally a text file doesn't contain information on the encoding in use: text editors use internal heuristics to determine it. Some Unicode text files may contain a kind of signature at the beginning known as <strong>byte-order mark (BOM)</strong>. This is a special, invisible Unicode character <code>Zero Width No-Break Space (U+FEFF)</code> used to identify UTF-encoded files, a trick proposed by Microsoft back in the early Unicode days. Today no text editor adds it anymore, especially on Unix-like operating systems.</p>
+<p>It's a good idea to save also source code files in UTF, so that you can put Unicode characters in them. Modern compilers and interpreters know how to deal with UTF-encoded source files with no problem. More on that in few paragraphs.</p>
+<h2>Unicode in programs</h2>
+<p>A string of text, in binary form, may reach a program from several sources: a series of user keystrokes, a file read from disk or the Internet. A program that just stores that text, or redirects it somewhere else — for example it prints it to screen, doesn't need to be aware of the character encoding in use. This is because interpreting the string as a bunch of bytes is enough for being carried around or stored in memory.</p>
+<p>On the other hand, programs that perform text manipulation such as text editors must know if the string is UTF-encoded or not. For example UTF-8 encoding may use more than one byte for a single character, so the program needs to understand the boundary of each character, in bytes, in order to handle it correctly.</p>
+<p>Consider this:</p>
+<pre><code class="lang-nolang">ɣ-rays
+</code></pre>
+<p>If encoded in UTF-8, the string above maps to the following bytes (written in hexadecimal format):</p>
+<pre><code class="lang-nolang">ɣ          -          r          a          y          s
+|          |          |          |          |          |
+0xC9 0xA3  0x2D       0x72       0x61       0x79       0x73
+</code></pre>
+<p>Now, imagine you want to count the number of letters in the string above. You'll get the wrong answer, 7, if your program just counts bytes without taking the UTF-8 rules into account. The same problem is relevant to any other text transformation such as cutting, trimming, flipping the case, sorting, filtering, getting the character at position <em>n</em> and so on.</p>
+<p>Comparing Unicode strings is tricky as well. Remember how the same character can be represented by different sequences of code points? The following equality might be false:</p>
+<pre><code class="lang-nolang">perché == perché
+</code></pre>
+<p>if the <code>é</code> character in the left string is represented as a single code point <code>U+00E9</code> (<a href="https://www.compart.com/en/unicode/U+00E9">Latin Small Letter E with Acute</a>) and the <code>è</code> character in the right string is represented as <code>U+0065 + U+0301</code> (<a href="https://www.compart.com/en/unicode/U+0065">Latin Small Letter E</a> + <a href="https://www.compart.com/en/unicode/U+0301">Combining Acute Accent</a>).</p>
+<h2>Programming with Unicode support: the easy way</h2>
+<p>Many high-level programming languages speak Unicode. For example, in Python 3 text is stored in UTF-8, while JavaScript uses UTF-16. In Rust, a low-level language, strings are UTF-8 encoded. Those languages understand strings at the <em>character</em> level, which makes string comparison and manipulation easy.</p>
+<p>Consider the following Python 3 example:</p>
+<pre><code class="lang-python">text = &quot;ɣ-rays&quot;
+print(text[0])
+</code></pre>
+<p>It will print the first character, <code>ɣ</code>, as expected. Of course this is valid for every other language that support UTF encoding natively.</p>
+<p>UTF-aware languages also provide tools for the so-called Unicode <strong>normalization</strong> (or <strong>canonicalization</strong>): the process of converting text to a form in which all the Unicode ambiguities seen before (<code>"perché" == "perché"</code>) are not present. Normalization is a mandatory step for correct string comparison and should be done as soon as possible if your program accepts input from users.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Programming without Unicode support: the hard way</h2>
+<p>Some programming languages understand strings just at the <em>byte</em> level, which makes Unicode string comparison and manipulation very hard to do correctly. In this case it is better to rely on external libraries if you really need to perform heavy text work. For example, <a href="https://icu.unicode.org/"><strong>International Components for Unicode (ICU)</strong></a> is a popular library that provide full Unicode support to C, C++ and Java.</p>
+<p>Languages such as C and C++ require special care even if you are just storing text in memory with no manipulation. For example:</p>
+<pre><code class="lang-c">char gamma = &#39;ɣ&#39;;
+</code></pre>
+<p>This code will not compile in C and C++. The <code>ɣ</code> character is made of two bytes in UTF-8 encoding (<a href="https://www.compart.com/en/unicode/U+0194">U+0194</a>) but the <code>char</code> type takes a memory size of only one byte. The two languages tried to overcome this by adding the <code>wchar_t</code> type, known as <strong>wide character</strong>: a type large enough to contain any Unicode character. Unfortunately the size of <code>wchar_t</code> is <em>compiler-specific</em> and can be as small as 8 bits. Consequently, programs that need to be portable across any C or C++ compiler should not use <code>wchar_t</code> for storing Unicode text.</p>
+<p>C and C++ recently added more Unicode-friendly types such as <code>char8_t</code> (for UTF-8), <code>char16_t</code> (for UTF-16) and <code>char32_t</code> (for UTF-32). They will help you storing Unicode string correctly, but all the text manipulations previously discussed are still left to you.</p>
+<h2>Writing Unicode string literals in source code</h2>
+<p>Most programming languages allow you to put Unicode characters right into string literals: that's what I did through all this article. For example, this is valid Python 3 code:</p>
+<pre><code class="lang-python">string = &quot;Ναι&quot;  # &quot;Yes&quot; in Greek
+print(string)
+</code></pre>
+<p>This is because compilers and interpreters are able to read UTF-encoded source files, assuming you correctly saved them with a UTF encoding. Some languages also allow you to put Unicode characters in function and variable names. It might hurt readability — or maybe not? Consider the following usage of mathematical symbols in Java:</p>
+<pre><code class="lang-java">float Δ      = 32.0;
+float π      = 3.1415;
+float result = Δ * π;
+</code></pre>
+<p>Many programming languages also support <a href="https://en.wikipedia.org/wiki/Escape_sequence">escape sequences</a>, used to map a sequence of hexadecimal numbers the corresponding Unicode code point. A JavaScript example:</p>
+<pre><code class="lang-javascript">const string = &quot;\xE2\x88\x83y \xE2\x88\x80x&quot; // ∃y ∀x — written with the \x[NN] escape sequence
+</code></pre>
+<p>C, C++, Python and others have also Unicode-specific escape sequences that look like <code>\u[...]</code> or <code>\U[...]</code>. Anyway, using escape sequences in string literals kills readability. Sometimes this is the only way to fit Unicode text right into the source code though, if your compiler/interpreter doesn't understand it.</p>
+<h2>Sources</h2>
+<p><a href="https://unicode.org/">Unicode official webside</a><br>
+<a href="https://docs.python.org/3/howto/unicode.html">Python docs — Unicode HOWTO</a><br>
+<a href="https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/">Joel On Software — The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets</a><br>
+<a href="https://utf8everywhere.org/">UTF-8 Everywhere</a><br>
+<a href="https://rushter.com/blog/python-strings-and-memory/">Artem Golubin — How Python saves memory when storing strings</a><br>
+<a href="https://en.wikipedia.org/wiki/UTF-8">Wikipedia — UTF-8</a> 
+<a href="https://en.wikipedia.org/wiki/Unicode">Wikipedia — Unicode</a><br>
+<a href="https://en.wikipedia.org/wiki/Unicode_font">Wikipedia — Unicode font</a><br>
+<a href="https://www.cl.cam.ac.uk/~mgk25/unicode.html">Markus Kuhn — UTF-8 and Unicode FAQ for Unix/Linux</a><br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings">Microsoft docs — Working with Strings</a><br>
+<a href="https://stdcxx.apache.org/doc/stdlibug/24-3.html">Apache C++ Standard Library User's Guide — Differences between the C Locale and the C++ Locales</a><br>
+<a href="https://www.gnu.org/software/libc/manual/html_node/Setting-the-Locale.html">libc manual — How Programs Set the Locale</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/character">character</a>
+				 • 								<a class="ip-tag" href="/tag/multilanguage">multilanguage</a>
+				 • 								<a class="ip-tag" href="/tag/unicode">Unicode</a>
+				 • 								<a class="ip-tag" href="/tag/java">Java</a>
+				 • 								<a class="ip-tag" href="/tag/javascript">Javascript</a>
+				 • 								<a class="ip-tag" href="/tag/python">Python</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

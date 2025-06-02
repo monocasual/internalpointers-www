@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to record the desktop with FFmpeg on Linux - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A solution that pleasantly works out of the box.">
+		<meta name="keywords" content="FFmpeg,PulseAudio">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to record the desktop with FFmpeg on Linux" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/record-desktop-ffmpeg-linux" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A solution that pleasantly works out of the box." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/record-desktop-ffmpeg-linux" />
+<meta name="twitter:title" content="How to record the desktop with FFmpeg on Linux" />
+<meta name="twitter:description" content="A solution that pleasantly works out of the box." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 18, 2015 
+								• updated on December 06, 2020  
+								• ID 17 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to record the desktop with FFmpeg on Linux</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A solution that pleasantly works out of the box.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Record a video of your desktop — and whatever happens on it — is almost dead simple with FFmpeg. I'm using one of the latest versions (as of this writing), 4.1.6 on a Linux box (Debian). I will also be using PulseAudio as the audio framework and <a href="https://ffmpeg.org/ffmpeg-devices.html#x11grab">x11grab</a> for capturing the video part.</p>
+<p>The generic command:</p>
+<p><code>ffmpeg -video_size [resolution] -framerate [framerate] -f x11grab -i :0.0 -f pulse -ac 2 -i [source] output.mkv</code></p>
+<p>As you may see you need to know the resolution, the video frame rate and the audio source.</p>
+<h2>Getting the proper video resolution</h2>
+<p>Let's start with the resolution. Type <code>xrandr</code> to print a list of supported video modes. For example:</p>
+<pre><code>Screen 0: minimum 8 x 8, current 1366 x 768, maximum 32767 x 32767
+LVDS1 connected 1366x768+0+0 (normal left inverted right x axis y axis) 344mm x 193mm
+   1366x768      60.06*+
+   1360x768      59.80    59.96  
+   1024x768      60.00  
+   800x600       60.32    56.25  
+   640x480       59.94  
+DP1 disconnected (normal left inverted right x axis y axis)
+HDMI1 disconnected (normal left inverted right x axis y axis)
+VGA1 disconnected (normal left inverted right x axis y axis)
+VIRTUAL1 disconnected (normal left inverted right x axis y axis)
+</code></pre>
+<p>The first mode in the list is the highest, let's go with it.</p>
+<h2>Getting the proper PulseAudio source</h2>
+<p>The command <code>pactl list sources</code> will print a list of supported PulseAudio sources (i.e. inputs). In my case I get the following:</p>
+<pre><code>Source #0
+    State: SUSPENDED
+    Name: alsa_output.pci-0000_00_1b.0.analog-stereo.monitor
+    Description: Monitor of Built-in Audio Analog Stereo
+  ...
+  [many other infos here]
+  ...
+</code></pre>
+<p>The source <code>0</code> is the only one available in my system. That's good. You should always record audio from the <strong>Monitor</strong> source, which basically contains what you are hearing over your speakers.</p>
+<h2>Packing the values together</h2>
+<p>The complete command, in my case, looks something like this:</p>
+<p><code>ffmpeg -video_size 1366x768 -framerate 25 -f x11grab -i :0.0 -f pulse -ac 2 -i 0 output.mkv</code></p>
+<p>A frame rate of 25 fps is a common choice that works best in most cases.</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/ffmpeg">FFmpeg</a>
+				 • 								<a class="ip-tag" href="/tag/pulseaudio">PulseAudio</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">j0n4t</span> on 
+							<span class="date">March 30, 2022 at 13:26</span>
+						</div> 
+						<div class="body">Thanks for this post! It was really helpful!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

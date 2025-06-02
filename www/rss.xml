@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0'>
+	<channel> 
+		<title>Internal Pointers</title>
+		<link>https://www.internalpointers.com</link>
+		<description>I hear and I forget. I see and I remember. I write and I understand.</description>
+		<language>en-us</language>
+				<item>
+			<title>Programming with Unicode: a gentle introduction</title>
+			<link>https://www.internalpointers.com/post/programming-unicode-gentle-introduction</link>
+			<guid>https://www.internalpointers.com/post/programming-unicode-gentle-introduction</guid>
+            <pubDate>Sat, 18 Jun 2022 12:23:43 +0200</pubDate>
+			<description>How not to get lost in a multilingual world. </description>
+		</item>
+				<item>
+			<title>Making HTTP requests with sockets in Python </title>
+			<link>https://www.internalpointers.com/post/making-http-requests-sockets-python</link>
+			<guid>https://www.internalpointers.com/post/making-http-requests-sockets-python</guid>
+            <pubDate>Sat, 01 Jan 2022 11:22:08 +0100</pubDate>
+			<description>A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. </description>
+		</item>
+				<item>
+			<title>Network programming for beginners: introduction to sockets </title>
+			<link>https://www.internalpointers.com/post/network-programming-beginners-overview</link>
+			<guid>https://www.internalpointers.com/post/network-programming-beginners-overview</guid>
+            <pubDate>Fri, 10 Sep 2021 10:38:14 +0200</pubDate>
+			<description>A theoretical look at one of the most popular programming tools for exchanging data over computer networks. </description>
+		</item>
+				<item>
+			<title>How to split a commit into smaller ones in Git </title>
+			<link>https://www.internalpointers.com/post/split-commit-into-smaller-ones-git</link>
+			<guid>https://www.internalpointers.com/post/split-commit-into-smaller-ones-git</guid>
+            <pubDate>Mon, 09 Aug 2021 11:41:07 +0200</pubDate>
+			<description>A quick and easy way powered by git rebase. </description>
+		</item>
+				<item>
+			<title>Introduction to TCP: Transmission Control Protocol</title>
+			<link>https://www.internalpointers.com/post/introduction-tcp-transmission-control-protocol</link>
+			<guid>https://www.internalpointers.com/post/introduction-tcp-transmission-control-protocol</guid>
+            <pubDate>Tue, 03 Aug 2021 19:20:14 +0200</pubDate>
+			<description>One of the most important, high-level protocols in the Internet Protocol Suite. </description>
+		</item>
+				<item>
+			<title>Introduction to IP: the Internet Protocol</title>
+			<link>https://www.internalpointers.com/post/introduction-ip-internet-protocol</link>
+			<guid>https://www.internalpointers.com/post/introduction-ip-internet-protocol</guid>
+            <pubDate>Mon, 07 Jun 2021 22:28:26 +0200</pubDate>
+			<description>From routing to IP addressing, a look at the protocol that gives life to the Internet.</description>
+		</item>
+				<item>
+			<title>Introduction to the TCP/IP protocol</title>
+			<link>https://www.internalpointers.com/post/introduction-tcp-ip-protocol</link>
+			<guid>https://www.internalpointers.com/post/introduction-tcp-ip-protocol</guid>
+            <pubDate>Tue, 27 Apr 2021 10:19:37 +0200</pubDate>
+			<description>The official rules that allow computers to communicate over the Internet.</description>
+		</item>
+				<item>
+			<title>Understanding the Internet </title>
+			<link>https://www.internalpointers.com/post/understanding-internet</link>
+			<guid>https://www.internalpointers.com/post/understanding-internet</guid>
+            <pubDate>Thu, 04 Mar 2021 19:16:59 +0100</pubDate>
+			<description>“Is that thing still around?” — Homer Simpson</description>
+		</item>
+				<item>
+			<title>Introduction to computer networks  </title>
+			<link>https://www.internalpointers.com/post/introduction-computer-networks</link>
+			<guid>https://www.internalpointers.com/post/introduction-computer-networks</guid>
+            <pubDate>Sun, 24 Jan 2021 18:31:12 +0100</pubDate>
+			<description>A bird's-eye view on the art of resource sharing from one computer to another. </description>
+		</item>
+				<item>
+			<title>Writing a custom iterator in modern C++</title>
+			<link>https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp</link>
+			<guid>https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp</guid>
+            <pubDate>Sun, 13 Dec 2020 18:00:29 +0100</pubDate>
+			<description>An experimental Forward Iterator written from scratch to boost up hand-made containers.</description>
+		</item>
+			</channel>
+</rss>

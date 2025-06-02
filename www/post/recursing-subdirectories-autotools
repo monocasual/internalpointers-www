@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Recursing subdirectories with Autotools - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Automake can recurse into subdirectories and compile source files from there.">
+		<meta name="keywords" content="Automake,make">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Recursing subdirectories with Autotools" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/recursing-subdirectories-autotools" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Automake can recurse into subdirectories and compile source files from there." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/recursing-subdirectories-autotools" />
+<meta name="twitter:title" content="Recursing subdirectories with Autotools" />
+<meta name="twitter:description" content="Automake can recurse into subdirectories and compile source files from there." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 26, 2015 
+								• updated on July 26, 2015  
+								• ID 8 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Recursing subdirectories with Autotools</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Automake can recurse into subdirectories and compile source files from there.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Lately I had the need to split the source code of a C++ project into smaller directories, in order to mantain a certain level of organization (and mental sanity as well). Automake supports the so-called <em>make recursion</em>: the ability to recursively parse a list of subdirectories and parse/execute other Makefiles from there. (Un)Fortunately that feature is highly discouraged:</p>
+<ul>
+<li>it forces you to create a new <code>Makefile.am</code> file per sub-directory (no thanks);</li>
+<li>it could be harmful (according to <a href="http://miller.emu.id.au/pmiller/books/rmch/">this article</a>).</li>
+</ul>
+<p>A great alternative is the so-called <em>non-recursive make</em>, simpler and easy to mantain. The game starts from the top-level directory, where lies the one and only <code>Makefile.am</code>. This is the top-level file which contains the options for Automake. Here you have to put references to source files with a relative path, for example:</p>
+<pre><code class="lang-nohighlights">...
+myapp_SOURCES = \
+src/folder/core.cpp \
+src/folder/utils.cpp \
+src/another-folder/core.cpp \
+src/another-folder/something.cpp
+...
+</code></pre>
+<p>This will compile all the source files in object files directly inside the top build directory. Is that what you want? Not in my case and in the example above, because both objects generated from <code>src/folder/core.cpp</code> and from <code>src/another-folder/core.cpp</code> would clash.</p>
+<p>That's not a problem: you just have to tell Automake to leave objects in sub-directories, instead of putting them all in one place. To do so, change the <code>AM_INIT_AUTOMAKE</code> call in <code>configure.ac</code> and add the option <code>subdir-objects</code>:</p>
+<pre><code class="lang-nohighlights">...
+AM_INIT_AUTOMAKE([subdir-objects])
+...
+</code></pre>
+<p>And you're done.</p>
+<h2>Sources</h2>
+<p>Autotools.io - <em>Non-recursive Automake</em> (<a href="https://autotools.io/automake/nonrecursive.html">link</a>)<br>
+David A. Wheeler - <em>Introduction to the Autotools, part 3</em> (<a href="https://www.youtube.com/watch?v=e-uYBb554LU">link, video</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/automake">Automake</a>
+				 • 								<a class="ip-tag" href="/tag/make">make</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

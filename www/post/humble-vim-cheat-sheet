@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The humble Vim cheat sheet - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Basic Vim commands I keep forgetting.">
+		<meta name="keywords" content="Vim">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The humble Vim cheat sheet" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/humble-vim-cheat-sheet" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Basic Vim commands I keep forgetting." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/humble-vim-cheat-sheet" />
+<meta name="twitter:title" content="The humble Vim cheat sheet" />
+<meta name="twitter:description" content="Basic Vim commands I keep forgetting." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 15, 2019 
+								• updated on February 26, 2020  
+								• ID 73 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The humble Vim cheat sheet</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Basic Vim commands I keep forgetting.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>This is my own minimalistic Vim cheat sheet. It contains most of the commands I use every day. It will get updated as new useful tricks are found.</p>
+<h2>File I/O</h2>
+<h3>Open files</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open existing file in a new buffer</td>
+<td><code>:e &lt;file&gt;</code></td>
+<td>Support wildcards, e.g. <code>**/&lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>Open new file in a horizontal split window</td>
+<td><code>:new</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open new file in a vertical split window</td>
+<td><code>:vnew</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open new file in the current window</td>
+<td><code>:enew</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open new file in a new tab</td>
+<td><code>:tabnew</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Read file content</td>
+<td><code>:r[ead] &lt;file&gt;</code></td>
+<td>Insert text content of <code>&lt;file&gt;</code> below the cursor</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Save files</h3>
+
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Save current file</td>
+<td><code>:w</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Save all files</td>
+<td><code>:wa</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Save current file as new file</td>
+<td><code>:saveas &lt;file-name&gt;</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2>Buffers operations</h2>
+
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List open buffers</td>
+<td><code>:ls</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Close current buffer</td>
+<td><code>:bd[elete]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Go to next buffer</td>
+<td><code>:bn[ext]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Go to previous buffer</td>
+<td><code>:bp[previous]</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2>Copy and paste</h2>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Copy the current line</td>
+<td><code>yy</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Copy <code>n</code> lines</td>
+<td><code>&lt;n&gt;yy</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Paste below the current line</td>
+<td><code>p</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Paste above the current line</td>
+<td><code>P</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2>Screen layout</h2>
+<h3>Windows</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Split window horizontally</td>
+<td><code>:split</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Split window vertically</td>
+<td><code>:vsplit</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move cursor across windows</td>
+<td><code>Ctrl-w + &lt;direction key&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Close current window</td>
+<td><code>Ctrl-w + q</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Tabs</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create new empty tab</td>
+<td><code>:tabn[ew]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Create new tab with a buffer</td>
+<td><code>:tabe[dit] &lt;file or path&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move tab</td>
+<td><code>:tabm[ove] &lt;numeric value&gt;</code></td>
+<td>e.g. <code>:tabm -1</code>, <code>:tabm +3</code> (relative), <code>:tabm 2</code> (absolute)</td>
+</tr>
+</tbody>
+</table>
+<h2>Text editing</h2>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insert mode</td>
+<td><code>i</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Jump to next line and start editing</td>
+<td><code>o</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Jump to the beginning of the line and start editing</td>
+<td><code>I</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Jump to the end of the line and start editing</td>
+<td><code>A</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Indentation, tabs and spaces</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Insert tabs as spaces</td>
+<td><code>:set expandtab</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Set tabs-as-spaces width</td>
+<td><code>:set shiftwidth=&lt;x&gt;</code></td>
+<td>Where <code>x</code> is the number of spaces to insert. Works only if <code>:set expandtab</code> is on</td>
+</tr>
+<tr>
+<td>Insert tabs as real tabs</td>
+<td><code>:set expandtab!</code></td>
+<td>Returns to the default behavior</td>
+</tr>
+</tbody>
+</table>
+<h3>Deletion</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delete line</td>
+<td><code>dd</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Clear line from cursor to end</td>
+<td><code>D</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Clear whole line</td>
+<td><code>0D</code></td>
+<td><code>0</code> moves the cursor to the beginning</td>
+</tr>
+<tr>
+<td>Clear whole line and end up in insert mode</td>
+<td><code>S</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Text selection</h2>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visual mode  (character)</td>
+<td><code>v</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Visual block (blocks)</td>
+<td><code>Ctrl-v</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Visual line  (lines)</td>
+<td><code>V</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Virtual mode</td>
+<td><code>:set virtualedit=&lt;mode&gt;</code></td>
+<td>Cursor can move where there is no actual character. <code>&lt;mode&gt;</code> can be: <code>block</code> for visual block mode, <code>insert</code> for insert mode, <code>all</code> for all modes, <code>onemore</code> allows the cursor to move just past the end of the line</td>
+</tr>
+<tr>
+<td>Select current word under cursor</td>
+<td><code>viw</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Select everything inside parentheses</td>
+<td><code>vi[parenthesis]</code></td>
+<td>e.g. <code>vi(</code>, <code>vi[</code>, <code>vi{</code></td>
+</tr>
+<tr>
+<td>Select everything inside block (curly braces)</td>
+<td><code>viB</code></td>
+<td>Same as <code>vi{</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Text navigation</h2>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Move to beginning of line</td>
+<td><code>0</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move to end of line</td>
+<td><code>$</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move to first non-blank character of the line</td>
+<td><code>_</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move to last non-blank character of the line</td>
+<td><code>g_</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move to first line</td>
+<td><code>gg</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Move to last line</td>
+<td><code>G</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Jump between the last two positions</td>
+<td><code>''</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Marks</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Set local mark</td>
+<td><code>m&lt;lowercase-letter&gt;</code></td>
+<td>Sets a mark in the current file, e.g. <code>ma</code>. Available letters: <code>a-z</code></td>
+</tr>
+<tr>
+<td>Set global mark</td>
+<td><code>m&lt;uppercase-letter&gt;</code></td>
+<td>Sets a unique, global mark in the current file, e.g. <code>mA</code>. Only one file can have a specific mark. Available letters: <code>A-Z</code></td>
+</tr>
+<tr>
+<td>Go to mark</td>
+<td><code>'&lt;letter&gt;</code></td>
+<td>E.g. <code>'a</code>, <code>'B</code></td>
+</tr>
+<tr>
+<td>Delete mark</td>
+<td><code>:delmarks &lt;letter&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Delete all local marks</td>
+<td><code>:delmarks!</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Text appearance</h2>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Word wrap</td>
+<td><code>:set wrap</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Break lines at words</td>
+<td><code>:set linebreak</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Highlight current line</td>
+<td><code>:set cursorline</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Show vertical line</td>
+<td><code>:set colorcolumn=&lt;x&gt;</code></td>
+<td>Where <code>&lt;x&gt;</code> is the column number</td>
+</tr>
+<tr>
+<td>Show all whitespaces</td>
+<td><code>:set list</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Automatic word wrapping</td>
+<td><code>:set textwidth=&lt;x&gt;</code></td>
+<td>Text wraps automatically as you type, in order to make each line long <code>&lt;x&gt;</code> characters at most</td>
+</tr>
+<tr>
+<td>Show existing tabs as <code>x</code> spaces</td>
+<td><code>:set tabstop=&lt;x&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>File browser</h2>
+<p>Vim has a built-in file browser called <strong>netrw</strong>.</p>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open file browser in the current window</td>
+<td><code>:Ex[plore]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open file browser in a new split horizontal window</td>
+<td><code>:Sex[plore]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open file browser in a new split vertical window</td>
+<td><code>:Vex[plore]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Open file browser in a new tab</td>
+<td><code>:Tex[plore]</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inside the file browser</h3>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change view mode</td>
+<td><code>i</code></td>
+<td>Switch between normal, compact list, tree</td>
+</tr>
+<tr>
+<td>Create a new directory</td>
+<td><code>d</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Create a new file</td>
+<td><code>%</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Delete file or directory</td>
+<td><code>D</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Rename file or directory</td>
+<td><code>R</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Running external commands</h2>
+<table>
+<thead><tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run external command</td>
+<td><code>:! &lt;command&gt; %</code></td>
+<td>E.g. <code>:! wc %</code>: runs the <code>wc</code> command on the current file (<code>%</code>) and reports the results</td>
+</tr>
+<tr>
+<td>Re-run last command</td>
+<td><code>:!!</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Run external command and save output to current buffer</td>
+<td><code>:r[ead] ! &lt;command&gt; %</code></td>
+</tr>
+</tbody>
+</table>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/vim">Vim</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Daniel</span> on 
+							<span class="date">July 30, 2019 at 17:24</span>
+						</div> 
+						<div class="body">I was looking at the cheat sheet, as it seems helpful, and I also noticed that vi{ is equivalent to viB, not vib.  Also ctrl-w d is not close buffer, but it splits window and then jump to definition under cursor. Perhaps you meant ctrl-w q or ctrl-w c</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Franck</span> on 
+							<span class="date">August 02, 2019 at 05:22</span>
+						</div> 
+						<div class="body">learned a few new tricks, thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 02, 2019 at 10:59</span>
+						</div> 
+						<div class="body">Thanks @Daniel, you're right! Both typos have been fixed ;)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">John</span> on 
+							<span class="date">September 08, 2019 at 00:03</span>
+						</div> 
+						<div class="body">I use these daily as well, though the parenthesis selections were new to me. Very useful indeed.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Larry</span> on 
+							<span class="date">February 12, 2020 at 22:45</span>
+						</div> 
+						<div class="body">This is now my favorite vim cheat sheet. Good work! But...<br />
+How about copy/paste?<br />
+Copy the current line.               yy<br />
+Copy <n> lines.                       <n>yy<br />
+Paste below the current line.     p<br />
+Paste above the current line.    P<br />
+<br />
+Another one I use constantly is:<br />
+Read a file into the current buffer below the current line      :r <file></div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">February 26, 2020 at 12:43</span>
+						</div> 
+						<div class="body">@Larry thank you! Sheet updated :)</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to resolve git conflicts for good - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Merge changes from multiple developers across the same code">
+		<meta name="keywords" content="git">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to resolve git conflicts for good" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/resolve-git-conflicts-good" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Merge changes from multiple developers across the same code" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/resolve-git-conflicts-good" />
+<meta name="twitter:title" content="How to resolve git conflicts for good" />
+<meta name="twitter:description" content="Merge changes from multiple developers across the same code" />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 13, 2016 
+								• updated on February 20, 2016  
+								• ID 26 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to resolve git conflicts for good</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Merge changes from multiple developers across the same code</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>I have a simple text file containing some words, namely a quote from Edgar Allan Poe:</p>
+<blockquote><p>I wish I could write as mysterious as a cat.</p>
+</blockquote>
+<p>It lies quietly in my local 'master' branch and in the remote one (origin/master). One day, for some reason, another guy working with me on the project pushed a commit that changes that line into:</p>
+<blockquote><p>I wish I could write as elegant as a cat.</p>
+</blockquote>
+<p>As you may see she changed the word "mysterious" with "elegant". Now when I try to merge the remote 'master' branch with my own local 'master' branch I get a weird conflict. Opening the simple text file would reveal the following horror:</p>
+<pre><code>I wish I could write as
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+mysterious
+=======
+elegant
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/master
+as a cat.
+</code></pre>
+<p>That's a conflict-marked file: we both modified the same line and GIT doesn't know what version should keep. Let's try to fix it for good.</p>
+<h2>Reading and fixing a conflict-marked file in GIT</h2>
+<p>A conflict-marked area begins with <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> and ends with <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. These are the conflict markers. The two conflicting blocks themselves are divided by a <code>=======</code>.</p>
+<p>The part between the lines beginning <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> and <code>======</code> is what I already have locally. The lines between <code>=======</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> is what was introduced by the other commit, in this case origin/master.</p>
+<p>To resolve the conflict, just delete the conflict markers and type out what you want to keep. In my case I would keep 'mysterious', as it is the original quote. The text file would become:</p>
+<pre><code>I wish I could write as mysterious as a cat.
+</code></pre>
+<p>Finally <code>git add</code> the file, commit the change with a new commit message, and you are done.</p>
+<h2>Sources</h2>
+<p>GitHub - <em>Resolving a merge conflict from the command line</em> (<a href="/web/20160219230244/https://help.github.com/articles/resolving-a-merge-conflict-from-the-command-line/">link</a>)<br>
+Stackoverflow - <em>Git conflict markers</em> (<a href="/web/20160219230244/http://stackoverflow.com/questions/7901864/git-conflict-markers">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/git">git</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

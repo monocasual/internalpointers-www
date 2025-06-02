@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>A quick primer on type traits in modern C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Discovering one of the pillars of C++ generic programming.">
+		<meta name="keywords" content="C++,type traits,Templates,metaprogramming">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="A quick primer on type traits in modern C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/quick-primer-type-traits-modern-cpp" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/01/type-traits-modern-cpp.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Discovering one of the pillars of C++ generic programming." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/quick-primer-type-traits-modern-cpp" />
+<meta name="twitter:title" content="A quick primer on type traits in modern C++" />
+<meta name="twitter:description" content="Discovering one of the pillars of C++ generic programming." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/01/type-traits-modern-cpp.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on February 22, 2020 
+								• updated on May 02, 2020  
+								• ID 79 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>A quick primer on type traits in modern C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Discovering one of the pillars of C++ generic programming.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p><strong>Type traits</strong> are a clever technique used in C++ template metaprogramming that gives you the ability to inspect and transform the properties of <em>types</em>.</p>
+<p>For example, given a generic type <code>T</code> — it could be <code>int</code>, <code>bool</code>, <code>std::vector</code> or whatever you want — with type traits you can ask the compiler some questions: is it an integer? Is it a function? Is it a pointer? Or maybe a class? Does it have a destructor? Can you copy it? Will it throw exceptions? ... and so on. This is extremely useful in <strong>conditional compilation</strong>, where you instruct the compiler to pick the right path according to the type in input. We will see an example shortly.</p>
+<p>Type traits can also apply some transformation to a type. For example, given <code>T</code>, you can add/remove the <code>const</code> specifier, the reference or the pointer, or yet turn it into a signed/unsigned type and many other crazy operations. Extremely handy when writing libraries that make use of templates.</p>
+<p>The beauty of these techniques is that everything takes place at <em>compile time</em> with no runtime penalties: it's template metaprogramming, after all. I assume you know a bit about C++ templates for the rest of this article. <a href="https://www.codeproject.com/Articles/257589/An-Idiots-Guide-to-Cplusplus-Templates-Part-1">This guide</a> is a great introduction if you don't.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>What is a type trait?</h2>
+<p>A type trait is a simple template struct that contains a member constant, which in turn holds the answer to the question the type trait asks or the transformation it performs. For example, let's take a look at <code>std::is_floating_point</code>, one of the many type traits defined by the C++ Standard Library in the <a href="https://en.cppreference.com/w/cpp/header/type_traits"><code>&lt;type_traits&gt;</code></a> header:</p>
+<pre><code class="lang-c++">template&lt;typename T&gt; 
+struct is_floating_point;
+</code></pre>
+<p>This type trait tells whether a type <code>T</code> is floating point or not. The member constant — called <code>value</code> for type traits that ask a question — will be either set to <code>true</code> or <code>false</code> according to the type passed in as template argument.</p>
+<p>On the other hand, for example <code>std::remove_reference</code> is a type trait that alters the type <code>T</code> it takes in input:</p>
+<pre><code class="lang-c++">template&lt;typename T&gt;
+struct remove_reference;
+</code></pre>
+<p>This type trait basically turns <code>T&amp;</code> into <code>T</code>.  The member constant — called <code>type</code> for those type traits that modify a type — contains the result of the transformation.</p>
+<h2>How do I use a type trait?</h2>
+<p>Simply instantiate the template struct with the type you want, then inspect its member constant and act accordingly. For example, let's say you just want to print out if a type is floating point or not:</p>
+<pre><code class="lang-c++">#include &lt;iostream&gt;
+#include &lt;type_traits&gt;
+
+class Class {};
+
+int main() 
+{
+    std::cout &lt;&lt; std::is_floating_point&lt;Class&gt;::value &lt;&lt; &#39;\n&#39;;
+    std::cout &lt;&lt; std::is_floating_point&lt;float&gt;::value &lt;&lt; &#39;\n&#39;;
+    std::cout &lt;&lt; std::is_floating_point&lt;int&gt;::value &lt;&lt; &#39;\n&#39;;
+}
+</code></pre>
+<p>This program will output:</p>
+<pre><code class="lang-nolang">0
+1
+0
+</code></pre>
+<h3>How does it work exactly?</h3>
+<p>In the snippet above you are passing three different types to the template struct <code>std::is_floating_point</code>: a custom <code>Class</code> type, a <code>float</code> and an <code>int</code>. The compiler, as with any regular template stuff, will generate three different structs for you under the hood:</p>
+<pre><code class="lang-c++">struct is_floating_point_Class {
+    static const bool value = false;
+};
+
+struct is_floating_point_float {
+    static const bool value = true;
+};
+
+struct is_floating_point_int {
+    static const bool value = false;
+};
+</code></pre>
+<p>At this point it's just a matter of reading the <code>value</code> member inside those structs created by the compiler. Being static, you have to access the member constant with the <code>::</code> syntax. Just keep in mind that this is template metaprogramming, so everything takes place at <em>compile time</em>.</p>
+<h2>Type traits in action, part 1: conditional compilation</h2>
+<p>Now that we have grasped the idea behind type traits, let's try to use them in some real world scenarios. Suppose you have two functions for the same algorithm: one that works with signed integers and another one that is super optimized for unsigned ones. You want the compiler to pick the signed one when an <code>int</code> is passed in and the unsigned one in case of an <code>unsigned int</code> to take advantage of the optimizations. This is the conditional compilation I mentioned before.</p>
+<p>For this task I will be using three tools:</p>
+<ul>
+<li>the C++17 <code>if constexpr</code> syntax: an <code>if</code> statement that works at compile time;</li>
+<li>the C++11 <code>static_assert</code> function that, as the name implies, triggers an assert at compile time if the condition is not met;</li>
+<li>two self-explanatory type traits: <code>std::is_signed</code> and <code>std::is_unsigned</code>.</li>
+</ul>
+<p>The code looks like this:</p>
+<pre><code class="lang-c++">void algorithm_signed  (int i)      { /*...*/ } 
+void algorithm_unsigned(unsigned u) { /*...*/ } 
+
+
+template &lt;typename T&gt;
+void algorithm(T t)
+{
+    if constexpr(std::is_signed&lt;T&gt;::value)
+        algorithm_signed(t);
+    else
+    if constexpr (std::is_unsigned&lt;T&gt;::value)
+        algorithm_unsigned(t);
+    else
+        static_assert(std::is_signed&lt;T&gt;::value || std::is_unsigned&lt;T&gt;::value, &quot;Must be signed or unsigned!&quot;);
+}
+</code></pre>
+<p>In words, the template function <code>algorithm</code> acts as a <em>dispatcher</em>: when instantiated, the compiler will grab the right function according to the type <code>T</code> passed in. If signed, <code>algorithm_signed</code> will be included; if unsigned, <code>algorithm_unsigned</code> will be included instead. Finally, throw a static assertion (i.e. a build error) if the type doesn't meet the criteria.</p>
+<p>Some usage examples:</p>
+<pre><code class="lang-c++">algorithm(3);       // T is int, include algorithm_signed()
+
+unsigned x = 3;
+algorithm(x);       // T is unsigned int, include algorithm_unsigned()
+
+algorithm(&quot;hello&quot;); // T is string, build error!
+</code></pre>
+<h2>Type traits in action, part 2: altering types</h2>
+<p>Type traits are also used to apply transformation to types. A typical usage of this magic comes from the <a href="https://www.internalpointers.com/post/c-c-standard-library">C++ Standard Library</a> and <a href="https://en.cppreference.com/w/cpp/utility/move"><code>std::move</code></a>: the utility function that turns a type <code>T</code> into an rvalue reference <code>T&amp;&amp;</code>. This is an important operation that paves the way for <a href="https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners">move semantics</a>.</p>
+<p>Internally, <code>std::move</code> makes use of the <a href="https://en.cppreference.com/w/cpp/types/remove_reference"><code>std::remove_reference</code></a> type trait to shave off the <code>&amp;</code> (if any) from the type in input and to return a <em>clean</em> <code>T</code> with the <code>&amp;&amp;</code> attached. A possible implementation:</p>
+<pre><code class="lang-c++">template &lt;typename T&gt;
+typename remove_reference&lt;T&gt;::type&amp;&amp; move(T&amp;&amp; arg)
+{
+  return static_cast&lt;typename remove_reference&lt;T&gt;::type&amp;&amp;&gt;(arg);
+}
+</code></pre>
+<p>Transformations like this one are widespread across the whole Standard Library, often used to optimize how function parameters flow across nested template function calls. All in all some of these type traits are rarely useful for average C++ projects, unless you are writing a library or performing some clever metaprogramming tricks.</p>
+<h2>Beautifying type traits</h2>
+<p>Reading <code>::value</code> and <code>::type</code> everywhere in your code is confusing. Luckily, C++14 and greater introduced a simplified syntax thanks to some helper aliases that end with <code>_v</code> and <code>_t</code> respectively. So for example:</p>
+<pre><code class="lang-c++">std::is_signed&lt;T&gt;::value;     /* ---&gt; */   std::is_signed_v&lt;T&gt;;
+std::remove_const&lt;T&gt;::type;   /* ---&gt; */   std::remove_const_t&lt;T&gt;;
+</code></pre>
+<p>These helpers exist for all type traits that query a type or apply a transformation on it.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>More type traits trivia and further readings</h2>
+<p>Type traits act as a foundation for many C++ features and, as always, in this article I've barely scratched their surface. The following is a list of additional topics that deserve more love in the future.</p>
+<h3>The source of type traits knowledge</h3>
+<p>How does a type trait know about a type? How can it infer that, for example, <code>std::is_signed_v&lt;T&gt;</code> is true for an <code>int</code>? Most basic type traits are the result of template metaprogramming tricks, <a href="https://en.wikipedia.org/wiki/Substitution_failure_is_not_an_error">SFINAE</a>, <a href="https://arne-mertz.de/2016/10/tag-dispatch/">tag dispatch</a> and other techniques from the dark corners of C++.</p>
+<p>Some type traits need additional help instead. For example the <code>std::is_abstract</code> type trait — which tells if a type is an abstract class or not — can't be generated with template metaprogramming alone. For this reason developers who work on the Standard Library make use of <strong>intrinsics</strong>: special built-in functions provided by the compiler that give more insight about the type in question, thanks to the deep knowledge a compiler has on the program it takes in input. More information <a href="https://stackoverflow.com/questions/20181702/which-type-traits-cannot-be-implemented-without-compiler-hooks">here</a> and <a href="https://github.com/Quuxplusone/from-scratch/blob/master/include/scratch/bits/type-traits/compiler-magic.md">here</a>.</p>
+<h3>Type traits and concepts</h3>
+<p><strong>Concepts</strong> are an important addition in C++20: an elegant and expressive way to put a constraint on the types a template function or class can take in. For example, in the conditional compilation example above I could have used a concept instead of triggering the static assertion at the end. Not surprisingly, concepts are based on the numerous type traits defined in the Standard Library. More information about concepts <a href="https://en.cppreference.com/w/cpp/language/constraints">here</a>.</p>
+<h3>Type traits provide introspection</h3>
+<p><strong>Introspection</strong> is the ability of a program to examine the type or properties of an object. For example, with introspection you can ask an object if it has a specific member function in order to call it.</p>
+<p>C++ is not capable of introspection at <em>runtime</em>, but as we saw in this article it does a good job at compile time thanks to type traits. We definitely used compile-time introspection when we checked if <code>T</code> was signed or not in the previous examples.</p>
+<p>On the other hand, <strong>reflection</strong> refers to the ability of a program to observe and alter its own structure or its behavior. There's no such thing in C++ for now, but some programming artists are working on crazy libraries such as <a href="https://github.com/apolukhin/magic_get">magic_get</a> by leveraging the power of type traits combined to template metaprogramming. There are also some proposals to include reflection in modern C++, drafted <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/n4818.pdf">here</a> and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1240r1.pdf">here</a>. Time will tell...</p>
+<h2>Sources</h2>
+<p>
+Cppreference — <a href="https://en.cppreference.com/w/cpp/language/type">Type</a><br>
+Cppreference — <a href="https://en.cppreference.com/w/cpp/types">Types</a><br>
+Cppreference — <a href="https://en.cppreference.com/w/cpp/language/static_assert">static_assert</a><br>
+IBM — <a href="https://www.ibm.com/developerworks/community/blogs/5894415f-be62-4bc0-81c5-3956e82276f3/entry/introduction_to_type_traits_in_the_c_standard_library?lang=en">Introduction to Type Traits in the C++ standard library</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Reflection_(computer_programming)">Reflection (computer programming)</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Type_introspection">Type introspection</a><br>
+Wikipedia — <a href="https://en.wikipedia.org/wiki/Intrinsic_function">Intrinsic function</a><br>
+gracicot.github.io — <a href="https://gracicot.github.io/reflection/2018/04/03/reflection-present.html">Reflection in C++ Part 1: The Present</a><br>
+StackOverflow — <a href="https://stackoverflow.com/questions/20181702/which-type-traits-cannot-be-implemented-without-compiler-hooks">Which type_traits cannot be implemented without compiler hooks?</a><br>
+Visual Studio Magazine — <a href="https://visualstudiomagazine.com/articles/2013/06/03/c-introspection.aspx">C++ Introspection</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/type-traits">type traits</a>
+				 • 								<a class="ip-tag" href="/tag/templates">Templates</a>
+				 • 								<a class="ip-tag" href="/tag/metaprogramming">metaprogramming</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mohit Pilkhan</span> on 
+							<span class="date">February 29, 2020 at 06:30</span>
+						</div> 
+						<div class="body">Lovely Article. Very Very Very Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">s b gatne</span> on 
+							<span class="date">March 01, 2020 at 07:44</span>
+						</div> 
+						<div class="body">nice explanation with simplicity, but c++ syntax is too complicated and makes more by new weird keywords. great work of c++ community is hampered by this.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anon</span> on 
+							<span class="date">June 02, 2020 at 12:46</span>
+						</div> 
+						<div class="body">Good read. Thanks.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Aviv</span> on 
+							<span class="date">June 04, 2020 at 17:26</span>
+						</div> 
+						<div class="body">Thank you for the helpful article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">harkwong</span> on 
+							<span class="date">October 09, 2020 at 04:51</span>
+						</div> 
+						<div class="body">thanks for the nice introduction of traits.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Roy</span> on 
+							<span class="date">November 15, 2020 at 10:43</span>
+						</div> 
+						<div class="body">Awesome!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Luiz Lima</span> on 
+							<span class="date">April 23, 2021 at 00:01</span>
+						</div> 
+						<div class="body">Very good. Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vikrant</span> on 
+							<span class="date">April 29, 2021 at 08:12</span>
+						</div> 
+						<div class="body">A very simple yet very elegant article. Nice introduction.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Iulian Peca</span> on 
+							<span class="date">September 06, 2021 at 07:02</span>
+						</div> 
+						<div class="body">Very nice to read. Kept me going until the end. (And that's something) </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">LALz</span> on 
+							<span class="date">September 28, 2021 at 12:03</span>
+						</div> 
+						<div class="body">Nice article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Elon Musk</span> on 
+							<span class="date">January 12, 2022 at 09:43</span>
+						</div> 
+						<div class="body">Thank you my friend. Very helpful.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ZJUGuoShuai</span> on 
+							<span class="date">January 22, 2022 at 08:11</span>
+						</div> 
+						<div class="body">Damn good.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">VInay</span> on 
+							<span class="date">September 25, 2022 at 09:16</span>
+						</div> 
+						<div class="body">It really helps. Thanks for this article</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">kailin4u</span> on 
+							<span class="date">April 04, 2023 at 11:59</span>
+						</div> 
+						<div class="body">usefull and cool</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sushil</span> on 
+							<span class="date">May 09, 2023 at 06:13</span>
+						</div> 
+						<div class="body">Superb explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Naveen Kumar Singh</span> on 
+							<span class="date">September 07, 2023 at 17:34</span>
+						</div> 
+						<div class="body">Thanks for explaining the concept so clearly and easy to grasp. Grateful to you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mihai</span> on 
+							<span class="date">September 26, 2023 at 19:08</span>
+						</div> 
+						<div class="body">Just great! Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">SM</span> on 
+							<span class="date">December 14, 2023 at 08:53</span>
+						</div> 
+						<div class="body">Awesome article!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

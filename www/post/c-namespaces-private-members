@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>C++ namespaces with private members - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A cool alternative to the C way of having static global variables.">
+		<meta name="keywords" content="C++,namespace">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="C++ namespaces with private members" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/c-namespaces-private-members" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A cool alternative to the C way of having static global variables." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/c-namespaces-private-members" />
+<meta name="twitter:title" content="C++ namespaces with private members" />
+<meta name="twitter:description" content="A cool alternative to the C way of having static global variables." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on March 18, 2017 
+								• updated on August 02, 2019  
+								• ID 51 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>C++ namespaces with private members</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A cool alternative to the C way of having static global variables.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>In C++ you can build beautiful namespaces with private members (variables and functions). This is a good choice when you want to hide the inner workings of a set of utility functions from the final user. You can accomplish that thanks to the concept of <strong>anonymous namespaces</strong>. An anonymous namespace is a namespace without name, like the following one:</p>
+<pre><code class="lang-c++">namespace
+{
+    // your stuff here
+}
+</code></pre>
+<p>The beauty of anonymous namespaces is that they are available only in their <a href="https://en.wikipedia.org/wiki/Translation_unit_%28programming%29"><strong>translation unit</strong></a>, that is the .cpp file they are located.</p>
+<p>For example, say I'm working on a small namespace called <code>thing</code>. This is the header file:</p>
+<pre><code class="lang-c++">// thing.hpp
+
+namespace thing
+{
+    int getX();
+    int getSum();
+}
+</code></pre>
+<p>And this is the implementation file:</p>
+<pre><code class="lang-c++">// thing.cpp
+
+namespace thing
+{
+    namespace   // anonymous namespace
+    {
+        int x = 1;
+        int y = 2;
+
+        int sum(int a, int b)
+        {
+            return a + b;
+        }
+    }
+
+    int getX() 
+    {
+        return x;
+    }
+
+    int getSum()
+    {
+        return sum(x, y);
+    }
+};
+</code></pre>
+<p>Notice how I've wrapped the private members in the anonymous namespace. Now only <code>thing</code> can access <code>x</code>, <code>y</code> and <code>sum()</code>. If you try to touch those variables from the outside, an error occurs. Let's try:</p>
+<pre><code class="lang-c++">#include &lt;cstdio&gt;
+#include &quot;thing.hpp&quot;
+
+int main(int argc, char **argv)
+{
+    printf(&quot;%d\n&quot;, thing::getX());     // OK
+    printf(&quot;%d\n&quot;, thing::getSum());   // OK
+    printf(&quot;%d\n&quot;, thing::sum(1, 2));  // error: ‘sum‘ is not a member of ‘thing’    
+    printf(&quot;%d\n&quot;, thing::y);          // error: ‘y‘ is not a member of ‘thing’    
+}
+</code></pre>
+<h2>Sources</h2>
+<p>Stackoverflow - <em>Why are unnamed namespaces used and what are their benefits?</em> (<a href="http://stackoverflow.com/questions/357404/why-are-unnamed-namespaces-used-and-what-are-their-benefits">link</a>)<br>
+Wikipedia - <em>Translation unit</em> (<a href="https://en.wikipedia.org/wiki/Translation_unit_(programming">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/namespace">namespace</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Roy</span> on 
+							<span class="date">June 17, 2018 at 14:05</span>
+						</div> 
+						<div class="body">Exactly what I needed. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Adrian</span> on 
+							<span class="date">April 08, 2019 at 15:10</span>
+						</div> 
+						<div class="body">I hope you read this: there's an error on the wikipedia article link (you need to close your parenthesis).</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">April 08, 2019 at 18:35</span>
+						</div> 
+						<div class="body">@Adrian thanks for the feedback, link fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dan</span> on 
+							<span class="date">April 19, 2019 at 22:02</span>
+						</div> 
+						<div class="body">This doesn't seem to work. After testing, I can still access the members in the main file.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">maisonsmd</span> on 
+							<span class="date">April 28, 2019 at 07:48</span>
+						</div> 
+						<div class="body">Me also, I'm still able to access those member.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">D</span> on 
+							<span class="date">May 18, 2019 at 20:33</span>
+						</div> 
+						<div class="body">I copy-pasted into repl.it (C++11), and I could still access everything. The StackOverflow link had the same effect.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">June 03, 2019 at 12:18</span>
+						</div> 
+						<div class="body">@D and others: my wild guess is that this trick works only when you have actual .o files generated by your compiler.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Xiao sings</span> on 
+							<span class="date">June 12, 2019 at 06:30</span>
+						</div> 
+						<div class="body">Thanks a lot, dude :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">S</span> on 
+							<span class="date">July 07, 2019 at 21:20</span>
+						</div> 
+						<div class="body">I've just tested this with the Microsoft Visual Studio compiler and it didn't let me access anything inside the anonymous namespace.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Dave Smith</span> on 
+							<span class="date">July 27, 2019 at 19:48</span>
+						</div> 
+						<div class="body">Thanks, @Triangles, this is very useful! This works for me on Ubuntu 16.04 using g++ 5.4.0. Only minor correction I noticed: your second #include in main should be of "thing.hpp".</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 02, 2019 at 12:45</span>
+						</div> 
+						<div class="body">@Dave Smith good catch! Typo fixed. Thank you :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Karol</span> on 
+							<span class="date">April 16, 2020 at 10:44</span>
+						</div> 
+						<div class="body">This looks neat, but doesn't apply to code written in C++11 or later. As stated here: https://en.cppreference.com/w/cpp/language/namespace#Unnamed_namespaces<br />
+<br />
+"Unnamed namespaces as well as all namespaces declared directly or indirectly within an unnamed namespace have internal linkage, which means that any name that is declared within an unnamed namespace has internal linkage." - so basically whether a name is declared inside an anonymous namespace or not, it is still available throughout the translation unit.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kecomi</span> on 
+							<span class="date">October 10, 2020 at 05:35</span>
+						</div> 
+						<div class="body">When using Xcode and naming the internal namespace, I noticed that the function doesn't show up in auto-complete. It's not totally hidden or inaccessible though, in that if you type in the name of the internal namespace then it will show up in auto complete </div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

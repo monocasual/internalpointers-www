@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The gradient descent in action - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression.">
+		<meta name="keywords" content="machine learning,gradient descent function,hypothesis function">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The gradient descent in action" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/gradient-descent-action" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/gradient-descent-action" />
+<meta name="twitter:title" content="The gradient descent in action" />
+<meta name="twitter:description" content="It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on February 18, 2017 
+								• ID 49 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The gradient descent in action</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-machine-learning">Introduction to machine learning</a>
+							</span> —
+							<span class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/linear-regression-one-variable">Linear regression with one variable</a>
+							</span> —
+							<span class="intro">Finding the best-fitting straight line through points of a data set.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-function">The gradient descent function</a>
+							</span> —
+							<span class="intro">How to find the minimum of a function using an iterative algorithm.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/multivariate-linear-regression">Multivariate linear regression</a>
+							</span> —
+							<span class="intro">How to upgrade a linear regression algorithm from one to many input variables.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a>
+							</span> —
+							<span class="intro">A collection of practical tips and tricks to improve the gradient descent process and make it easier to understand.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a>
+							</span> —
+							<span class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a>
+							</span> —
+							<span class="intro">Preparing the logistic regression algorithm for the actual implementation.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/problem-overfitting-machine-learning-algorithms">The problem of overfitting in machine learning algorithms</a>
+							</span> —
+							<span class="intro">Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>In the previous article I outlined the theory behind <a href="https://www.internalpointers.com/post/gradient-descent-function">the gradient descent algorithm</a>. It's now time to apply it to our original problem: <a href="https://www.internalpointers.com/post/linear-regression-one-variable">the house pricing task</a>. Let's make some good use out of it!</p>
+<p>In words, I'm going to apply gradient descent to the cost function [texi]J(\theta_0, \theta_1)[texi] found in the 2nd episode, in order to minimize it. Let me recap all the formulas found so far. We have a linear hypothesis function</p>
+<p>[tex]
+h_\theta(x) = \theta_0 + \theta_1 (x)
+[tex]</p>
+<p>and its cost function</p>
+<p><span>
+[tex]
+J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^{m} (\theta_0 + \theta_1x^{(i)} - y^{(i)})^2
+[tex]
+</span></p>
+<p>.</p>
+<p>I will apply the gradient descent algorithm</p>
+<p>[tex]
+\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta_0, \theta_1, ... \theta_n) \\
+\text{ for } j=0, j=1, ... j=n \text{ until convergence}
+[tex]</p>
+<p>to the cost function in order to minimize it, that is</p>
+<p>[tex]
+\min_{\theta_0, \theta_1} J(\theta_0, \theta_1)
+[tex]</p>
+<p>Once we have found the minimized (i.e. best) values for [texi]\theta_0[texi] and [texi]\theta_1[texi] we can plug them into the linear hypothesis function and obtain the best fitting line through our data set.</p>
+<h2>Finding the derivative</h2>
+<p>The key part of out task is the derivative inside the gradient descent function, that is</p>
+<p><span>
+[tex]
+\frac{\partial}{\partial \theta_j} J(\theta_0, \theta_1) = 
+\frac{\partial}{\partial \theta_j} \frac{1}{2m} \sum_{i=1}^{m} (\theta_0 + \theta_1x^{(i)} - y^{(i)})^2
+[tex]
+</span></p>
+<p>Nothing fancy here: I just plugged in the definition of the cost function.</p>
+<p>According to the gradient descent algorithm, we have to figure out what is the derivative in <em>two</em> cases, one for each [texi]\theta[texi] in our cost function ([texi]\theta_0[texi] and [texi]\theta_1[texi] of course). I don't want to harass you with the step-by-step development of those derivatives, so trust the following results:</p>
+<p><span>
+[tex]
+\begin{align} 
+j = 0 : \frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1) & = \frac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \\\\ 
+j = 1 : \frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1) & = \frac{1}{m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x^{(i)}
+\end{align}
+[tex]
+</span></p>
+<p>Remember: each of those derivatives gives us the slope of a tangent line, which is just a plain number.</p>
+<h2>The linear regression algorithm in all its splendor</h2>
+<p>Now that we have found those derivatives, we can plug them back into the gradient descent function:</p>
+<p><span>
+[tex]
+\begin{align} 
+\text{repeat until convergence \{} \\
+\theta_0 & := \theta_0 - \alpha \cdot \frac{1}{m} \cdot \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \\\\ 
+\theta_1 & := \theta_1 - \alpha \cdot \frac{1}{m} \cdot \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x^{(i)} \\\\
+\text{\}}
+\end{align}
+[tex]
+</span></p>
+<p>This is the heart of the linear regression. You may not know that we have implicitly solved a nasty problem that might arise in other applications besides linear regression. In the previous article I mentioned that, while initializing the gradient descent, different initial values of [texi]\theta[texi]'s might lead to a different minimum of the cost function. Such thing will never happen in linear regression: here all cost functions are bowl-shaped, with only <em>one</em> minimum point at the bottom. They are said to be <strong>convex functions</strong>.</p>
+<h3>Running the algorithm</h3>
+<p>Now that I've packed all things together, I am able to run the algorithm and see how it behaves with the initial data set. The picture below briefly shows how the hypothesis function and the cost function progress as the whole thing runs.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2017/02/gradient-descent-algorithm-at-work.png" alt="Gradient descent algorithm at work">
+<div class="caption">1. The gradient descent algorithm at work on the linear regression.</div>
+</div><p>In the first step, I've initialized the parameter of the cost function at a random value (the white dot), say for example [texi]\theta_0 = 100, \theta_1 = 3[texi]. Those values correspond to [texi]h(x) = 100 + 3x[texi], definitely not a good outcome for the hypothesis function, as you may see on the left.</p>
+<p>As the algorithm takes further steps in the gradient descent, new values for [texi]\theta[texi]s pop up in the contour plot. Those new values corresponds to improved hypotheses that better fit to the data. Eventually the algorithm discovers the minimum on the cost function, which yields a hypothesis function that fits best the data set. We can now proudly use that hypothesis function to predict new values, namely new house prices given new sizes.</p>
+<h2>Some final words on the algorithm</h2>
+<p>The gradient descent algorithm used so far is called <strong>batch gradient descent</strong>, because it runs on the entire data set. You may notice that by looking at those two derivatives we've found earlier and their [texi]\sum_{i=1}^{m} ...[texi], the summation part. The summation forces the algorithm to parse the entire dataset from [texi]1[texi] to [texi]m[texi], where [texi]m[texi] is the total number of inputs. There are other non-batch versions of the gradient descent that look at a small subset of the training set in order to speed up the computation. We will see some examples in the future.</p>
+<p>Finally, our algorithm is clearly an iterative one. There are different, non-iterative versions based on <strong>normal equations</strong> that find the minimum without multiple steps. However the iterative ones scale better on large data sets. We will take a look at those versions soon.</p>
+<h2>Sources</h2>
+<p>Machine learning @ Coursera - <em>Gradient Descent For Linear Regression</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/kCvQc/gradient-descent-for-linear-regression">link</a>)<br>
+StackOverflow - <em>Why gradient descent when we can solve linear regression analytically</em> (<a href="http://stackoverflow.com/questions/18191890/why-gradient-descent-when-we-can-solve-linear-regression-analytically">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/machine-learning">machine learning</a>
+				 • 								<a class="ip-tag" href="/tag/gradient-descent-function">gradient descent function</a>
+				 • 								<a class="ip-tag" href="/tag/hypothesis-function">hypothesis function</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/gradient-descent-function">The gradient descent function</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/multivariate-linear-regression">Multivariate linear regression</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

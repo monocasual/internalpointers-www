@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Introduction to ETFs - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Mutual funds version 2.0!">
+		<meta name="keywords" content="ETF,mutual fund,index fund,nav,iNAV,stock">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Introduction to ETFs" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-etfs" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Mutual funds version 2.0!" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-etfs" />
+<meta name="twitter:title" content="Introduction to ETFs" />
+<meta name="twitter:description" content="Mutual funds version 2.0!" />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on May 07, 2017 
+								• ID 53 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Introduction to ETFs</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Mutual funds version 2.0!</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>I wrote quite a bunch of articles about mutual funds, like for example the micro-series <a href="https://www.internalpointers.com/post/depth-look-mutual-funds-part-1">In-depth Look into Mutual Funds</a> or the lightweight <a href="https://www.internalpointers.com/post/introduction-investment-funds">Introduction to Investment Funds</a>. One thing that emerged from those excursions is that traditional mutual funds are tailored for medium/long-term investments. It takes some time to buy fund units, their NAV (i.e. their value) is computed once a day, there's no such things as short selling and many other trading strategies that come from the stock market.</p>
+<p>Wouldn't it be nice to combine the benefits of mutual funds with the trading speed of stocks? With <strong>ETFs</strong> you can. ETF stands for <strong>Exchange-Traded Fund</strong> and the acronym says it all: they are funds traded on a stock exchange.</p>
+<h2>ETFs: mutual funds on a stock exchange</h2>
+<p>ETFs are basically mutual funds: a pool of assets that offers exposure to a particular area of the market. There are stocks-based ETFs, bonds-based ETFs, commodities-based ETFs, currencies-based ETFs, options-based ETF and any other conceivable permutation.</p>
+<p>You buy shares in an ETF directly from your brokerage account as you would do with shares of a public company, whenever you want - if the market is open. In addition, you can also perform all sorts of stocklike strategies with ETFs that you never could with mutual funds. ETFs are an improved version of mutual funds.</p>
+<p>An important feature of ETFs: they all <em>track an existing index</em>. Wherever you find an ETF, there's an index used as underlying basement. For this reason you can think of ETFs as index funds on steroids. In the past <a href="https://www.internalpointers.com/post/should-i-know-index-funds">I had the chance to write about index funds</a>, a form of passive investment where there are no fund managers who actively trade securities like regular mutual funds do. Less activity means much lower expense fees.</p>
+<p>The number of index funds and ETFs are close. However, ETFs cover about five times as many indexes. Some of the newer ETFs track some indexes that are more appropriate for an ETF structure than for an index fund, like for example the <a href="https://en.wikipedia.org/wiki/Inverse_exchange-traded_fund">inversed ETFs</a>. They are designed to perform as the inverse of whatever index they track. I'm sure you won't find anything like that in mutual funds' land. For that reason, sometimes you might be able to invest in an index by using ETFs instead of a <em>raw</em> index fund, simply because there are no index funds available.</p>
+<h3>Why tracking an index?</h3>
+<p>Are all ETFs forced to track a specific index? Why can't a fund manager just pick a bunch of assets (stocks, bonds, whatever he thinks is more appropriate) and make an ETF out of it? The Internet didn't offer a clear answer.</p>
+<p>Some say that handling an actively managed ETF would be cumbersome. Being ETFs on the stock market, the SEC requires them publish their holdings on a daily basis. That would be a pain for two reasons:</p>
+<ol>
+<li>actively-managed funds don't like to fully undercover their asset composition, like no one would give away a secret recipe for free;  </li>
+<li>such things require lot of bureaucracy and paperwork. That's why traditional mutual funds do it quarterly.</li>
+</ol>
+<p>In addition, active management implies higher costs due to people working on it. That would make ETFs less appealing to traders.</p>
+<h2>NAV, iNAV, market prices and other subtleties</h2>
+<p>Looking at EFTs' online prospectuses reveals a funny hybrid page where both indicators from stocks and mutual funds pop up. That's kind of expected, since ETFs mix both worlds.</p>
+<p>EFTs, like traditional mutual funds, use the <a href="https://www.internalpointers.com/post/depth-look-mutual-funds-part-1">NAV</a> (i.e. the Net Asset Value) to measure their value, which is basically the value of a fund's assets minus its liabilities (i.e. debts or obligations).</p>
+<p>ETFs however, like stocks, have also a market price that keeps changing every second. What is the relationship between the market price and the NAV? What's the point of having a such a double measurement?</p>
+<h3>iNAV is better than NAV</h3>
+<p>For a start, ETFs' value is actually called <strong>iNAV</strong>, or <strong>intraday NAV</strong>. The traditional mutual funds' NAV is computed only when the market closes, way too infrequent for ETFs which trade all throughout the day. The iNAV provides an intraday price every 15 seconds. Some traders might find it not fast enough, but that's better than nothing.</p>
+<h3>Market price</h3>
+<p>Being something actively traded, ETFs have a market price as well, driven by supply and demand forces. ETFs are structured so that the market price can be very close to their iNAV. Sometimes however it could deviate a bit, in particular, when the assets of the ETF you are trading come from an exchange that happens to be closed. The iNAV is stuck at its last price, but people still trade the ETF, moving the price up and down and making it deviating from the iNAV. The same happens when strong demand for an ETF will push its market price above its iNAV, while strong selling pressure has the opposite effect.</p>
+<h2>Sub-types of ETFs: inversed and leveraged</h2>
+<p>I've already mentioned how ETFs can be thought as a more experimental version of mutual/index funds, by citing the <strong>inversed ETFs</strong> as an example. They are designed to perform as the inverse of whatever index they track. When the index goes down, the ETF goes up and vice versa.</p>
+<p><strong>Leveraged ETFs</strong> are another powerful tool used to magnify returns. They basically apply a multiplier (usually 2x, 3x, or even 4x, as <a href="http://www.reuters.com/article/us-sec-etfs-idUSKBN17Z009">recently approved by the SEC</a>) to the numbers in output. For example, say you have a leveraged ETF that tracks the natural gas index; when the index goes up by 2%, your 3x ETF goes up 6% accordingly. The math is way more complex than that, especially when the underlying index's return is fluctuating between positive and negative ranges. For now it's enough to know that inversed and leveraged ETFs are meant for experienced traders.</p>
+<p>ETFs provide such a wealth of trading strategies that they can even emulate <a href="https://www.internalpointers.com/post/introduction-investment-funds">hedge funds</a>. There are deep structural differences between those two and ETFs cannot hold hedge funds. However by relying on indexes, advanced trading strategies or by simply mimic their holdings, some ETFs are able to replicate the behavior and the returns of traditional hedge funds.</p>
+<h2>Benefits of ETFs</h2>
+<p>ETFs have some nice +1's on their side, especially when compared to traditional mutual/index funds.</p>
+<ul>
+<li><p>Lower fees and expenses — ETFs are basically index funds, there's not so much work to do;</p>
+</li>
+<li><p>very quick operations — you can buy or sell them at any time the stock market is open. On the other hand mutual funds are way more sluggish and require more paperwork on buy/sell operations;</p>
+</li>
+<li><p>ridiculously low minimum investment — you can invest in an ETF by buying as little as one share, making the initial minimum for ETFs way lower than minimums for index funds. They are great for experiments!</p>
+</li>
+<li><p>lots of trading strategies — you can use any stock-like trading strategy with ETFs. In addition, inversed and leveraged ETFs add even more tools in your toolbox.</p>
+</li>
+</ul>
+<h2>Downsides of ETFs</h2>
+<p>Obviously, when compared to traditional mutual funds, ETFs have some disadvantages as well.</p>
+<ul>
+<li><p>You will pay commissions on each buy/sell operation — ETFs are bought and sold like stocks, so your broker will suck a bit of your cash on each operation. That might kill the advantage of lower expense ratios!</p>
+</li>
+<li><p>no dividend accumulation — as with stocks, ETFs pay dividends in cash right into your account. Reinvesting in the same ETF implies additional commissions. On the contrary mutual funds dividends are typically automatically reinvested, <em>commission-free</em> into more fund shares;</p>
+</li>
+<li><p>being like stocks, ETFs might suffer from high bid/ask spread — remember <a href="https://www.internalpointers.com/post/buying-and-selling-stocks">the bid/ask spread issue</a>? Bid is the price someone is willing to pay, ask is the price someone is willing to offer. In general a smaller difference between bid and ask prices means that investors are actively trading the ETF. Some obscure ETFs might have a greater bid/ask spread, because few people trade them. That would take a bite out of your returns every time you buy or sell.</p>
+</li>
+</ul>
+<h2>What to choose: ETFs or index funds?</h2>
+<p>Say you've just found an ETF and an index fund that both track the very same index. Should you go the ETF way or the traditional index fund way? To answer that question, I will follow a very minimalistic rule of thumb.</p>
+<p>Go with the ETF if you more inclined to a trading-like, short-term approach. You will benefit from the ability to apply all the strategies that come with the stock trading. Watch out for low volumes and high bid/ask spread.</p>
+<p>Otherwise go with the index fund if you are looking for a mild, long-term investment. The lack of many stock-like features and the ability to automatically reinvest a fund's distributions back into new shares make index mutual funds a much better choice than ETFs for the average buy-and-hold investor.</p>
+<h2>Sources</h2>
+<p>Wikipedia - <em>Inverse exchange-traded fund</em> (<a href="https://en.wikipedia.org/wiki/Inverse_exchange-traded_fund">link</a>)<br>
+Money.stackexchange - <em>Are all ETFs index-based passive portfolios, or are there other kinds?</em> (<a href="http://money.stackexchange.com/questions/78054/are-all-etfs-index-based-passive-portfolios-or-are-there-other-kinds">link</a>)<br>
+The Motley Fool - <em>ETF vs. Index Fund: Which Is Best for You?</em> (<a href="https://www.fool.com/investing/2016/08/26/etf-vs-index-fund-which-is-best-for-you.aspx">link</a>)<br>
+Vanguard - <em>ETF pricing: Explaining NAVs, iNAVs, and market prices</em> (<a href="https://personal.vanguard.com/us/insights/article/etf-pricing-explanations-022016">link</a>)<br>
+ETF.com - <em>Understanding iNAV</em> (<a href="http://www.etf.com/etf-education-center/21028-understanding-inav.html">link</a>)<br>
+Vanguard - <em>What is the difference between an ETF's NAV and its market price?</em> (<a href="https://www.vanguardcanada.ca/individual/insights/etf-nav-market-price.htm">link</a>)<br>
+ETF.com - <em>Alternatives ETFs: Can An ETF Replicate A Hedge Fund?</em> (<a href="http://www.etf.com/etf-education-center/21043-article-46-alternatives-etfs-can-an-etf-replicate-a-hedge-fund.html">link</a>)<br>
+ETF.com - <em>Leveraged And Inverse ETFs: Why 2x Is Not The 2x You Think</em> (<a href="http://www.etf.com/etf-education-center/21044-leveraged-and-inverse-etfs-why-2x-is-not-the-2x-you-think.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/etf">ETF</a>
+				 • 								<a class="ip-tag" href="/tag/mutual-fund">mutual fund</a>
+				 • 								<a class="ip-tag" href="/tag/index-fund">index fund</a>
+				 • 								<a class="ip-tag" href="/tag/nav">nav</a>
+				 • 								<a class="ip-tag" href="/tag/inav">iNAV</a>
+				 • 								<a class="ip-tag" href="/tag/stock">stock</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

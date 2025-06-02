@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Introduction to computer networks   - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A bird's-eye view on the art of resource sharing from one computer to another. ">
+		<meta name="keywords" content="networks,internet,communication">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Introduction to computer networks  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/introduction-computer-networks" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/introduction-computer-networks.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A bird's-eye view on the art of resource sharing from one computer to another. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/introduction-computer-networks" />
+<meta name="twitter:title" content="Introduction to computer networks  " />
+<meta name="twitter:description" content="A bird's-eye view on the art of resource sharing from one computer to another. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/introduction-computer-networks.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 24, 2021 
+								• updated on May 06, 2021  
+								• ID 87 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Introduction to computer networks  </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A bird's-eye view on the art of resource sharing from one computer to another. </p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+																							<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-internet">Understanding the Internet </a>
+							</span> —
+							<span class="intro">“Is that thing still around?” — Homer Simpson</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a>
+							</span> —
+							<span class="intro">The official rules that allow computers to communicate over the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-ip-internet-protocol">Introduction to IP: the Internet Protocol</a>
+							</span> —
+							<span class="intro">From routing to IP addressing, a look at the protocol that gives life to the Internet.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-tcp-transmission-control-protocol">Introduction to TCP: Transmission Control Protocol</a>
+							</span> —
+							<span class="intro">One of the most important, high-level protocols in the Internet Protocol Suite. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/network-programming-beginners-overview">Network programming for beginners: introduction to sockets </a>
+							</span> —
+							<span class="intro">A theoretical look at one of the most popular programming tools for exchanging data over computer networks. </span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a>
+							</span> —
+							<span class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes. </span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>Welcome to the first episode of the <a href="">Networking 101</a> series. In this introductory chapter I want to take a peek at the huge world of computer networks and try to grasp the fundamental concepts behind them. Computer networks are one of the hottest technologies of the 21st century and really have changed the way we humans share knowledge. Let's start off by answering to the most obvious question.</p>
+<h2>What is a computer network?</h2>
+<p>A computer network is a bunch of devices connected together to exchange information — emails, documents, audio/video data — or to share a resource — printers, storages and other physical devices. Typically, computers in a network are called <strong>hosts</strong>, while <strong>links</strong> are the elements that connect them. The picture below displays a very primitive form of network where two hosts are linked together through a physical cable.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/computers-connected-cable.png" alt="Two computers connected via cable">
+<div class="caption">1. Two computers connected together via cable. This is the simplest form of computer network.</div>
+</div><p>The network seen above works, at least theoretically: the computer on the left is able to send data to the one on the right through the connecting cable and vice versa. Things are obviously way more complex in the real world, where multiple devices are linked across the globe, often without physical cables, data can be sent anywhere and the transmission is orchestrated by various hardware and software components. How is it possible to achieve all that magic on a global scale? Also, how exactly the transmission takes place? What kind of technology allows to get a text document, squeeze it through a cable and deliver it on someone else's computer? This series will try to find the right answers to those questions.</p>
+<p>The first step in our research is to acknowledge that computer networks are complex creatures that can be studied in multiple ways: from how to lay down network cables in the ocean to complex mathematical models that explain the data flow. Let's dig deeper.</p>
+<h2>Computer networks by scope</h2>
+<p>Computer networks can be analyzed both at a <em>hardware</em> and <em>software</em> level. Physically, a network is made of computers, cables and other machinery that makes it work correctly. Studying the network hardware involves a lot of physics, mathematics and electronics to describe how the signal travels around, along with the technology behind components and computers. On the software side you will find programs, instructions and algorithms that give life to the physical counterpart.</p>
+<p>In this series I will mostly focus on the latter category, providing some hardware background when needed. We will also touch a bit of <strong>network programming</strong>: the art of writing programs that communicate with each other over a computer network. Nevertheless, the physical side of networks remains a fascinating topic that will deserve more love in the future.</p>
+<h2>Computer networks by shape</h2>
+<p>Computer networks can be classified according to their shape, also known as <strong>topology</strong>. The picture below shows a sample of possible shapes that you can find out there:</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/network-topologies.png" alt="Different network topologies">
+<div class="caption">2. Different network topologies, where each dot is a host. Courtesy of <a href="https://en.wikipedia.org/wiki/Network_topology#/media/File:NetworkTopologies.svg">Wikipedia</a>.</div>
+</div><p>Our first example in picture 1. can be seen as a very simple line network. On the other hand my computer, my phone and my tablet currently are all part of a star network, located in my apartment. They are all connected to a central node — also known as the <strong>hub</strong> — and can't talk to each other directly. We will dig into this type of home networks in future chapters.</p>
+<p>Each network shape has pros and cons: choosing the right one really depends on what requirements the network has to meet. Also, topology can be <em>physical</em> — the actual placement of network components or <em>logical</em> — how the data flows inside a network. Analyzing networks by shape may also involve a lot of <a href="https://en.wikipedia.org/wiki/Graph_theory"><strong>graph theory</strong></a>, a branch of mathematics concerned with objects connected together.</p>
+<h2>Computer networks by access type</h2>
+<p>A network can be <strong>public</strong> or <strong>private</strong>. Public networks can be accessed freely: for example the web page you are currently reading belongs to a public network and is available to anyone with a working connection, a computer and a web browser. Conversely, a private network has its access restricted, isolated from other public networks. Private networks are usually found in schools or companies, where sensitive information must be protected from unauthorized access.</p>
+<p>Private networks can also be built on top of public ones with technologies such as <strong>Virtual Private Network (VPN)</strong>, used to connect two private networks together through an existing public network. VPNs provide privacy and anonymity and will be examined in detail in one of the future chapters of this series.</p>
+<p>Privacy and anonymity are part of a bigger issue called <strong>network security</strong>: any activity designed to protect the usability and the integrity of network and data. This is yet another huge and extremely fascinating topic that touches multiple fields and technologies from <a href="https://en.wikipedia.org/wiki/Cyberattack">cyberattacks</a> to <a href="https://en.wikipedia.org/wiki/Automotive_security">automotive security</a> and <a href="https://en.wikipedia.org/wiki/Cyberwarfare">cyberwarfare</a>.</p>
+<h2>Computer networks by size</h2>
+<p>Computer networks range from very small to very large. Few hosts connected together over a limited area form the so-called <strong>Local Area Network (LAN)</strong>. This is the typical network size you find inside houses, schools or offices. A larger network that extends across a city is called <strong>Metropolitan Area Network (MAN)</strong> and can be conceptually seen as many smaller LANs connected together. Finally a <strong>Wide Area Network (WAN)</strong> is even bigger than that, which connects multiple MANs or LANs together and can span the whole globe. Engineers are also working on a type of <a href="https://en.wikipedia.org/wiki/Interplanetary_Internet">interplanetary computer network</a> that connects satellites, planetary rovers and the Earth.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/01/computer-networks/lan-man-wan.png" alt="LAN, MAN, WAN networks">
+<div class="caption">3. Example of three network sizes, from home LANs to world-wide WANs.</div>
+</div><p>Different network sizes often require different technologies. For example a LAN is designed to serve few computers connected together and can't scale up to a MAN or a WAN so easily: another kind of infrastructure is required. As networks grow bigger they may also raise political concerns, especially when multiple countries are involved. The <a href="https://en.wikipedia.org/wiki/Net_neutrality"><strong>net neutrality</strong></a> is the principle that people should be free to control what they see and do in a public global network, without filters or censorship applied by the local network providers.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Computer networks by technologies</h2>
+<p>All networks are based on one or more <strong>network protocols</strong>, a set of rules that determine how information should be transmitted between different computers in the same network. A protocol instructs engineers how to build a working network both from a hardware and software point of view. The list of existing network protocols is quite huge and spans across multiple domains.</p>
+<p>For example, the <strong>HyperText Transfer Protocol (HTTP)</strong> is probably one of the most popular: it describes how to fetch and share resources, for example text documents, over a network. It also describes all the hardware components required for the resource exchange to work correctly. Thanks to the HTTP you can browse this page on your device, add comments in the box below or share it on social media.</p>
+<p>Another example, way closer to the hardware: the <strong>Address Resolution Protocol (ARP)</strong>. This protocol determines how physical hosts are identified inside a network and plays a critical role in the modern connectivity. In this series I will focus on the most important protocols, the ones that rule networks currently existing on this planet. HTTP and ARP included, of course!</p>
+<h2>The Internet: what is it?</h2>
+<p>All the complexity and diversity seen above has a downside: not all networks can talk to each other nicely. A LAN for example is driven by protocols designed to support few computers connected together and that makes it incompatible with a MAN or a WAN. Wouldn't it be great to be able to send a message from one corner of the Earth to another, regardless of the network type and the protocol it uses? This problem is solved by <strong>internetworks</strong>, or <strong>internets</strong> in short. An internetwork is just another type of network that connects multiple networks together and abstracts away their differences, so that they can communicate as if they were compatible in the first place.</p>
+<p>Currently there is only one type of internetwork on our planet, called <strong>the Internet</strong> (with the capital <em>I</em>). The Internet is a vast network of networks (a WAN) made of private, public, business and government networks all around the globe. Thanks to the Internet anyone can can share information with other people — and other computers too — connected to the Internet without barriers.</p>
+<p>The internet, like any other network, needs a protocol in order to operate correctly: this is known as the <strong>Internet Protocol Suite</strong> and is actually a collection of multiple communication protocols bundled together that describe how data should be sent around the globe. The Internet Protocol Suite is also called <strong>TCP/IP</strong> because of the two most important sub-protocols it contains: the <strong>Transmission Control Protocol (TCP)</strong> and the <strong>Internet Protocol (IP)</strong>. I will dig into those two in the upcoming episodes. Stay tuned!</p>
+<h2>Sources</h2>
+<p><a href="https://www.amazon.com/Computer-Networks-5th-Andrew-Tanenbaum/dp/0132126958">Computer Networks — A. Tanenbaum, D. Wetherall</a><br>
+<a href="https://en.wikipedia.org/wiki/Computer_network">Wikipedia — Computer network</a><br>
+<a href="https://en.wikipedia.org/wiki/Node_%28networking%29">Wikipedia — Node (networking)</a><br>
+<a href="https://en.wikipedia.org/wiki/Host_%28network%29">Wikipedia — Host (network)</a><br>
+<a href="https://en.wikipedia.org/wiki/Local_area_network">Wikipedia — Local area network</a><br>
+<a href="https://en.wikipedia.org/wiki/Wide_area_network">Wikipedia — Wide area network</a><br>
+<a href="https://en.wikipedia.org/wiki/Internetworking">Wikipedia — Internetworking</a><br>
+<a href="https://en.wikipedia.org/wiki/Internet">Wikipedia — Internet</a><br>
+<a href="https://en.wikipedia.org/wiki/Communication_protocol">Wikipedia — Communication protocol</a><br>
+<a href="https://en.wikipedia.org/wiki/Internet_protocol_suite">Wikipedia — Internet protocol suite</a><br>
+<a href="https://www.cisco.com/c/en/us/products/security/what-is-network-security.html">Cisco — What Is Network Security?</a><br>
+<a href="https://youtu.be/QKfk7YFILws">Computer Networking Complete Course - Beginner to Advanced</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/networks">networks</a>
+				 • 								<a class="ip-tag" href="/tag/internet">internet</a>
+				 • 								<a class="ip-tag" href="/tag/communication">communication</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/understanding-internet">Understanding the Internet </a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thank you for the best resource ever!</span> on 
+							<span class="date">March 18, 2022 at 18:27</span>
+						</div> 
+						<div class="body">I was looking for HTTP resources to further understand computer networks and this just happened to show up. The way this is written is so clean and not based all on code. It's the guide I would've wanted when I was at Google. Thank you for the awesome work!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Magpie</span> on 
+							<span class="date">April 10, 2022 at 12:41</span>
+						</div> 
+						<div class="body">The blog explains the simplest and detailed way of how internet works. Thanks for the amazing blog!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

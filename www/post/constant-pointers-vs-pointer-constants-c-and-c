@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Constant pointers vs. pointer to constants in C and C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Pointer, constant pointer, pointer to constant, constant pointer to constant: what else?">
+		<meta name="keywords" content="C++">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Constant pointers vs. pointer to constants in C and C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/constant-pointers-vs-pointer-constants-c-and-c" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Pointer, constant pointer, pointer to constant, constant pointer to constant: what else?" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/constant-pointers-vs-pointer-constants-c-and-c" />
+<meta name="twitter:title" content="Constant pointers vs. pointer to constants in C and C++" />
+<meta name="twitter:description" content="Pointer, constant pointer, pointer to constant, constant pointer to constant: what else?" />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on December 10, 2018 
+								• updated on March 08, 2019  
+								• ID 68 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Constant pointers vs. pointer to constants in C and C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Pointer, constant pointer, pointer to constant, constant pointer to constant: what else?</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>This is a topic that always confused me since the beginning: it's time to figure it out for good. In C and C++ you can have pointers that point to objects. But also constant pointers to objects. Or pointers to constant objects. Or even both. What's the real difference?</p>
+<p>The easiest way to tackle the const/non-const pointer issue is to find out the different combinations. You have two actors here: <strong>the pointer</strong> and <strong>the object pointed to</strong>. How they can interact together:</p>
+<ol>
+<li>neither the pointer nor the object is const;</li>
+<li>the object is const;</li>
+<li>the pointer is const;</li>
+<li>both the pointer and the object are const.</li>
+</ol>
+<p>Let's take a <code>int</code> as an example. Those different possibilities can be expressed as follows:</p>
+<pre><code class="lang-c++">int* a;             // Pointer to int
+const int* a;       // Pointer to const int
+int* const a;       // Const pointer to int
+const int* const a; // Const pointer to const int
+</code></pre>
+<p>Now, suppose you have a simple structure defined like this:</p>
+<pre><code class="lang-c++">struct Object { int x; };
+</code></pre>
+<p>from which you instantiate two objects:</p>
+<pre><code class="lang-c++">Object* object1 = new Object{1};
+Object* object2 = new Object{2};
+</code></pre>
+<p>Let's see what you can do by mixing the four possibilities listed above.</p>
+<h2>1. Pointer to object</h2>
+<p>Both the pointer and the object are writable. You can modify the object, e.g. changing its <code>x</code> value and you can also modify the pointer, e.g. assign it a new object:</p>
+<pre><code class="lang-c++">Object* object_ptr = object1;
+object_ptr = object2;          // Modify pointer, OK
+object_ptr-&gt;x = 40;            // Modify object, OK
+</code></pre>
+<h2>2. Pointer to const object</h2>
+<p>You can modify the pointer but you can't modify the object:</p>
+<pre><code class="lang-c++">const Object* object_ptr = object1;
+object_ptr = object2;                // Modify pointer, OK
+object_ptr-&gt;x = 40;                  // Modify object, ERROR
+</code></pre>
+<h2>3. Const pointer to object</h2>
+<p>You can't modify the pointer but you can modify the object:</p>
+<pre><code class="lang-c++">Object* const object_ptr = object1;
+object_ptr = object2;                // Modify pointer, ERROR
+object_ptr-&gt;x = 40;                  // Modify object, OK
+</code></pre>
+<h2>4. Const pointer to const object</h2>
+<p>You can't do anything here, except for reading the object value:</p>
+<pre><code class="lang-c++">const Object* const object_ptr = object1;  // Const pointer to const object
+object_ptr = object2;                      // Modify pointer, ERROR
+object_ptr-&gt;x = 40;                        // Modify object, ERROR
+std::cout &lt;&lt; object_ptr-&gt;x &lt;&lt; &quot;\n&quot;;        // Read object, OK
+</code></pre>
+<h2>Sources</h2>
+<p>StackOverflow - <a href="https://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const">What is the difference between const int<em>, const int </em> const, and int const *?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/10091825/constant-pointer-vs-pointer-on-a-constant-value">Constant pointer vs pointer on a constant value</a></p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Manuel</span> on 
+							<span class="date">December 16, 2018 at 17:02</span>
+						</div> 
+						<div class="body">I believe the description for cases 2 and 3 are swapped. Thanks for the excellent articles and explanations.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Yamil</span> on 
+							<span class="date">December 17, 2018 at 11:12</span>
+						</div> 
+						<div class="body">Hi,<br />
+<br />
+Your posts have been really useful! I just wanted to tell you that the text explanations on points 2 and 3 are mixed up. <br />
+2: Pointer to const object -> should be: "You can modify the pointer but you can't modify the object"<br />
+3: Const pointer to object -> should be: "You can't modify the pointer but you can modify the object"<br />
+<br />
+Let me know if that makes sense :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">December 17, 2018 at 12:27</span>
+						</div> 
+						<div class="body">@Manuel and @Yamil, you are right! Typo fixed, thanks :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jim</span> on 
+							<span class="date">January 04, 2019 at 09:58</span>
+						</div> 
+						<div class="body">This was very useful to me. thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ryan</span> on 
+							<span class="date">February 16, 2021 at 18:38</span>
+						</div> 
+						<div class="body">Exactly what I was looking for, thanks!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Let Automake build and run your test cases - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Add easy support for testing your program.">
+		<meta name="keywords" content="Automake,Autotools,test">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Let Automake build and run your test cases" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/let-automake-build-and-run-your-test-cases" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Add easy support for testing your program." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/let-automake-build-and-run-your-test-cases" />
+<meta name="twitter:title" content="Let Automake build and run your test cases" />
+<meta name="twitter:description" content="Add easy support for testing your program." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on September 08, 2015 
+								• updated on October 05, 2018  
+								• ID 16 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Let Automake build and run your test cases</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Add easy support for testing your program.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Automake is able to build and run your test suites without tearing your mind apart. The key point is to add a couple of special variables inside the glorious <code>Makefile.am</code> and set up the rest properly.</p>
+<p>Say you have a project organized as follows:</p>
+<pre><code>src/
+test/
+Makefile.am
+... [many others Autotools files here] ...
+</code></pre>
+<p>where <code>src/</code> contains the actual source code and <code>test/</code> the test suite. I want Make to build the tests from the latter folder (possibly including the needed files from <code>src/</code>) and run the suites, alerting me if anything goes wrong. Please note that I'm using <a href="http://www.internalpointers.com/post/recursing-subdirectories-autotools">non-recursive Automake</a>.</p>
+<p>Open your <code>Makefile.am</code> and define the special variable <code>TESTS</code>, which is basically the name of the executable (or script or program) that Make will <strong>run</strong> in order to do the testing. Say you have an app called <em>Funky</em>, I would call the test program as <code>funky_test</code>. For example:</p>
+<pre><code>TESTS = funky_test
+</code></pre>
+<p>You can actually define multiple test programs, but I will stick to one for the sake of simplicity. Next, add <code>check_PROGRAMS</code>: another variable that will define programs that are <strong>compiled</strong> when someone runs the test suite. For example:</p>
+<pre><code>check_PROGRAMS = funky_test
+</code></pre>
+<p>That was pretty obvious. The last step: list all the source files needed within the variable <code>[your_program]_SOURCES</code>. So in our example it would be:</p>
+<pre><code>funky_test_SOURCES = test/main.cc src/funky-class.cc src/another-funky-class.cc
+</code></pre>
+<p>Here I'm including the main source file with the actual test suite (<code>test/main.cc</code>) and other classes from the <code>src/</code> folder, needed by the test itself (<code>src/funky-class.cc</code> and <code>src/another-funky-class.cc</code>).</p>
+<p>Finally: build and run your tests with <code>make check</code>. Enjoy!</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/automake">Automake</a>
+				 • 								<a class="ip-tag" href="/tag/autotools">Autotools</a>
+				 • 								<a class="ip-tag" href="/tag/test">test</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Thomas</span> on 
+							<span class="date">September 30, 2018 at 12:46</span>
+						</div> 
+						<div class="body">Erreur, ce n'est pas "funky_test_PROGRAMS = " mais "funky_test_SOURCES ="</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">October 05, 2018 at 10:39</span>
+						</div> 
+						<div class="body">You're right Thomas. Error fixed, merci beaucoup!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">lemon</span> on 
+							<span class="date">February 19, 2019 at 20:07</span>
+						</div> 
+						<div class="body">thanks for this!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

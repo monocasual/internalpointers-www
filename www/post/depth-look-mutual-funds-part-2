@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>An in-depth look at mutual funds, part 2 - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="How to read a mutual fund's online prospectus like a pro (even without suit and tie).">
+		<meta name="keywords" content="investment,fund,mutual fund,aum,nav,stock">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="An in-depth look at mutual funds, part 2" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/depth-look-mutual-funds-part-2" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="How to read a mutual fund's online prospectus like a pro (even without suit and tie)." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/depth-look-mutual-funds-part-2" />
+<meta name="twitter:title" content="An in-depth look at mutual funds, part 2" />
+<meta name="twitter:description" content="How to read a mutual fund's online prospectus like a pro (even without suit and tie)." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on February 26, 2016 
+								• updated on March 01, 2016  
+								• ID 30 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>An in-depth look at mutual funds, part 2</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>How to read a mutual fund's online prospectus like a pro (even without suit and tie).</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/depth-look-mutual-funds-part-1">An in-depth look at mutual funds, part 1</a>
+							</span> —
+							<span class="intro">First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/should-i-know-index-funds">What should I know about index funds</a>
+							</span> —
+							<span class="intro">A type of mutual fund with a portfolio that approximates an index.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/real-estate-investing-reits-mlps-and-mutual-funds">Real estate investing with REITs, MLPs and mutual funds</a>
+							</span> —
+							<span class="intro">A way of investing in lands and buildings without getting your hands too dirty.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>This is the second chapter of my open-end mutual fund analysis series. Here I want to tackle a mutual fund from the real world, analyze the chart, the publicly available information and see how to work with it. You can think of this article as the pratical part of <a href="http://www.internalpointers.com/post/depth-look-mutual-funds-part-1">the previous episode</a>, where I dealt with the gruesome theory.</p>
+<p>For the purpose of my research I've randomly chosen an open-end mutual fund from the market. The picking turned out to be the <strong>Fidelity Contrafund</strong>. Managed by <a href="https://en.wikipedia.org/wiki/William_Danoff">William Danoff</a> from <a href="https://en.wikipedia.org/wiki/Fidelity_Investments">Fidelity Investments</a>, it's one of the largest single-manager fund in the United States.</p>
+<p>Please note that I don't actually own a single unit of Fidelity Contrafund, nor I'm interested in selling you anything through affiliate marketing techniques. These are just hacking experiments made with real-world data!</p><h2>A couple of words on mutual fund returns</h2><p>A prospectus is here to answer basic questions like: did the fund go well in the past? Will it do the same in the future? How much can I benefit from it? In other words, they all revolve around the concept of <strong>return</strong>: the gain or loss of the mutual fund in a specific period.</p>
+<p>In the <a href="www.internalpointers.com/post/depth-look-mutual-funds-part-1">first chapter</a> we saw countless ways of making/losing money with mutual funds involving the capital gain, yields from the underlying securities and so on. Many variables come into play. For that reason the final amount of money in your pocket turns out to be quite tricky to compute.</p>
+<p>Let's keep it straight and clear: the mutual fund return is a measure of how much its value has changed over any given time period, including yield and distributions.</p>
+<p>Say for example that Internal Pointers Mutual Fund has a NAV of $11 in January 2100. In January 2101, the NAV increases to $14. Plus, during the year, distributions of $3 are made to investors. The return over that period, in percentage, is computed like that:</p>
+<p>§{"final NAV" + "yield" - "original NAV"} / {"original NAV"} * 100§</p>
+<p>That is</p>
+<p>§ {$14 + $3 - $11} / {$11} * 100 ~= 54.5% §</p>
+<p>The moral of the story: Internal Pointers return increased by 54.5% from 2100 to 2101.</p>
+<h2>Crave for mutual fund data</h2>
+<p>As with stocks and other securities, mutual funds are described through charts and data sheets, provided by the fund company itself and other public services such as Yahoo Finance or Marketwatch. For this article I've cropped some images from those websites and put up a sort of collage picture of the interesting sections.</p>
+<p>Every mutual fund (like any other tradable security) is unambiguously defined by a symbol made of a set of characters, usually letters, known as the <strong>Ticker symbol</strong>. The ticker symbol for Fidelity Contrafund is <em>FCNTX</em>. Take care of that X at the end: all mutual funds' tickers have that letter at the end, so that they can be distinguished from other securities that also have ticker symbols.</p>
+<p>It's easy to search for fund information when you know the ticker symbol. Just drop it into your favorite search engine and lots of interesting results will pop up. That's exactly what I've done for Fidelity Contrafund, obtaining the following results:</p>
+<p><a href="http://www.marketwatch.com/investing/fund/FCNTX">Fidelity Contrafund @ Market Watch</a><br>
+<a href="http://finance.yahoo.com/q?s=FCNTX">Fidelity Contrafund @ Yahoo Finance</a><br>
+<a href="https://fundresearch.fidelity.com/mutual-funds/summary/316071109">Fidelity Contrafund official data sheet</a></p>
+<p>Usually a mutual fund technical analysis is made of several components, or tabs. In general they are <strong>news</strong>, <strong>summary</strong>, <strong>profile</strong>, <strong>performance</strong>, <strong>holding</strong>, <strong>risk</strong>. Of course there are no hardcoded rules for such structure, however I find it pretty useful and clear. Let's go through each one of those macro-categories and see how one can read them properly.</p>
+
+
+<h3>Wait: where are my benchmarks?</h3>
+
+I will intentionally leave out every item related to benchmarks, Morningstar vs Lipper rating, style boxes and other technical tools: it's a rather broad topic that requires a separate article. You will find all that goodies in the next third chapter of this massive, yet exciting (at least for me) post series on mutual funds. 
+
+<h2>"News" section</h2><p>No fancy stuff here: this is just a list of the most recent news regarding the mutual fund, its company and the market sector. The type and the quality of those news depends of course on what service you are relying upon. For example the websites I used for this analysis (Yahoo Finance and Marketwatch) seem to just spider their news sources matching the ticker symbol.</p>
+<p>The official page on the other hand does not offer such service. Instead I've found a quarterly fund review, a Q&amp;A section with the portfolio manager and a chairman's message. Those information apply only for the Fidelity Contrafund official website of course, and they may vary for others.</p>
+<h2>"Summary" section</h2><p><p>This section contains general information such as current NAV, returns, fees and expenses, small charts. In the picture 1. below most of the area is covered by a graph that shows the current NAV per unit, in dollars. Note also how the mutual fund name is always accompanied by its ticker symbol.</p></p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-overview-sheet.png" alt="Mutual fund overview sheet">
+<div class="caption">1. Mutual fund overview sheet.</div>
+</div><p>Other useful information:</p>
+<ul>
+<li><p><strong>change</strong> — the amount the NAV has changed since it last closed (the previous day);</p>
+</li>
+<li><p><strong>YTD return</strong> (year-to-date return) — the mutual fund value change so far this year. It's a short-term performance indicator. From January 2016, the fund has lost -7.35%;</p>
+</li>
+<li><p><strong>5 yr avg return</strong> (5 years average return) — same as above, but on a 5-years basis. It's a long-term performance indicator. Since 2011, Fidelity Contrafund gained 10.42%;</p>
+</li>
+<li><p><strong>Total net assets</strong> — the value of the mutual fund's security pool minus any liabilities;</p>
+</li>
+<li><p><strong>52 week low/high</strong> — in the past 52 weeks the NAV per unit touched the lowest price of $90 and the highest price of $106.95. The small bar underneath tells how much the current NAV is closer to one of those extremities. The same information is reported in the chart by those two horizontal lines;</p>
+</li>
+<li><p><strong>Yield</strong> — how much, in percentage, the fund yields in a given period of time. Mutual funds are legally required to distribute dividends once per year, but the exact frequency may vary. Fidelity Contrafund <em>seems</em> to yield twice a year, so the percentage refers to that time window. We already know from the <a href="http://www.internalpointers.com/post/depth-look-mutual-funds-part-1">first chapter</a> how to compute a mutual fund yield:</p>
+<p>§"yield" = "security dividends" / "security price" * 100§</p>
+</li>
+</ul>
+<h2>"Profile" section</h2>
+<p>This section gives you a detailed look of the mutual fund's composition, management information, more precise expense data. Here you might find the <strong>fund overview</strong>, <strong>management information</strong> and facts on <strong>operation and expenses</strong>.</p>
+<h3>Fund overview</h3>
+<p>A general profile box as shown in picture 2. is often used as a global recap of data already available in the summary section we have seen before.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-overview.png" alt="Mutual fund general profile box">
+<div class="caption">2. Mutual fund general profile box.</div>
+</div><p>Some data were already present in the summary section (net assets, YTD return, yield). What's new here:</p>
+<ul>
+<li><p><strong>category</strong> — every mutual fund has an investment objective, also referred as its <em>style</em>. <em>Large growth</em> means that the fund invests in companies that are growing rapidly, usually with low/no dividends but with higher increases in fund's value. More information on that in <a href="http://www.internalpointers.com/post/depth-look-mutual-funds-part-1">the previous episode</a>;</p>
+</li>
+<li><p><strong>fund family</strong> — this is basically the name of the company running the mutual fund. You may wish to invest in mutual funds from the same company, in order to obtain some benefits such as move money between individual funds of the family with lower front-end loads;</p>
+</li>
+<li><p><strong>Morningstar rating</strong> — this is a special grade on fund's performances. I will talk about it more in detail in the third chapter of this series;</p>
+</li>
+<li><p><strong>fund inception date</strong> — when the fund was born.</p>
+</li>
+</ul>
+<h3>Investment information box</h3>
+<p>The investment information box (figure 3. below) usually contains the biography of the mutual fund manager, that is William Danoff in this case. You may want to get to know him better, at least virtually, since he is the guy that would manage your money.</p>
+<p>In this section you also find the minimum initial investment. Here it means that, for the first time, you have to buy at least $2,500 of fund units. There are no lower limits for subsequent investments. The table also reports data in case you are planning an <a href="https://en.wikipedia.org/wiki/Individual_retirement_account">IRA</a> or an <a href="http://www.investopedia.com/terms/a/automaticinvestmentplan.asp">AIP</a>, two types of retirement plans available in the United States.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-investment-info.png" alt="Mutual fund investment information">
+<div class="caption">3. Mutual fund investment information.</div>
+</div><h3>Operation and expenses box</h3>
+<p>Here we are talking about inputs and outputs. The upper table in figure 4. shows:</p>
+<ul>
+<li><p><strong>last dividend</strong> — when the fund last yielded dividends (on December 10, 2015). Dividends are usually declared on a per-unit basis: one unit of Fidelity Contrafund generated $0.31 of dividends;</p>
+</li>
+<li><p><strong>last cap gain</strong> (last capital gain) — a capital gain occurs when the fund manager sells part of the securities for more than the purchase price. Here it never happened;</p>
+</li>
+<li><p><strong>annual holdings turnover</strong> — the rate at which the mutual fund's securities are traded <em>over the course of a year</em>. In other words, the fund's trading activity. For example, 0% turnover means that no securities have been changed over the course of the year, while 100% turnover implies a complete revolution of securities. Turnover ratio can be greater than 100% in case of aggressive trading strategies. <strong>Average for category</strong> reports the same value grabbed from the other mutual funds in the current category (<em>large growth</em>, remember?);</p>
+</li>
+</ul>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-ops-expenses.png" alt="Mutual fund operation and expenses">
+<div class="caption">4. Mutual fund operation and expenses.</div>
+</div><p>The bottom table in figure 4. shows fees and expenses. All values here are compared to an average from the other mutual funds in the current category. It might be useful to know how much your mutual fund drifts away from the mean. In detail:</p>
+<ul>
+<li><p><strong>annual report expense ratio</strong> — this is the annual fee that the fund managers charge the investor. The current NAV of Fidelity Contrafund you see in the previous tabs ($91.54) has already been slimmed down by a %0.64;</p>
+</li>
+<li><p><strong>prospectus gross/net expense ration</strong> — these are just more detailed versions of the annual report expense ratio. Many mutual funds offer discounts on the fees (a.k.a. <em>fee waivers</em>) in order to attract new investors. Gross expense ratio shows what you pay without any fee waivers, net expense ratio takes into account discounts like that, instead. The ratio are the same here (%0.64), so no bonuses have been issued (yet);</p>
+</li>
+<li><p><strong>max 12b1 expense fee</strong> — the cost of marketing, advertising, and distribution services. Nothing to pay here;</p>
+</li>
+<li><p><strong>max front end/deferred sales load</strong> — these are fees you have to pay whenever you buy (<em>front end</em>) or sell (<em>deferred</em>) fund units. Note that <em>deferred sales load</em> is just an alias of <em>back end sales load</em> (fancy names everywhere). This mutual fund turns out to be quite low-cost;</p>
+</li>
+<li><p><strong>3/5/10 Yr expense projection</strong> — if you own today $10,000 of Fidelity Contrafund units, how much you will pay in the next 3/5/10 years in terms of expense ratio?</p>
+</li>
+</ul>
+<h2>"Performance" section</h2>
+<p>This sections tells you how the mutual fund is going on. Usually you may find a general overview report and more in-depth detailed information.</p>
+<h3>Overview box</h3>
+<p>Illustrated in figure 5. As you may notice many entries have been already seen in the summary. What's noteworthy here:</p>
+<ul>
+<li><p><strong>Morningstar return rating</strong> — a special grade by Morningstar, from 1 to 5 points, on how well the mutual fund performed in the past in comparison to similar funds. More on that in the third chapter;</p>
+</li>
+<li><p><strong>Numbers of years up/down</strong> — a year up is scored when the end of year NAV is greater than at the start of the year. Here it happened 36 times. The same, yet opposite math applies for the down part;</p>
+</li>
+<li><p><strong>best/worst 1/3 Yr total return</strong> — the total return is how much the fund earned (or lost) in a given period of time (here 1 or 3 years).</p>
+</li>
+</ul>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-performance-overview.png" alt="Mutual fund performance overview">
+<div class="caption">5. Mutual fund performance overview.</div>
+</div><h3>Load adjusted returns box</h3>
+<p>This box tells you how much of a return you would actually see, once all fees have been subtracted from it: simply think of it as the <em>net return</em>. The table in picture 6. reports such data for 1, 2, 5 and 10 years. Namely, in 10 years you would have gained a pure and clear %7.49.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-load-adjusted-returns.png" alt="Mutual fund load adjusted returns">
+<div class="caption">6. Mutual fund load adjusted returns.</div>
+</div><h3>Trailing returns box</h3>
+<p>A trailing return tells you how the mutual fund's NAV performed in the past, in percentage. It's usually compared to other funds in the same category and other indexes. Unfortunately such comparison data was unavailable at the time of this writing, so I cropped the leftmost data in picture 7. below. Anyway trailing returns are calculated as follows:</p>
+<p>§ "Trailing Returns" = {"current NAV" - "previous NAV"} / "previous NAV" * 100 §</p>
+<p>The previous NAV of course depends on the time range. For example, in 5-year trailing returns, the previous NAV dates back to 5 years ago from now.</p>
+<p>Note also that any dividend that would be reinvested or expenses that would lower your return must be included as well.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-trailing-returns.png" alt="Mutual fund trailing returns">
+<div class="caption">7. Mutual fund trailing returns.</div>
+</div><p>Comparing your mutual fund to its category average is always useful in order to check if the fund is good enough. For example if the category average has a trailing return of 8% but your fund is set to 2%, you may want to keep looking in that category for a better alternative.</p>
+<p>Index comparison is another valuable idea: is the fund able to outperform the index? If not, it may be smarter to invest in an index mutual fund following that index.</p>
+<h3>Other reports</h3>
+<p>In the Performance section you might find other detailed reports such as the <strong>Past quartely returns</strong>, past returns in a three-month time frame or the <strong>Annual total returns</strong>, past returns for each year from the inception date. Those are just big chunky tables filled with data, too bulky to be reported here but easy to understand.</p>
+<h2>"Holding" section</h2>
+<p>This section provides a detailed description of the mutual fund's security pool. Here you usually find reports on <strong>market sectors</strong>, the <strong>top N holdings</strong>, the <strong>asset allocation</strong> (the quota of each security) and the <strong>regional diversification</strong>, a table of countries or regions which the fund may invest.</p>
+<p>All those data may be used for revealing the mutual fund's investment strategy. For example: if you see a heavy bond exposure, it may reveal an income orientation. Otherwise a large percentage of security in cash might indicate a defensive position. In knowing a fund's composition, you can be sure that you are getting the type of fund you are looking for.</p>
+<h3>Market sectors</h3>
+<p>Picture 8. below shows which markets the fund is investing into. As you may see for Fidelity Contrafund the major sectors are IT, consumer discretionary, financials and health care. On the rightmost part there is a comparison with an index, the S&amp;P 500 in this case.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-major-market-sectors.png" alt="Mutual fund major market sectors">
+<div class="caption">8. Mutual fund major market sectors.</div>
+</div><h3>Top N holdings</h3>
+<p>Here you will find an excerpt of the underlying assets. The official website of Fidelity Contrafund reports the top 10 holdings in which the fund had its largest investments. They state that this information is updated quarterly, with a one-month lag. For other funds, this information is updated based on the disclosure policy of each company.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-top-holdings.png" alt="Mutual fund top holdings">
+<div class="caption">9. Mutual fund top holdings.</div>
+</div><h3>Asset allocation</h3>
+<p>The asset allocation (picture 10.) shows what security classes the mutual fund's securities belong to:</p>
+<ul>
+<li><strong>domestic equities</strong> — an alias for U.S. stocks. 88.17% of our fund's securities come from that category;</li>
+<li><strong>international equities</strong> — another alias for non-U.S. stocks, with further details regarding the type of their foreign market. Only 7.83% here, of which 6.83% from developed markets, 1% from emerging markets and nothing from tax-advantaged countries (places where taxes are very low or not present at all). Defining the market's development level is not a trivial task, often different between analysts and firms. Some starting points on Wikipedia for <a href="https://en.wikipedia.org/wiki/Developed_market">both</a> <a href="https://en.wikipedia.org/wiki/Emerging_markets">types</a>;</li>
+<li><strong>bonds</strong>, <strong>cash &amp; other assets</strong> — you guess what.</li>
+</ul>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-asset-allocation.png" alt="Mutual fund asset allocation">
+<div class="caption">10. Mutual fund asset allocation.</div>
+</div><h3>Diversification</h3>
+<p>The picture 12. below lists the countries the mutual fund is investing into. We saw before that Fidelity Contrafund handles also a small part of cash: the leftmost table shows what currencies are actually managed.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-diversification.png" alt="Mutual fund diversification">
+<div class="caption">12. Mutual fund diversification tables.</div>
+</div><h2>"Risk" section</h2><p>This section shows you how much the mutual fund is volatile, generally with tons of reports and fine data. Here you may also find some advanced mathematical concepts, if you are inclined.</p>
+<h3>Risk overview</h3>
+<p>Most of the items here have been already faced in previous sections. <strong>Morningstar risk rating</strong>, the only new entry here, is a measure of a fund's level of risk, relative to similar funds. The rating goes from 1 (not so risky) to 5 (risky) points or stars. Such rating measurements will be covered thoroughly in the third part of this article.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-risk-overview.png" alt="Mutual fund risk overview.">
+<div class="caption">13. Mutual fund risk overview.</div>
+</div><h3>Modern portfolio theory statistics</h3><p>The so-called <strong>Modern portfolio theory</strong> is a mathematical investing model that should help investors to minimize risk and maximize returns. You can think of it as a framework of tools, many of them reported in the table below (picture 12.). Some of those tools are compared against a <em>standard index</em> which usually is the S&amp;P 500 in case of mutual funds. I will definitely write some more accurate articles on that set of gadgets in the future. For now let's take a general look to each of them:</p>
+<ul>
+<li><p><strong>beta</strong> — a.k.a. <strong>β</strong> or <strong>beta coefficient</strong>, indicates the volatility of the mutual fund in relation to the market index. <span class="ip-inline">§beta < 1§</span>: the investment is less volatile than the index, <span class="ip-inline">§beta > 1§</span>: it's more volatile than the index;</p>
+</li>
+<li><p><strong>alpha</strong> — a.k.a. <strong>α</strong>, it answers one basic question: are you being compensated for the volatility risk taken? <span class="ip-inline">§alpha = 0§</span>: the fund has earned a return adequate for the its volatility; <span class="ip-inline">§alpha > 0§</span>: the fund has earned a return that has more than compensated for the volatility risk taken; <span class="ip-inline">§alpha < 0§</span>: otherwise. The more positive an alpha is, the better it is. Here α is equal to 1.65 which is good. It's also good to see how Fidelity Contrafund's alpha has beaten its category in the last three years;</p>
+</li>
+<li><strong>mean annual return</strong> — the annual return in percentage, <a href="http://www.internalpointers.com/post/averages-mean-median-mode-range">averaged</a> over N years. The default value for N is 10, unless noted otherwise. It's another tool for measuring long term performances;</li>
+<li><strong>r-squared</strong> — it measures the correlation between the mutual fund and the reference index, in percentage. The higher the r-squared value, the higher the similarity of the mutual fund's price to the S&amp;P 500. You may use that value to choose a mutual fund that follows or not the standard index.</li>
+<li><strong><a href="http://www.internalpointers.com/post/standard-deviation">standard deviation</a></strong> — it measures the volatility, or the fluctuations of the NAV's price. That number, 11.02, makes sense if compared to the mutual fund's category: Fidelity Contrafund was slightly less volatile than it's category in the past 3 years;</li>
+<li><strong>Sharpe ratio</strong> — it tells you how well you are compensated by the return of the fund, given its level of risk. Internally it uses the standard deviation as the level of risk. The greater the value of the Sharpe ratio, the more attractive the risk-adjusted return. For the last 3 years Fidelity Contrafund had a higher Sharpe ratio than its category, so it provided better return for the same risk;</li>
+<li><strong>Treynor ratio</strong> — it basically answers the same question of Mr. Sharpe, but internally uses β instead of the standard deviation. What's the difference: since β works in relation to the market index (while the standard deviation works in relation to the specific fund), Treynor ratio takes into account the market as a whole.</li>
+</ul>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/02/mutual-fund-modern-portfolio-theory.png" alt="Mutual fund modern portfolio theory stats">
+<div class="caption">14. Mutual fund modern portfolio theory statistics.</div>
+</div><h2>Sources</h2><p>Globefund - <em>Mutual fund returns</em> (<a href="http://www.globefund.com/centre/GettingStarted06.html">link</a>)<br>
+Investopedia - <em>Ticker Symbol</em> (<a href="http://www.investopedia.com/terms/t/tickersymbol.asp">link</a>)<br>
+Investopedia - <em>Why do all mutual fund tickers have an X at the end?</em> (<a href="http://www.investopedia.com/ask/answers/06/xmutualfundticker.asp">link</a>)<br>
+Investing Answers - <em>Net Assets</em> (<a href="http://www.investinganswers.com/financial-dictionary/financial-statement-analysis/net-assets-2283">link</a>)<br>
+Nasdaq - <em>52 Week High/Low</em> (<a href="http://www.nasdaq.com/aspx/52-week-high-low.aspx">link</a>)<br>
+Wikipedia - <em>List of mutual-fund families in the United States</em> (<a href="https://en.wikipedia.org/wiki/List_of_mutual-fund_families_in_the_United_States">link</a>)<br>
+About.com - <em>What Is a Mutual Fund Family?</em> (<a href="http://beginnersinvest.about.com/od/what-is-a-mutual-fund/a/What-Is-A-Mutual-Fund-Family.htm">link</a>)<br>
+The Motley Fool - <em>Turnover and Cash Reserves</em> (<a href="http://www.fool.com/School/MutualFunds/Costs/Turnover.htm">link</a>)<br>
+The Motley Fool - <em>Mutual Fund Gross Expense Ratio vs. Net Expense Ratio</em> (<a href="http://www.fool.com/knowledge-center/2015/10/17/mutual-fund-gross-expense-ratio-vs-net-expense-rat.aspx">link</a>)<br>
+Investopedia - <em>Load-Adjusted Return</em> (<a href="http://www.investopedia.com/terms/l/load-adjusted-return.asp">link</a>)<br>
+Smart Step - <em>Trailing Return: What it is and How to Use it</em> (<a href="http://www.takeasmartstep.com/trailing-return/">link</a>)<br>
+Morningstar - <em>Composition</em> (<a href="http://www.morningstar.com/InvGlossary/composition.aspx">link</a>)<br>
+Investopedia - <em>Annualized Total Return</em> (<a href="http://www.investopedia.com/terms/a/annualized-total-return.asp">link</a>)<br>
+Wikipedia - <em>Modern portfolio theory</em> (<a href="https://en.wikipedia.org/wiki/Modern_portfolio_theory">link</a>)<br>
+Money-zine - <em>Mutual Funds: Evaluating Performance</em> (<a href="http://www.money-zine.com/investing/mutual-funds/buying-mutual-funds-part-iii/">link</a>)<br>
+Wikipedia - <em>Beta (finance)</em> (<a href="https://en.wikipedia.org/wiki/Beta_%28finance%29">link</a>)<br>
+Wikipedia - <em>Sharpe ratio</em> (<a href="https://en.wikipedia.org/wiki/Sharpe_ratio">link</a>)<br>
+Arbor Investment Planner - <em>Alpha and Beta: How Do They Relate to Investment Risk?</em> (<a href="http://www.arborinvestmentplanner.com/alpha-and-beta-investment-risk/">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/investment">investment</a>
+				 • 								<a class="ip-tag" href="/tag/fund">fund</a>
+				 • 								<a class="ip-tag" href="/tag/mutual-fund">mutual fund</a>
+				 • 								<a class="ip-tag" href="/tag/aum">aum</a>
+				 • 								<a class="ip-tag" href="/tag/nav">nav</a>
+				 • 								<a class="ip-tag" href="/tag/stock">stock</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/depth-look-mutual-funds-part-1">An in-depth look at mutual funds, part 1</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/should-i-know-index-funds">What should I know about index funds</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

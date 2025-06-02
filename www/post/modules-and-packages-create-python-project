@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Modules and packages: how to create a Python project - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A quick and dirty tutorial on how to get things done.">
+		<meta name="keywords" content="Python,Python3">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Modules and packages: how to create a Python project" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/modules-and-packages-create-python-project" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A quick and dirty tutorial on how to get things done." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/modules-and-packages-create-python-project" />
+<meta name="twitter:title" content="Modules and packages: how to create a Python project" />
+<meta name="twitter:description" content="A quick and dirty tutorial on how to get things done." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on January 16, 2019 
+								• updated on January 19, 2019  
+								• ID 70 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Modules and packages: how to create a Python project</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A quick and dirty tutorial on how to get things done.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Do you sweat every time you have to organize a bunch of new Python code? Should you make a module, a package, or both? Don't worry, I've been there thousand times. In this article I will show you the rationale behind a Python module, the differences with a package and how the two things interact together.</p>
+<h2>Python modules vs. Python packages</h2>
+<p>A <strong>module</strong> is a Python file which contains code, saved with the <code>.py</code> extension. Every time you write a function, a class or a statement and save it to a <code>.py</code> file you are actually creating a new module. A module can be executed by the Python interpreter directly, e.g. <code>python script.py</code> and thus called <strong>main module</strong>, or imported by other modules. Modules are a way to lay out your program in different files for easier maintenance.</p>
+<p>When you have many modules in your project it's good practice to organize them into folders. For example, say I'm working on a very primitive game in Python called Fancy Game: I would like to structure the directory as follows:</p>
+<pre><code class="lang-nolang">fancy_game/
+    models/
+        player.py
+        monster.py
+    audio/
+        mixer.py
+        effects.py
+        player.py
+    graphics/
+        renderer.py
+        screen.py
+    common/
+        constants.py
+    main.py
+</code></pre>
+<p>A <strong>package</strong> is simply a collection of Python modules organized into folders. In my Fancy Game the packages could be: <code>models</code>, <code>audio</code>, <code>graphics</code> and <code>common</code>. The <code>fancy_game</code> folder is not a package itself, because it is intended to be run directly by Python (i.e. <code>python main.py</code>). Sometimes you want to create a library instead to be imported in other Python programs, so the entire root folder would become a package too (made of many sub-packages).</p>
+<p>Having a project or a library organized into packages is a good thing: a) your source code is even more modularized and b) packages provide protection against name clashes with other modules. We'll see why in a minute.</p>
+<h2>Turn a folder into a Python package</h2>
+<p>Python has to be instructed about which directory should become a package. To do this, simply add an empty file called <code>__init__.py</code> inside each desired folder. This is a special file used to mark directories on disk as Python package directories. So, my Fancy Game folder structure would be:</p>
+<pre><code class="lang-nolang">fancy_game/
+    models/
+        __init__.py        &lt;--- new __init__.py file added
+        player.py
+        monster.py
+    audio/
+        __init__.py        &lt;--- new __init__.py file added
+        mixer.py
+        effects.py
+        player.py
+    graphics/
+        __init__.py        &lt;--- new __init__.py file added
+        renderer.py
+        screen.py
+    common/
+        __init__.py        &lt;--- new __init__.py file added
+        constants.py
+    main.py
+</code></pre>
+<p>Notice how there is no <code>__init__.py</code> in the root folder: this is because my game (i.e. <code>main.py</code>) is intended to be run directly from the Python interpreter. In case of a library, simply add the special file into the root directory as well.</p>
+<h2>Importing modules from packages</h2>
+<p>Now that the whole structure has been set up, the code inside <code>main.py</code> needs to import some modules from the various packages in order to make the game work. To import a module from a package you have to follow the <strong>dotted module name</strong> syntax. For example, in the main module I want to import the <code>player</code> module from the <code>audio</code> package:</p>
+<pre><code class="lang-python"># main.py
+import audio.player
+</code></pre>
+<p>More generally, the rule is <code>import [package].[module]</code>. This also works in case you have nested packages: <code>import [package1].[package2].[module]</code> and so on.</p>
+<p>Once imported, the module must be referenced with its full name. So if I want to use the function <code>play_sound()</code> from within the <code>audio.player</code> module I have to call it as <code>audio.player.play_sound()</code>. As mentioned above, this is a good way to avoid name clashes across different modules: I can easily import the module <code>model.player</code> without messing up with its homonym <code>audio.player</code>:</p>
+<pre><code class="lang-python"># main.py
+import audio.player
+import model.player
+
+# Two modules with the same name: no problem
+audio.player.play_sound()
+model.player.run()
+</code></pre>
+<h3>Importing modules from above</h3>
+<p>Sometimes a deep-buried module needs to import stuff from the upper level. For example, the <code>audio.player</code> module might need something inside <code>common.constants</code>. There are two ways of doing it:</p>
+<ol>
+<li>absolute import — import the module as if the importer is located in the root directory. Python is able to figure out the right path. For example, in <code>audio.player</code> just do <code>import common.constants</code>. This is my favorite option;</li>
+<li>relative import — use the formula <code>from [module] import [name]</code> with <strong>dots</strong> to indicate the current and parent packages involved in the import. For example, in <code>audio.player</code> you can call <code>from .. import common.constants</code>. One dot means the current package, two dots is up one level, three dots is up two levels and so on. I'm not a huge fan of this one, as relative imports break easily when you move modules around.</li>
+</ol>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Shorten module names</h2>
+<p>Using long names such as <code>models.monster.Skeleton</code> is quite inconvenient. You can shorten a module name while importing it with an <strong>alias</strong>, for example:</p>
+<pre><code class="lang-python"># main.py
+import models.monster as monster
+</code></pre>
+<p>Now <code>models.monster</code> is available as <code>monster</code>. Just keep in mind that this way might lead to name clashes across modules.</p>
+<h2>Sources</h2>
+<p>Alex Dzyoba - <a href="https://alex.dzyoba.com/blog/python-import/">Hitchhiker's guide to the Python imports</a><br>
+Stack Overflow - <a href="https://stackoverflow.com/questions/448271/what-is-init-py-for">What is __init__.py for?</a><br>
+Python docs - <a href="https://docs.python.org/3/tutorial/modules.html">6. Modules</a><br>
+Python reference - <a href="https://docs.python.org/3/reference/simple_stmts.html#the-import-statement">7.11. The import statement</a></p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/python">Python</a>
+				 • 								<a class="ip-tag" href="/tag/python3">Python3</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">flying sheep</span> on 
+							<span class="date">January 27, 2019 at 14:11</span>
+						</div> 
+						<div class="body">> Python has to be instructed about which directory should become a package. To do this, simply add an empty file called __init__.py inside each desired folder.<br />
+<br />
+This is simply wrong as of Python 3.0: Every directory with a alphanumeric name is a python package. No need for __init__.py files unless you want to actually put code in them.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Landon</span> on 
+							<span class="date">January 27, 2019 at 15:11</span>
+						</div> 
+						<div class="body">Thank you, this is a great explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 28, 2019 at 10:51</span>
+						</div> 
+						<div class="body">@flying sheep good catch, too bad it is not mentioned in the official documentation! This is the PEP: <br />
+https://www.python.org/dev/peps/pep-0420/ <br />
+and this is a short explanation: https://stackoverflow.com/a/37140173/3296421<br />
+Thank you :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Florian</span> on 
+							<span class="date">January 29, 2019 at 22:45</span>
+						</div> 
+						<div class="body">Cool Post! Have you checked out PyScaffold to create a Python package structure easily? https://pyscaffold.org/</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Fabien</span> on 
+							<span class="date">January 30, 2019 at 22:09</span>
+						</div> 
+						<div class="body">That's a nice quick and dirty tutorial!<br />
+I would suggest a few precisions:<br />
+<br />
+1) good practice in python 3 is to use *relative import* syntax for packages not installed as site packages and directly available to the execution script:<br />
+<br />
+    from . import audio.player     # notice the "." that tells audio is in the root dir<br />
+    from .audio import player     # equivalent, but shorter name<br />
+<br />
+See pep 328 for details (https://www.python.org/dev/peps/pep-0328/)<br />
+<br />
+2) use import *from* to shorten the module name, and *as* to use a meaningful alias:<br />
+<br />
+    from .models import monster     # no need for alias there<br />
+    import .audio.effects as afx     # short and usefull alias<br />
+<br />
+See pep 221 for details on *import as* (https://www.python.org/dev/peps/pep-0221/)<br />
+<br />
+3) If *main.py* is meant as an executable script for the game, the whole project should be a package, and main.py should not use relative import.<br />
+The reason why is that when you finally decide to distribute the fancy game, and install *main.py* as an executable scripts from setup.py, it will no longer be able to perform relative imports from this package.<br />
+<br />
+For this use case, create a __init__.py for the *fancy_game* dir, and use:<br />
+<br />
+    from fancy_game import audio.player<br />
+    from fancy_game.audio import effects as afx<br />
+    from fancy_game.models import monster<br />
+<br />
+Which will not break upon installation.<br />
+<br />
+This is likely a bit beyond this tutorial, but mentioning this could prevent headaches :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tesfit</span> on 
+							<span class="date">July 12, 2019 at 09:29</span>
+						</div> 
+						<div class="body">You explain it  explicitly, thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Serob</span> on 
+							<span class="date">September 02, 2019 at 21:28</span>
+						</div> 
+						<div class="body">What about sys.path-s? Because without adding project path to PYTHONPATH this approach doesn't work (at least on windows).<br />
+And see the question<br />
+https://stackoverflow.com/questions/57760296/can-not-import-package-created-in-pycharm</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Kristy</span> on 
+							<span class="date">September 16, 2020 at 08:53</span>
+						</div> 
+						<div class="body">Exactly, Serob!  I am on Windows 10, and I don't want to copy a "util.py" file I made, to every single project that uses it.  Why not be able to have that "util.py" off in some forgotten directory (nowhere near the current project's directory) and just import it?  This tutorial assumes that all modules / packages used in an app are either:<br />
+(a) built-in modules / packages<br />
+(b) modules / packages located in the root directory of the app.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ABHIRAM ANIL</span> on 
+							<span class="date">January 05, 2021 at 17:00</span>
+						</div> 
+						<div class="body">which refers to a collection of module that together cater to specific type of needs or application?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Antoine</span> on 
+							<span class="date">April 20, 2021 at 19:30</span>
+						</div> 
+						<div class="body">Thank you! Very clearly explained. Super duper helpful :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Daniel</span> on 
+							<span class="date">January 06, 2022 at 23:50</span>
+						</div> 
+						<div class="body">Amazing! This is exactly the simple and effective tutorial I need to make my source code more modular and readable. <br />
+<br />
+Thank you!</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

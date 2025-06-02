@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>A list of useful git commands - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Carefully crafted for the absent-minded.">
+		<meta name="keywords" content="git">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="A list of useful git commands" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/list-useful-git-commands" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Carefully crafted for the absent-minded." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/list-useful-git-commands" />
+<meta name="twitter:title" content="A list of useful git commands" />
+<meta name="twitter:description" content="Carefully crafted for the absent-minded." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on June 01, 2015 
+								• updated on January 25, 2018  
+								• ID 1 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>A list of useful git commands</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Carefully crafted for the absent-minded.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>I type <code>git</code> in the command line on a daily basis, but I keep on forgetting most of the core commands available. Especially if I don't use them so frequently. The following list contains what I need to remember about Git. I will update it as needed.</p>
+<h2>Rename branches</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rename the current branch</td>
+<td><code>git branch -m &lt;new-name&gt;</code></td>
+</tr>
+<tr>
+<td>rename a different branch</td>
+<td><code>git branch -m &lt;old-branch-name&gt; &lt;new-branch-name&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Delete branches</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delete a local branch</td>
+<td><code>git branch -d &lt;branch-name&gt;</code></td>
+</tr>
+<tr>
+<td>force delete a local branch (if not fully merged)</td>
+<td><code>git branch -D &lt;branch-name&gt;</code></td>
+</tr>
+<tr>
+<td>delete a remote branch</td>
+<td><code>git push origin --delete &lt;branch-name&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Track/untrack branches</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unset upstream from the current branch</td>
+<td><code>git branch --unset-upstream</code></td>
+</tr>
+<tr>
+<td>set upstream to another local branch</td>
+<td><code>git branch --set-upstream &lt;local-branch&gt; origin/&lt;remote-branch&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Push commits</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>push to a <em>new</em> remote branch</td>
+<td><code>git push &lt;remote-name&gt; &lt;local-branch-name&gt;:&lt;remote-branch-name&gt;</code></td>
+</tr>
+<tr>
+<td>(as above, shorter)</td>
+<td><code>git push &lt;remote-name&gt; &lt;branch-name&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Checkout</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>temporarily switch to a different commit<sup>1</sup></td>
+<td><code>git checkout &lt;commit-hash&gt;</code></td>
+</tr>
+<tr>
+<td>switch to a different commit and delete history</td>
+<td><code>git checkout --hard &lt;commit-hash&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>1: This command generates a <em>detached head</em> status. <code>git checkout &lt;branch-name&gt;</code> will get you back on the previous branch, while <code>git checkout -b &lt;new-branch-name&gt;</code> will move the current state to a new branch.</p>
+<h2>Undo things</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>undo all unstaged changes</td>
+<td><code>git checkout -- .</code></td>
+</tr>
+<tr>
+<td>undo specific unstaged file</td>
+<td><code>git checkout -- &lt;file-name&gt;</code></td>
+</tr>
+<tr>
+<td>reset to specific commit, throwing away uncommitted changes</td>
+<td><code>git reset --hard &lt;commit-hash&gt;</code></td>
+</tr>
+<tr>
+<td>reset to specific commit, leaving your current files untouched<sup>1</sup></td>
+<td><code>git reset --soft &lt;commit-hash&gt;</code></td>
+</tr>
+<tr>
+<td>change the most recent commit message (locally)</td>
+<td><code>git commit --amend</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>1: Useful to undo accidental commits.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Stash things</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stash all unstaged files</td>
+<td><code>git stash</code></td>
+</tr>
+<tr>
+<td>unstash all stashed files</td>
+<td><code>git stash pop</code></td>
+</tr>
+<tr>
+<td>delete all stashes</td>
+<td><code>git stash clear</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Diff, show</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>show code changes between two branches</td>
+<td><code>git diff &lt;branch-1&gt;..&lt;branch-2&gt;</code></td>
+</tr>
+<tr>
+<td>show what files have changed between two branches</td>
+<td><code>git diff --stat &lt;branch-1&gt;..&lt;branch-2&gt;</code></td>
+</tr>
+<tr>
+<td>compare file between two commits (works also in different branches)</td>
+<td><code>git diff &lt;commit-hash-1&gt;..&lt;commit-hash-2&gt; &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>show a file in another branch</td>
+<td><code>git show &lt;branch&gt;:&lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>show files changed between two commits</td>
+<td><code>git diff --name-only &lt;commit-hash-1&gt; &lt;commit-hash-2&gt;</code></td>
+</tr>
+<tr>
+<td>(as above, using <code>HEAD</code>)</td>
+<td><code>git diff --name-only HEAD~[M] HEAD~[N]</code></td>
+</tr>
+<tr>
+<td>show diff on staged files</td>
+<td><code>git diff --staged</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Tagging</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>show all tags</td>
+<td><code>git tag --list</code></td>
+</tr>
+<tr>
+<td>create a new annotated<sup>*</sup> tag</td>
+<td><code>git tag -a &lt;tag-title&gt; -m '&lt;tag-message&gt;'</code></td>
+</tr>
+<tr>
+<td>create a new lightweight<sup>*</sup> tag</td>
+<td><code>git tag &lt;tag-title&gt;</code></td>
+</tr>
+<tr>
+<td>push all tags to a remote repository</td>
+<td><code>git push --tags</code></td>
+</tr>
+<tr>
+<td>push a specific tag to a remote repository</td>
+<td><code>git push origin &lt;tag-name&gt;</code></td>
+</tr>
+<tr>
+<td>checkout to a specific tag</td>
+<td><code>git checkout tags/&lt;tag-name&gt;</code></td>
+</tr>
+<tr>
+<td>delete local tag</td>
+<td><code>git tag --delete &lt;tag-name&gt;</code></td>
+</tr>
+<tr>
+<td>delete remote tag</td>
+<td><code>git push --delete origin &lt;tag-name&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>*: Annotated tags are meant for release while lightweight tags are meant for private or temporary object labels (<a href="http://git-scm.com/docs/git-tag">source</a>).</p>
+<h2>Info</h2>
+<table>
+<thead><tr>
+<th>action</th>
+<th>command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>show origin</td>
+<td><code>git remote show origin</code></td>
+</tr>
+</tbody>
+</table>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/git">git</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

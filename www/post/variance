@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Variance - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Or the variability from an average value.">
+		<meta name="keywords" content="data,set,variance,population,sample,mean">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Variance" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/variance" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Or the variability from an average value." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/variance" />
+<meta name="twitter:title" content="Variance" />
+<meta name="twitter:description" content="Or the variability from an average value." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on August 21, 2015 
+								• ID 13 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Variance</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Or the variability from an average value.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Variance is a measurement of the <em>spread</em> between numbers in a data set, or elements in a population. It's a numerical value that indicates how widely those elements vary from the <a href="http://internalpointers.com/post/averages-mean-median-mode-range">mean</a>.</p>
+<p>If the variance value is zero, it means that all the values of the data set are identical. A large variance indicates that the values are far from the mean and each other. A small variance means the opposite.</p>
+<p>The concept of variance plays an important role, among other fields, in finance. Variance can be seen as a <em>risk indicator</em> of a specific asset: the higher the variance, the greater the investment's volatility, beacuse in such case prices tend to spread across a bigger range.</p>
+<h2>How to compute the variance of a population</h2>
+<p>The variance of a population (i.e. the whole data set) is defined as follow:</p>
+<p>§
+sigma^2 = 1/N sum_{i=1}^{N} (X_i - μ)^2
+§</p>
+<p>In the formula above σ<sup>2</sup> (the greek letter <em>sigma</em>) is the population variance (yes, it's a squared value!), μ is the population mean, X<sub>i</sub> is the <em>i</em>-th element of the population and N is the number of elements of the population.</p>
+<p>In words you have to go through three steps:</p>
+<ol>
+<li>compute the mean of all the elements of the population;</li>
+<li>for each element of the population (i.e. for each number) subtract the mean and square the result;</li>
+<li>sum up all the values from the previous point and divide them by the total number of population.</li>
+</ol>
+<p>It's quite important to square the differences during the step 2). If you just added up the differences from the mean, the negatives would cancel the positives (as in -4 and +4). The square tool also provides a bigger value when the differences are more spread out, which is exactly what we need.</p>
+<h2>How to compute the variance of a sample</h2>
+<p>Sometimes (and I would say quite often) you don't own the full set of data, but only a part of it - a sample. Computing the variance of a sample requires little tweaks to the original formula:</p>
+<p>§
+s^2 = {1}/{n-1} sum_{i=1}^{n} (x_i - x̄)^2
+§</p>
+<p>First of all we changed the notation: s<sup>2</sup> is the variance of a sample, n is the number of elements in the sample, x<sub>i</sub> is the <em>i</em>-th element of the sample, x̄ is the mean of the sample. That's the correct notation when you are dealing with a sample instead of the whole population.</p>
+<p>Then we also divide by n - 1: this is the so-called <a href="https://en.wikipedia.org/wiki/Bessel%27s_correction">Bessel's correction</a> used to avoid bias. It compensates for the fact that we are working only with a sample rather than with the whole population.</p>
+<h2>Computing the variance: an example</h2>
+<p>What follows is a generic set <em>x</em> of numerical values. I pretend it's not a sample, so I compute the variance of the whole population:</p>
+<p>§
+x = {21, 21, 22, 16, 20}
+§</p>
+<p>Let's calculate the mean first:</p>
+<p>§
+μ = 1/n sum_{i=1}^{n} x_i<br>
+§</p>
+<p>§
+μ = {21 + 21 + 22 + 16 + 20} / 5 = 20
+§</p>
+<p>Then process each element as seen in points 2) and 3):</p>
+<p>§
+sigma^2 = {(21-20)^2 + (21-20)^2 + (22-20)^2 + (16-20)^2 + (20-20)^2} / 5
+§</p>
+<p>§
+sigma^2 = {1 + 1 + 4 + 16 + 0} / 5 = 4.4
+§</p>
+<h2>Do I really have to work with a squared value?</h2>
+<p>In the variance formula you square your values: such procedure naturally brings you back a squared result. Let's take a look at the previous example: the outcome was 4.4 but the input values (the population) were "plain" numbers, obviously not squared. Hence it seems pointless to make any reasoning on the computed variance, until we don't transform it into something more useful.</p>
+<p>The solution is actually simple: just return to the non-squared numbers by taking the <em>square root</em> of the variance, obtaining the so-called <strong>standard deviation</strong>. I will be writing about that in one of my next posts.</p>
+<h2>Sources</h2>
+<p>Statistic Glossary - <em>Basic Definitions</em> (<a href="http://www.stats.gla.ac.uk/steps/glossary/basic_definitions.html#popn">link</a>)<br>
+Investopedia - <em>Variance</em> (<a href="http://www.investopedia.com/terms/v/variance.asp">link</a>)<br>
+Investopedia - <em>What is the difference between standard deviation and variance?</em> (<a href="http://www.investopedia.com/ask/answers/021215/what-difference-between-standard-deviation-and-variance.asp">link</a>)<br>
+Wolfram Mathworld - <em>Variance</em> (<a href="http://mathworld.wolfram.com/Variance.html">link</a>)<br>
+Stat Trek - <em>Statistics and Probability Dictionary</em> (<a href="http://stattrek.com/statistics/dictionary.aspx?definition=Variance">link</a>)<br>
+Math Is Fun - <em>Standard Deviation and Variance</em> (<a href="http://www.mathsisfun.com/data/standard-deviation.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/data">data</a>
+				 • 								<a class="ip-tag" href="/tag/set">set</a>
+				 • 								<a class="ip-tag" href="/tag/variance">variance</a>
+				 • 								<a class="ip-tag" href="/tag/population">population</a>
+				 • 								<a class="ip-tag" href="/tag/sample">sample</a>
+				 • 								<a class="ip-tag" href="/tag/mean">mean</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

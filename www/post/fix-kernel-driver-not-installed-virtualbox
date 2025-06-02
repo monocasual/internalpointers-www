@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Fix kernel driver not installed in VirtualBox - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="How do I install kernel header files?">
+		<meta name="keywords" content="kernel,header,VirtualBox">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Fix kernel driver not installed in VirtualBox" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/fix-kernel-driver-not-installed-virtualbox" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="How do I install kernel header files?" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/fix-kernel-driver-not-installed-virtualbox" />
+<meta name="twitter:title" content="Fix kernel driver not installed in VirtualBox" />
+<meta name="twitter:description" content="How do I install kernel header files?" />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on May 03, 2016 
+								• ID 35 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Fix kernel driver not installed in VirtualBox</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>How do I install kernel header files?</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Every time I install a new kernel version in my Debian Testing, I mess up the Virtual Box configuration. The message that comes from VirtualBox is pretty clear:</p>
+<blockquote><p>Kernel driver not installed (rc=-1908)</p>
+<p>The VirtualBox Linux kernel driver (vboxdrv) is either not loaded or there is a permission problem with /dev/vboxdrv. Please reinstall the kernel module by executing</p>
+<p>'/etc/init.d/vboxdrv setup'</p>
+<p>as root. [...]</p>
+</blockquote>
+<p>Here the kernel version has changed under the hood, and VirtualBox should be notified about that. The solution lies in the message above: run <code>/etc/init.d/vboxdrv setup</code> as root and everything should be fine.</p>
+<h2>Missing kernel headers</h2>
+<p>If you are a bit less lucky like me, you might not have the latest kernel headers at hand, and because of that <code>vboxdrv</code> cannot work properly. That's not a problem at least on Debian-based distros. You just have to install them with:</p>
+<p><code>sudo apt-get install linux-headers-&lt;kernel-version&gt;-&lt;processor&gt;</code></p>
+<p>If you don't remember the kernel version or the architecture of your processor, the small utility <code>uname</code> comes to the rescue. It's a Unix app that prints some information about the operating system running on your machine. Invoke it with the flag <code>-r</code> to print the kernel release. In my case it is:</p>
+<p><code>4.5.0-1-amd64</code></p>
+<p>That's enough for apt-get to do its job. Let's glue those parts together:</p>
+<p><code>sudo apt-get install linux-headers-$(uname -r)</code></p>
+<p>And you're done.</p>
+<h2>Sources</h2>
+<p>Wikipedia - <em>Uname</em> (<a href="https://en.wikipedia.org/wiki/Uname">link</a>)<br>
+AskUbuntu - <em>How do I install kernel header files?</em> (<a href="http://askubuntu.com/questions/75709/how-do-i-install-kernel-header-files">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/kernel">kernel</a>
+				 • 								<a class="ip-tag" href="/tag/header">header</a>
+				 • 								<a class="ip-tag" href="/tag/virtualbox">VirtualBox</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

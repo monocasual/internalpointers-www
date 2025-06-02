@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>What is a stock? - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Understanding how stocks work both from companies' and investors' point of view.">
+		<meta name="keywords" content="stock,Share,Stock market,IPO,broker,dividend,capital gain">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="What is a stock?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/stock" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Understanding how stocks work both from companies' and investors' point of view." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/stock" />
+<meta name="twitter:title" content="What is a stock?" />
+<meta name="twitter:description" content="Understanding how stocks work both from companies' and investors' point of view." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 11, 2016 
+								• updated on September 17, 2016  
+								• ID 40 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>What is a stock?</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Understanding how stocks work both from companies' and investors' point of view.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+																							<li>
+						<p>
+							<span class="title">
+								<a href="/post/most-important-metrics-stock-investments">The most important metrics for stock investments</a>
+							</span> —
+							<span class="intro">What are the most famous stock metrics and how to translate them into something useful to humans.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/buying-and-selling-stocks">Buying and selling stocks: how-to</a>
+							</span> —
+							<span class="intro">Let's disclose what happens behind that click on the "buy" button.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>This is the first chapter of the fascinating series <a href="http://www.internalpointers.com/post-group/adventures-stock-market">Adventures in stock markets</a>, where I basically examine how stocks and stock markets work.</p>
+<p>In this inaugural article I will study the differences between a private and a public company, answering that big question "what is a stock?" both from a private investor's and an enterpreneur's point of view.</p>
+<h2>Let's set up a company</h2>
+<h3>Private companies versus public companies</h3>
+<p>Suppose you have just founded a company with a couple of other guys. All of you, as founders have put a portion of your investments or savings into the project, so you are the owners of the whole thing. As long as the money come from you, or from any other <em>private</em> investor (someone that uses his/her own money) that believes in your ideas, the company is said to be <strong>private</strong>, or <strong>privately-held</strong>.</p>
+<p>On the opposite side there is the <strong>public company</strong>: it has sold a portion of itself to the public so that anyone, like me, can invest in it. If I, as a public investor put some money in your public company I become a <strong>shareholder</strong>: I own a piece of your firm, called <strong>share</strong> and I have claim to part of your company's assets and profits.</p>
+<p>Actually a private company can have shareholders as well, but they are few in number and they and the firm are loosely regulated. This changes dramatically when you go public, as we will see later.</p>
+<h3>Why going public?</h3>
+<p>Selling pieces of your project might sounds crazy at first. Actually going public might be a great benefit for your company: you will be able to raise more money, have more liquidity and to invest further in the business. The downsides are that you are much more tightly regulated and exposed to pressure from your shareholders: they want to profit from your firm!</p>
+<p>The process by which a company goes from private to public is called <strong>initial public offering</strong>, or <strong>IPO</strong>. An IPO happens exactly when a privately owned company issues shares to be sold to the general public, for the first time. Let's see how it works in the U.S.</p>
+<h2>The IPO process</h2>
+<p>First thing you need: one or more banks to fund your IPO, in a process that is called <strong>underwriting</strong>. The <strong>underwriter</strong> is the investment bank that employs IPO specialists. They will help you to conform to the jungle of regulations that an IPO brings in.</p>
+<p>The banks then start to ask you some questions: what is the amount of money your company will raise? What type of shares will be issued (yes, they are many)? You and the banks eventually define all the gritty details in the underwriting agreement. Since the IPO might go wrong for several reasons (e.g. not enough investors found), investment banks are usually hesitant to bear all the risk themselves. Instead, they form a team of underwriters to spread around the funding and the risk for the IPO, with one underwriter taking the lead.</p>
+<p>Once the deal between you and the underwriters is done, they put together a document containing information about your company, its financial statements, any legal problems, the IPO itself and where the new money is to be used. That document is then sent to the <a href="https://en.wikipedia.org/wiki/U.S._Securities_and_Exchange_Commission">SEC</a> for its approval. The SEC takes some time to do further investigation on you and make sure that all relevant financial data has been disclosed. Then the official date of the IPO is set once the SEC approves the offering. From that day on people will be able to buy your shares.</p>
+<h3>Spread the word</h3>
+<p>The SEC approval requires some time, of course. During that time the underwriters put down a sort of promotional paper, <strong>red herring</strong> in jargon, containing information on your company except for the official date of the IPO and the price of your shares (because those are still unknown so far). With that document in hand you and the underwriters go hunting big institutional investors (banks, insurance companies, <a href="http://www.internalpointers.com/post/introduction-investment-funds">hedge funds</a>) to turn the heat up. What about individual investors:</p>
+<ul>
+<li>at this stage they are not involved yet, not being the target market. They basically don't have enough cash to wake up the underwriters' interest;</li>
+<li>they are unable to buy shares because shares are listed in a stock exchange (like Nasdaq or NSYE) only when the IPO begins, unless they have an account with one of the investment banks that is part of the underwriting team.</li>
+</ul>
+<h3>And the IPO finally came</h3>
+<p>Several things happened so far. You and the underwriters have defined the price of your shares. Institutional investors have bought them, along with the underwriters — they too want to profit on the difference in price between what they paid before the IPO and when the shares are officially offered to the public. Stock exchanges too want the business of an IPO (it means more trading opportunities), which try to persuade you and the underwriters to let them jump in. Once the stock exchange has been defined, shares are available to the masses and individual investors like me are finally able to buy part of your firm.</p>
+<h2>What is a stock, anyway?</h2>
+<p>I used the word <em>share</em> so far, which is a unit of ownership in a company. The term <strong>stock</strong> means just a set of shares or a portfolio, possibly made of shares from different companies. Those two terms are used interchangeably today.</p>
+<p>In the past stocks used to have a physical avatar, called <strong>stock certificate</strong>: it was just a fancy piece of paper with your name and the number of shares on it. That certificate was the document demonstrating your ownership, and it looked something like the one in the picture .1 below.</p>
+<div class="ip-img">
+  <img src="https://s3.amazonaws.com/images.internalpointers.com/2016/06/disney-stock.jpg" alt="Disney stock certificate">
+  <div class="caption">1. A stock certificate from Disney.</div>
+</div><p>Today, stock ownership is just a record in a database: physical stock certificates are quite uncommon. Several companies don't issue them anymore: they are a pain to manage, as you have to store them safely. Moreover, redeeming them when one want to sell the investment becomes tricky.</p>
+<h3>Where do I get a stock?</h3>
+<p>Whenever I want to buy stocks from a company, I will generally choose a <strong>broker</strong> and open an account. A broker is a guy that works in a <strong>brokerage firm</strong>. I deposit some money with it and she places investment orders on my behalf, for a fee.</p>
+<p>I could also buy stocks directly from the company, through what it's called a <strong>direct stock plan</strong> or <strong>DSP</strong>. It introduces some nuisances, though: not all companies allow it, some others require me to be their employee, usually I can't buy stocks whenever I like but only at established times. Also, that way I'm not getting rid of any middleman completely: there is still the <strong>Stock transfer agent</strong> in the background, which is a third-party company that manages the trades, such as <strong>Computershare</strong> and <strong>Wells Fargo Shareowner Services</strong>. Those are the guys who would manage the DSP, anyway.</p>
+<h3>Types of stock</h3>
+<p>During your company's IPO you have the chance to choose what types of shares you want to set up. There are many different types of shares, with <strong>common stocks</strong> and <strong>preferred stocks</strong> being the two main ones.</p>
+<p>Common stocks are the most prevalent type of stocks. If I buy those I, as a shareholder receive a part of your company's profits which are however exposed to market conditions. I also have voting rights in your meetings, because I own a piece of your firm. Lastly I have the rights to maintain the same proportion of ownership in your company, whenever you decide to issue more shares (it does happen, as we will see later). In such case I can purchase as much stock as it takes to keep my ownership at the previous level.</p>
+<p>Common stocks can be further split into <strong>classes</strong>, like <strong>class A</strong>, <strong>class B</strong>, <strong>class C</strong> and so on. Not all companies use to sub-class their shares that way. When they do it's because they want to increase the granularity of voting rights. For example, you company might define higher voting power to class A shares and give them to its founders, so that they have more control over crucial decisions than other regular shareholders.</p>
+<p>With preferred stocks I, as a shareholder don't have voting rights, but the company's profit are more "stable", unlike the ones from the common stocks. In general, preferred stocks are less volatile but with less potential for profits. They are also said to be <em>callable</em>, which means that your company can purchase my shares back from me at any time for any reason, although with a favorable price. There is also a subset of preferred stocks called <strong>convertible preferred stocks</strong> that can be converted into common stocks.</p>
+<p>Those are actually general rules: in some companies preferred stocks still have many of the features of common ones. Nothing is set in stone in terms of what those types and classes of stocks can do.</p>
+<p>You can buy both types of stocks through your broker. However common stocks will be easier to spot, being more "popular". Therefore information on common stocks is easily available, unlike preferred stocks. We will face that issue in depth when I will write about the actual stock trading process.</p>
+<h2>I have a stock: what happens next?</h2>
+<p>Once I have bought some stocks, I own a slice of the company. If I am a common stockholder (i.e. owning common stocks), I am invited to
+their stockholder meetings to vote on important decisions that the company makes. Votes are based on how many shares I own and if I own more than 50% of them I am virtually in charge of controlling the company. However in the real world there are lots of conditions in the company documents, called <strong>anti-takeover measures</strong> designed to prevent that from happening.</p>
+<p>Besides voting, one usually wants to make a profit out of the stocks. It can happen in two ways: through <strong>dividends</strong> and/or <strong>capital gain</strong>.</p>
+<h3>Dividends vs capital gains</h3>
+<p>A <strong>dividend</strong> is a portion of a company's earnings distributed to the shareholders. The company's board of directors defines when and how to pay dividends during their regular meetings. Not all companies distribute them: some might prefer to reinvest their profits into further expansion. Also, dividends are not 100% certain, especially for common stocks: companies increase, decrease, start paying and stop paying dividends when they think it is appropriate. If a dividend is declared, shareholders are notified via press release. You would find the same announcement into major stock quoting services as well.</p>
+<p>A <strong>capital gain</strong> occurs when I sell part of my stocks for more than the purchase price. While a negative dividend does not exist in this game, I can incur into a negative capital gain, also known as <strong>capital loss</strong>: the difference between a lower selling price and a higher purchase price. Both concepts introduce new questions: what actually drives the stock prices? And most importantly: selling to who? I will try to answer those questions in the following chapter of this series.</p>
+<h2>Stocks operations</h2>
+<p>Once I own stocks, many things can happen from the company's side. Let me list here the most common operations that your stocks might face during their lifetime.</p>
+<h3>Stock dilution</h3>
+<p><strong>Stock dilution</strong> occurs when the company issues more shares in order to raise more money. A naive example: suppose that your company has previously issued 10,000 shares at 2$ per share and I bought 1,000 of those, owning 10% of your company. Now you decides to issue 10,000 more shares (in what is called a <strong>secondary offering</strong> or <strong>Follow on Public Offer (FPO)</strong>, because it follows the IPO), generating a total of 20,000 shares at 2$ per share. After the dilution no money is lost on my side: my 1,000 shares still worth 2$ each, but my partnership decreased from 10% to 5% because more shares are being used for the ownership of the same company.</p>
+<h3>Stock split</h3>
+<p>Sometimes shares prices increase to levels that are too high, making them less appealing to potential new investors. The solution is a <strong>stock split</strong>, that happens when the company doubles the number of outstanding shares, halving their price. For example, your company might split 10,000 shares at 100$ each into 20,000 shares at 50$ each: that would be a 2-for-1 conversion which is quite common, but also other ratios can take place like 3-for-1 or 3-for-2. My previously owned 1,000 shares at 100$ each become 2,000 shares at 50$ each. Neither money is lost, nor my percentage of ownership, but now shares are tradable more easily.</p>
+<p>The opposite operation is called <strong>reverse split</strong>. It's useful when the share prices are too low to be respectable in the market, or to prevent the company for being <em>delisted</em> from a stock exchange. In fact, many of them remove stocks that fall below a certain price per share.</p>
+<h3>Shares buyback/Stock repurchases</h3>
+<p>We saw that companies may distribute part of their earnings to the shareholders through dividends. <strong>Shares buyback</strong>, also known as <strong>stock repurchases</strong> is another way to share their prosperity. It happens when the company buys back part of its shares from the marketplace, reducing the overall number of outstanding shares. Then the value of each share increases, along with the ownership of each investor.</p>
+<h3>Bonus issue</h3>
+<p>It's time to dividend distribution but the company is short on cash: what to do? One solution is to issue a <strong>bonus</strong> of free additional shares to existing shareholders. They can in turn sell the extra shares and generate cash as expected. Technically it is a form of stock split, because more shares are generated. There's a subtle difference, though: during a stock split the company's cash reserves stay the same, no increase or decrease at all. In contrast, when a company issues bonus shares, the shares are paid for out of the cash reserves, and the reserves deplete.</p>
+<h2>Sources</h2>
+<p>Wikipedia - <em>Initial public offering</em> (<a href="https://en.wikipedia.org/wiki/Initial_public_offering">link</a>)<br>
+CNBC - <em>Initial Public Offering: CNBC Explains</em> (<a href="http://www.cnbc.com/id/47099278">link</a>)<br>
+Investopedia - <em>What's the difference between publicly- and privately-held companies?</em> (<a href="http://www.investopedia.com/ask/answers/162.asp">link</a>)<br>
+Investopedia - <em>Brokerage Account</em> (<a href="http://www.investopedia.com/terms/b/brokerageaccount.asp">link</a>)<br>
+Investopedia - <em>Stocks Basics: Different Types Of Stocks</em> (<a href="http://www.investopedia.com/university/stocks/stocks2.asp">link</a>)<br>
+SEC - <em>Direct Investment Plans: Buying Stock Directly from the Company</em> (<a href="https://www.sec.gov/answers/drip.htm">link</a>)<br>
+Dough - <em>brokerage accounts vs. savings accounts: what's the difference?</em> (<a href="https://www.dough.com/blog/brokerage-account-vs-savings-account-infographic">link</a>)<br>
+Money.stackexchange - <em>Basic questions about investing in stocks</em> (<a href="http://money.stackexchange.com/questions/57014/basic-questions-about-investing-in-stocks">link</a>)<br>
+FSA - <em>Common Stock vs. Preferred Stock</em> (<a href="http://www.fsa1.com/Common-Stock-vs--Preferred-Stock.c1019.htm">link</a>)<br>
+Forbes - <em>How to Buy a Preferred</em> (<a href="http://www.forbes.com/forbes/2003/0303/108.html">link</a>)<br>
+Investopedia - <em>Dividend</em> (<a href="http://www.investopedia.com/terms/d/dividend.asp">link</a>)<br>
+Investopedia - <em>Why would a company have multiple share classes, and what are super voting shares?</em> (<a href="http://www.investopedia.com/ask/answers/05/070405.asp">link</a>)<br>
+Khan Academy - <em>Stock Dilution</em> (<a href="https://www.youtube.com/watch?v=tjQzJ7GY0GY">link</a>)<br>
+Investopedia - <em>What is a stock split? Why do stocks split?</em> (<a href="http://www.investopedia.com/ask/answers/113.asp">link</a>)<br>
+Investopedia - <em>Stock Buybacks: Breakdown</em> (<a href="http://www.investopedia.com/articles/02/041702.asp">link</a>)<br>
+Investopedia - <em>Bonus Issue</em> (<a href="http://www.investopedia.com/terms/b/bonusissue.asp">link</a>)<br>
+Dividend Growth Investor - <em>Dividends versus Share Buybacks/Stock repurchases</em> (<a href="http://www.dividendgrowthinvestor.com/2009/06/dividends-versus-share-buybacksstock.html">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/stock">stock</a>
+				 • 								<a class="ip-tag" href="/tag/share">Share</a>
+				 • 								<a class="ip-tag" href="/tag/stock-market">Stock market</a>
+				 • 								<a class="ip-tag" href="/tag/ipo">IPO</a>
+				 • 								<a class="ip-tag" href="/tag/broker">broker</a>
+				 • 								<a class="ip-tag" href="/tag/dividend">dividend</a>
+				 • 								<a class="ip-tag" href="/tag/capital-gain">capital gain</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/most-important-metrics-stock-investments">The most important metrics for stock investments</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Brent</span> on 
+							<span class="date">March 12, 2019 at 11:38</span>
+						</div> 
+						<div class="body">Thanks for this.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

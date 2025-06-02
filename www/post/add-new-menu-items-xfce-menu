@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to add new menu items to XFCE menu - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Just create a simple text file and you're done.">
+		<meta name="keywords" content="Linux,Xfce">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to add new menu items to XFCE menu" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/add-new-menu-items-xfce-menu" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Just create a simple text file and you're done." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/add-new-menu-items-xfce-menu" />
+<meta name="twitter:title" content="How to add new menu items to XFCE menu" />
+<meta name="twitter:description" content="Just create a simple text file and you're done." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 27, 2016 
+								• updated on May 13, 2020  
+								• ID 41 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to add new menu items to XFCE menu</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Just create a simple text file and you're done.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Do you have the need to add a new application to my XFCE menu? Unfortunately, there are many confusing ways of doing it. In this article I want to tackle my favorite one: simple, easy, straight to the point.</p>
+<p>Suppose you want to add a new program, say CLion (which is a pleasant IDE, even if such tools are not my cup of tea) to your XFCE menu. First of all, you have to prepare a simple <code>.desktop</code> file that contains some information on the executable and the program itself.</p>
+<h2>Writing the <code>.destkop</code> file</h2>
+<p>Open your text editor and type something like the following:</p>
+<pre><code>[Desktop Entry]
+Version=1.0
+Type=Application
+Name=&lt;name-of-the-app&gt;
+Exec=&lt;path-to-executable-file&gt;
+Icon=&lt;path-to-icon-file&gt;
+Categories=&lt;list-of-;-separated-categories&gt;
+</code></pre>
+<p>What to change in the above template:</p>
+<ul>
+<li><strong>Name</strong> — put here the name of the application. This will be displayed in the menu;</li>
+<li><strong>Exec</strong> — path to the executable file. For example <code>/opt/clion-2016.2/bin/clion.sh</code>;</li>
+<li><strong>Icon</strong> — path to the icon file. Example: <code>/opt/clion-2016.2/bin/clion.svg</code>;</li>
+<li><strong>Categories</strong> — semicolon-separated list of categories. <a href="https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html#category-registry">Here</a> is a list of what you can choose from.</li>
+</ul>
+<p>There are several additional parameters you can add, but what you see above should be enough. The last step: put that file somewhere useful, so that the system can be aware of it and update the menu accordingly.</p>
+<h2>Place the <code>.desktop</code> file in the right place</h2>
+<p>You can place that file both in <code>/usr/share/applications</code> or in <code>[your-home]/.local/share/applications</code>. What's the difference? The former will enable the menu entry for every user, the latter only for you.</p>
+<h2>Sources</h2>
+<p>Xubuntugeek - <em>Add items to Xfce Applications Menu</em> (<a href="http://xubuntugeek.blogspot.it/2011/12/add-items-to-xfce-applications-menu.html">link</a>)<br>
+FreeDesktop - <em>Desktop Menu Specification</em> (<a href="https://specifications.freedesktop.org/menu-spec/menu-spec-1.0.html">link</a>)</p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/linux">Linux</a>
+				 • 								<a class="ip-tag" href="/tag/xfce">Xfce</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">nux</span> on 
+							<span class="date">April 12, 2018 at 14:06</span>
+						</div> 
+						<div class="body">Very neat little thing those .desktop files. Thanks for the hint.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">windows geek</span> on 
+							<span class="date">January 25, 2019 at 12:31</span>
+						</div> 
+						<div class="body">yo xfce, it's 2019 callin', you heard drag'n'drop, bro? they introduced it in windows 98, now it's time for linux to realize we're in 21st century!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">January 26, 2019 at 11:40</span>
+						</div> 
+						<div class="body">@windows geek mmmm drag'n'drop... isn't it about cooking pasta?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">fu7zed</span> on 
+							<span class="date">May 11, 2019 at 10:06</span>
+						</div> 
+						<div class="body">@windows geek<br />
+have you ever tried to compare idle ram usage, M$ Windows vs any XFCE desktop based distribution ?<br />
+Windows = ease of use<br />
+XFCE = lghtweight and fast<br />
+geez ...</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">I dont use windows much</span> on 
+							<span class="date">June 10, 2019 at 06:45</span>
+						</div> 
+						<div class="body">But I agree. Menulibre and alacarte both suck. It shouldnt be that much work to add the ability to add/remove launchers from an heirarchical menu and quite honestly its been sucking this way for a long time. Now i see in my dmesg where my usb mouse disconnects itself again and again and thats been dispositioned as 'wont fix' by ubuntu for several versions now. Maybe its time to stop congratulating yourself for unix's early success and actually fix some stuff.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">chris</span> on 
+							<span class="date">June 28, 2019 at 20:30</span>
+						</div> 
+						<div class="body">Thanks! Hope you never take this page down, I'm too stupid to make a copy :D</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Khalfani</span> on 
+							<span class="date">July 03, 2019 at 06:05</span>
+						</div> 
+						<div class="body">I don't think this should be easier.<br />
+<br />
+ I've been using Linux for a long time and I've never had to do this until now. <br />
+<br />
+XFCE developers should focus on things that affect a majority of users. Ease of use is a priority for Gnome</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">phreakerg</span> on 
+							<span class="date">August 11, 2019 at 22:05</span>
+						</div> 
+						<div class="body">wow, why is such a natural normal task for anyone who owns an ARM/x86/ia64-3.1415/blah/SelectricIII so extreme?  Scared to get your programming hand dirty?  First you have to learn assembly & fortran for the ibm 7090, next get a good punch card service, cue the magnetic tape onto the receive reel, set console to load.  etc.  Easy as Pie!  Thanks Xfce!<br />
+<br />
+Seriously XFCE?  It's an icon for a program or script.  H E L L O?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">August 14, 2019 at 12:18</span>
+						</div> 
+						<div class="body">@phreakerg you're telling me! :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Szymon P</span> on 
+							<span class="date">April 25, 2020 at 09:35</span>
+						</div> 
+						<div class="body">thanks, I fixed chromium in debian noroot app</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">apaz</span> on 
+							<span class="date">August 09, 2020 at 07:39</span>
+						</div> 
+						<div class="body">@windows geek<br />
+@phreakerg<br />
+I'm very confused by the toxicity. Worse, it's toxicity based off blatantly incorrect information. If you had used XFCE even once, you would know.<br />
+<br />
+Want to create a launcher? <br />
+Right click on desktop -> Create Launcher -> Fill in the GUI popup<br />
+<br />
+To add it to a panel (taskbar), it's the same, but instead of right clicking on the desktop, you right click on the panel. It really is that easy.<br />
+<br />
+In 99.9% of cases, applications are going to handle creating their own .desktop files when you install and uninstall them. It was standardized a long time ago, and every app supports it. The average user doesn't have to know how to write one by hand.<br />
+<br />
+The one instance where creating your own does become useful though is when you write your own application or wrap one with WINE and want to set it to be discoverable all over your system. Any user who can do that is assumed to also be comfortable using a text editor.<br />
+<br />
+Or if you really don't want to use a text editor, you can call:<br />
+<br />
+exo-desktop-item-edit --create-new [DIRECTORY]<br />
+<br />
+to bring up that familiar GUI and create your .desktop file.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Jake</span> on 
+							<span class="date">September 06, 2020 at 02:44</span>
+						</div> 
+						<div class="body">@apaz<br />
+That option is very hidden, but ok, systematically, it's possible to, eventually, find it.<br />
+It's not 99% applications, but like 70% of applications, BUT THERE IS like a 99% change that a common user of such system WILL need at least 1 application from that 30% ... and in that case they're sc** .... <br />
+<br />
+The application launch and task bar ALREADY HAS ALL TECHNICALITIES to support drag&drop, you can actually drag app from task bar to launch bar and see it triggering little frames<br />
+- IT JUST DOESN'T DO ANYTHING , which after all those years, just blows my mind, so I'm not surprised by those angry reactions.<br />
+<br />
+It's a GUI system for a reason - that reason is dismissed when you suggest to "program" or "code" a special file just to add a simple icon for everyday use.<br />
+<br />
+And for the gnome/unity people - c'mon - if somebody is using xfce, there is a big change it's because they CAN'T use any other more performant-expensive GUIs... </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Harp</span> on 
+							<span class="date">November 12, 2020 at 08:33</span>
+						</div> 
+						<div class="body">Thank you for this article. It is very useful if somebody uses PyCharm or Eclipse and doesn't want to start it from command line. :-)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Andy Alt</span> on 
+							<span class="date">November 14, 2020 at 00:37</span>
+						</div> 
+						<div class="body">Thanks for this. I use XFCE on Debian, but use the latest Thunderbird and Firefox from Mozilla. I created desktop launchers for them, but also wanted launchers in my app -> Internet menu.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Neil</span> on 
+							<span class="date">July 24, 2021 at 13:27</span>
+						</div> 
+						<div class="body">I love desktop files.<br />
+So quick and easy if you know how to edit a text file.<br />
+I know they've been trying to make the OS more popular with consumers, but I'm really happy with the underlying text config.<br />
+I guess I should start my own desktop project - with no GUI config whatsoever.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">nEwwE</span> on 
+							<span class="date">November 28, 2021 at 05:15</span>
+						</div> 
+						<div class="body">lol.... here because XFCE Whisker with Alacarte or MenuLibre will not show all my .desktop files as shortcuts even when they're located in /usr/share/applications/ and ~/.local/share/applications.<br />
+<br />
+Fixed<br />
+one thing alacarte has that menulibre doesn't is Restore System Configuration. fixes everything but knocks out your favorites so take a screenshot before you click this button. uninstall purge menulibre. install alacarte. click on restore system configuration. reinstall menulibre.<br />
+<br />
+Also<br />
+restart xfce4-panel -r makes Windows Buttons unclickable so you reboot or logout.<br />
+<br />
+copy with ctrl+c from a launcher will not work. You have to right click to menu and choose copy.<br />
+<br />
+there's always .config/menus/xfce-applications.menu<br />
+<br />
+i love my Linux 99% of the time even when it's broken. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">TANAKA Hidemune</span> on 
+							<span class="date">September 06, 2022 at 13:25</span>
+						</div> 
+						<div class="body">Thx!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mike</span> on 
+							<span class="date">October 17, 2022 at 16:23</span>
+						</div> 
+						<div class="body">How to add a binary file Netbeans 15, netbean.desktop not work.</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

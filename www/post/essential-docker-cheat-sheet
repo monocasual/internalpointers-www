@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>An essential Docker cheat sheet - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="All the best Docker commands that I keep forgetting.">
+		<meta name="keywords" content="Docker">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="An essential Docker cheat sheet" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/essential-docker-cheat-sheet" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="All the best Docker commands that I keep forgetting." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/essential-docker-cheat-sheet" />
+<meta name="twitter:title" content="An essential Docker cheat sheet" />
+<meta name="twitter:description" content="All the best Docker commands that I keep forgetting." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on October 05, 2017 
+								• updated on October 05, 2017  
+								• ID 58 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>An essential Docker cheat sheet</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>All the best Docker commands that I keep forgetting.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<h2>Images</h2>
+<table>
+<thead><tr>
+<th>Action</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show all images</td>
+<td><code>docker images -a</code></td>
+</tr>
+<tr>
+<td>Delete all images</td>
+<td><code>docker rmi $(docker images -a -q)</code></td>
+</tr>
+<tr>
+<td>Pull remote image</td>
+<td><code>docker pull &lt;image&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Containers</h2>
+<table>
+<thead><tr>
+<th>Action</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show all running containers</td>
+<td><code>docker ps</code></td>
+</tr>
+<tr>
+<td>Show all running and stopped containers</td>
+<td><code>docker ps -a</code></td>
+</tr>
+<tr>
+<td>Stop all containers</td>
+<td><code>docker stop $(docker ps -a -q)</code></td>
+</tr>
+<tr>
+<td>Delete all containers</td>
+<td><code>docker rm $(docker ps -a -q)</code></td>
+</tr>
+<tr>
+<td>Create and run a new container</td>
+<td><code>docker run &lt;image tag&gt; &lt;commands&gt;</code></td>
+</tr>
+<tr>
+<td>Create a new container without running it</td>
+<td><code>docker create &lt;image tag&gt; &lt;commands&gt;</code></td>
+</tr>
+<tr>
+<td>Run an existing container</td>
+<td><code>docker start &lt;container id&gt;</code></td>
+</tr>
+<tr>
+<td>Run an existing container with STDIN, STDOUT and STDERR</td>
+<td><code>docker start -a -i &lt;container id&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Dockerfile</h2>
+<table>
+<thead><tr>
+<th>Action</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build a Dockerfile</td>
+<td><code>docker build -t &lt;image tag&gt; &lt;Dockerfile&gt;</code></td>
+</tr>
+</tbody>
+</table>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/docker">Docker</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

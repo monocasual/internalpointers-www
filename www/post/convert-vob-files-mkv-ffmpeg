@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to convert VOB files to mkv with FFmpeg - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="You have just ripped a movie from a DVD and you want to store it in a compressed format with multi-language audio tracks, subtitles and high quality video.">
+		<meta name="keywords" content="audio,video,FFmpeg,VOB,mkv,video conversion">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to convert VOB files to mkv with FFmpeg" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/convert-vob-files-mkv-ffmpeg" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="You have just ripped a movie from a DVD and you want to store it in a compressed format with multi-language audio tracks, subtitles and high quality video." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/convert-vob-files-mkv-ffmpeg" />
+<meta name="twitter:title" content="How to convert VOB files to mkv with FFmpeg" />
+<meta name="twitter:description" content="You have just ripped a movie from a DVD and you want to store it in a compressed format with multi-language audio tracks, subtitles and high quality video." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 09, 2017 
+								• updated on November 13, 2017  
+								• ID 54 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to convert VOB files to mkv with FFmpeg</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>You have just ripped a movie from a DVD and you want to store it in a compressed format with multi-language audio tracks, subtitles and high quality video.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>In this guide I'll show you how to do that by using FFmpeg (version 3.2.5 or greater) on a Linux-based operating system - I'm currently using Debian Stable, aka <em>Jessie</em>.</p>
+<p>FFmpeg is able to deal with a vast amount of audio/video formats and containters. For our task I will be using <strong>Matroska Multimedia Container</strong> container (.mkv files), as it is capable of storing different audio, video and subtitle tracks together. The video stream will be encoded with H.264 codec, currently the best guy in town. Audio tracks will be encoded in mp3 format.</p>
+<p>Let's begin!</p>
+<h2>Step 1: unify your VOBs</h2>
+<p>VOB file are usually 1 Gb each in order to be compatible with all operating systems, as some cannot read files larger than that size. The first step then is to join them into a single, big VOB file. To do that, browse to the <code>VIDEO_TS</code> folder and do:</p>
+<pre><code>cat *.VOB &gt; output.vob
+</code></pre>
+<p>That's it.</p>
+<h2>Step 2: identify the streams</h2>
+<p>Now let's inspect the newly created file: we want to find what kind of stuff it contains. Use FFmpeg for that, as follows:</p>
+<pre><code>ffmpeg -i output.vob
+</code></pre>
+<p>For example, you might end up with something like:</p>
+<pre><code>Input #0, mpeg, from 'output.vob':
+  Duration: 01:50:40.99, start: 0.287267, bitrate: 7581 kb/s
+    Stream #0:0[0x1bf]: Data: dvd_nav_packet
+    Stream #0:1[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, top first), 720x576 [SAR 64:45 DAR 16:9], 25 fps, 25 tbr, 90k tbn, 50 tbc
+    Stream #0:2[0x80]: Audio: ac3, 48000 Hz, 5.1(side), fltp, 384 kb/s
+    Stream #0:3[0x89]: Audio: dts (DTS), 48000 Hz, 5.1(side), fltp, 768 kb/s
+    Stream #0:4[0x82]: Audio: ac3, 48000 Hz, 5.1(side), fltp, 384 kb/s
+</code></pre>
+<p>Here FFmpeg reports that my VOB file contains five streams. Starting from the first one, <code>Stream #0:0</code> contains data regarding the DVD's menu navigation. We can get rid of it. <code>Stream #0:1</code> is the actual movie. The remaining streams are audio tracks. I'll discard <code>Stream #0:2</code> as it contains the same data (English audio track) encoded in a different format.</p>
+<h3>Mind the deep-buried streams!</h3>
+<p>Normally, while looking for streams, FFmpeg parses only few seconds of the input data as most formats have a global header there that describes everything present in the file. Unfortunately VOBs have no headers and it is likely to find movies that hold additional streams further down the VOB file.</p>
+<p>Let FFmpeg scan it thoroughly by adding two more flags: <code>-analyzeduration</code> (in microseconds) and <code>-probesize</code> (in bytes). Honestly I'm not able to tell the difference between those options: put in there some fairly large numbers and tweak them until you are satisfied. For example:</p>
+<pre><code>ffmpeg -analyzeduration 100M -probesize 100M -i output.vob
+</code></pre>
+<p>And, not surprisingly, two more streams are found:</p>
+<pre><code>...
+    Stream #0:5[0x21]: Subtitle: dvd_subtitle
+    Stream #0:6[0x20]: Subtitle: dvd_subtitle
+</code></pre>
+<p>Subtitles: let's keep them!</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Step 3: encoding</h2>
+<p>We are ready to pack our DVD into a beautiful .mkv file. The command looks like:</p>
+<pre><code>ffmpeg \
+  -analyzeduration 100M -probesize 100M \
+  -i output.vob \
+  -map 0:1 -map 0:3 -map 0:4 -map 0:5 -map 0:6 \
+  -metadata:s:a:0 language=ita -metadata:s:a:0 title="Italian stereo" \
+  -metadata:s:a:1 language=eng -metadata:s:a:1 title="English stereo" \
+  -metadata:s:s:0 language=ita -metadata:s:s:0 title="Italian" \
+  -metadata:s:s:1 language=eng -metadata:s:s:1 title="English" \
+  -codec:v libx264 -crf 21 \
+  -codec:a libmp3lame -qscale:a 2 \
+  -codec:s copy \
+  output.mkv
+</code></pre>
+<p>Let me dissect it:</p>
+<ul>
+<li><code>-analyzeduration 100M -probesize 100M</code> — keep this one so that FFmpeg is able to find hidden streams;</li>
+<li><code>-i output.vob</code> — the input file;</li>
+<li><code>-map 0:1 -map 0:3 -map 0:4 -map 0:5 -map 0:6</code> — here I'm <em>mapping</em> the streams, namely I'm telling FFmpeg to keep <code>Stream 0:1</code>, <code>Stream 0:3</code>, <code>Stream 0:4</code>, <code>Stream 0:5</code>, <code>Stream 0:6</code> and put them in the output file in that specific order;</li>
+<li><code>-metadata[...]</code> — this is used to give streams a title and other additional information, specifically to audio tracks (<code>s:a:0</code> and <code>s:a:1</code> where <code>a</code> stands for <code>audio</code>) and subtitles (<code>s:s:0</code> and <code>s:s:1</code> where <code>s</code> stands for <code>subtitles</code>);</li>
+<li><code>-codec:v libx264 -crf 21</code> — defines the video codec in use and the <strong>constant rate factor</strong> (crf), namely the quality level. This method allows the encoder to keep a constant quality level, regardless the output file size: 0 is lossless, 23 is default, and 51 is worst possible. The sane range is between 18 and 28;</li>
+<li><code>-codec:a libmp3lame -qscale:a 2</code> — defines the audio codec in use and the quality level: 0-3 will produce transparent results, 4 (default) should be close to perceptual transparency, 6-9 produces an "acceptable" quality. Using numbers from 0 to 9 means that the audio track will be encoded in <strong>variable bitrate</strong> (vbr) mode: smaller files, better quality; </li>
+<li><code>-codec:s copy</code> — <code>s</code> stands for <code>subtitles</code>: copy them as they are;</li>
+<li><code>output.mkv</code> — the output file. </li>
+</ul>
+<p>Bonus point: if your machine supports it, add the flag <code>-threads N</code> to enable multi-threading and give the encoding a boost. Replace N with the number of your CPU cores.</p>
+
+
+<h2>Sources</h2>
+<p>Wikipedia - <em>VOB</em> (<a href="https://en.wikipedia.org/wiki/VOB">link</a>)<br>
+Wikipedia - <em>Matroska</em> (<a href="https://en.wikipedia.org/wiki/Matroska">link</a>)<br>
+FFmpeg f.a.q. - <em>3.16 Why does FFmpeg not see the subtitles in my VOB file?</em> (<a href="http://www.ffmpeg.org/faq.html#Why-does-FFmpeg-not-see-the-subtitles-in-my-VOB-file_003f">link</a>)<br>
+FFmpeg wiki - <em>FFmpeg and H.264 Encoding Guide</em> (<a href="https://trac.ffmpeg.org/wiki/Encode/H.264">link</a>)<br>
+FFmpeg wiki - <em>FFmpeg MP3 Encoding Guide</em> (<a href="https://trac.ffmpeg.org/wiki/Encode/MP3">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/audio">audio</a>
+				 • 								<a class="ip-tag" href="/tag/video">video</a>
+				 • 								<a class="ip-tag" href="/tag/ffmpeg">FFmpeg</a>
+				 • 								<a class="ip-tag" href="/tag/vob">VOB</a>
+				 • 								<a class="ip-tag" href="/tag/mkv">mkv</a>
+				 • 								<a class="ip-tag" href="/tag/video-conversion">video conversion</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Eytan</span> on 
+							<span class="date">March 18, 2018 at 00:07</span>
+						</div> 
+						<div class="body">Thanks a lot.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vangelis</span> on 
+							<span class="date">April 07, 2018 at 17:24</span>
+						</div> 
+						<div class="body">Many thanks for the helpful how-to guide. While checking out your sources, i couldn't help but notice the speed preset flag (i.e. slow, veryslow, etc.). I was wondering why have you omitted this option from your example above? Is it because you've tried it but saw no noticeable improvement in the quality of the encoding?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">April 08, 2018 at 11:32</span>
+						</div> 
+						<div class="body">Hey @Vangelis, I initially thought presets would override manual crf parameters, however this example -> https://trac.ffmpeg.org/wiki/Encode/H.264#CRFExample seems to tell a different story. Thanks for the input, I will look into it!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Daniel</span> on 
+							<span class="date">June 22, 2018 at 07:57</span>
+						</div> 
+						<div class="body">Very helpful, but I would like to ask FFmpeg can also apply to Windows system? I now use the wonderfox DVD video converter to achieve this goal, so I want to make an alternative, can it be achieved?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">June 24, 2018 at 09:59</span>
+						</div> 
+						<div class="body">@Daniel FFmpeg runs on Win, Mac and Linux :) https://www.ffmpeg.org/download.html</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Evgeny</span> on 
+							<span class="date">October 14, 2018 at 15:57</span>
+						</div> 
+						<div class="body">Thanks for the guide.<br />
+I was getting "Too many packets buffered for output stream" error message and managed to fix it by adding "-max_muxing_queue_size 9999" parameter.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daveclark966</span> on 
+							<span class="date">November 07, 2018 at 08:31</span>
+						</div> 
+						<div class="body">Avdshare Video Converter is just one of the best MKV to VOB converters which can convert any MKV compressed with any codec to VOB without losing subtitles or quality.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Harney</span> on 
+							<span class="date">November 23, 2018 at 04:01</span>
+						</div> 
+						<div class="body">Another method is to use iDealshare VideoGo to combine vob files into one mkv, vob or mp4, or avi, etc.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bob</span> on 
+							<span class="date">November 28, 2018 at 00:07</span>
+						</div> 
+						<div class="body">Great guide! But one question. I'm familiar with the -threads flag you mention, but not where to place it in the encoding step above.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">December 01, 2018 at 10:46</span>
+						</div> 
+						<div class="body">@Bob I think you can place it anywhere you want before "output.mkv"</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daveclark966</span> on 
+							<span class="date">December 11, 2018 at 10:47</span>
+						</div> 
+						<div class="body">To convert VOB to MPEG, Avdshare Video Converter, as the most professional VOB to MPEG converter, can become your good assistant.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">rickster</span> on 
+							<span class="date">January 10, 2019 at 04:38</span>
+						</div> 
+						<div class="body">Hey thanks for your ffmpeg howto. It did the trick for digging out those "dvd_subtitle' streams from VOB's.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daveclark966</span> on 
+							<span class="date">January 11, 2019 at 09:20</span>
+						</div> 
+						<div class="body">Avdshare Video Converter is just the workable VOB to MKV converter that you need.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Stanislav</span> on 
+							<span class="date">March 11, 2019 at 04:57</span>
+						</div> 
+						<div class="body">Hi! <br />
+<br />
+If your media stream is interlaced you need to add special key to deinterlace it. " -vf yadif " (without quotes)<br />
+<br />
+To  check if your VOB file is interlaced use the following command<br />
+<br />
+mediainfo input.vob | grep "Scan type"</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Bob</span> on 
+							<span class="date">June 05, 2019 at 20:06</span>
+						</div> 
+						<div class="body">@Triangles - Sorry it took so long to get back to you. Your answer to my threads question worked perfectly. I put -threads 1 \  just above output.mkv. I'm working with an old 2-core processor and just using 1 thread keeps it from "cooking".<br />
+<br />
+Also, if anyone else is interested, I found a simple command to convert the mkv to mp4: ffmpeg -i output.mkv -vcodec copy -acodec copy output.mp4<br />
+<br />
+Thanks again for sharing this How-To.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Henry</span> on 
+							<span class="date">August 06, 2019 at 09:28</span>
+						</div> 
+						<div class="body">Another method is to use iDealshare VideoGo to convert between VOB, MKV, MP4, MOV, AVI, WMV, MPG, etc</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">David</span> on 
+							<span class="date">November 22, 2019 at 02:55</span>
+						</div> 
+						<div class="body">I use Avdshare Video Converter to convert between various video and audio formats.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">freewareuser</span> on 
+							<span class="date">February 05, 2020 at 18:47</span>
+						</div> 
+						<div class="body">How many more times are we going to see those stupid spam-remarks about commercial converters that dont even work on Linux?!! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">daveclark966</span> on 
+							<span class="date">March 08, 2020 at 15:23</span>
+						</div> 
+						<div class="body">iDealshare VideoGo for Mac, the ideal WinFF for Mac Alternative, can convert all the video and audio formats that WinFF supports. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">fdasjdsoi284</span> on 
+							<span class="date">August 06, 2020 at 18:37</span>
+						</div> 
+						<div class="body">following this method changes the display aspect rati. My input vob file has a ratio of 16:9, output mkv got 4:3.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ubuntudefaultos</span> on 
+							<span class="date">April 06, 2021 at 19:18</span>
+						</div> 
+						<div class="body">Thank you very much for this tutorial. Extremely clear, could not be better. 2 things. 1 : Advertising like Wondershare or Idealshare are useless here. 2 : If someone has message errors with "buffer size(...)", you have to keep ONLY the .VOB files of a movie and remove all the other files if they are NOT important. For example, only keep : VTS_03_1.VOB, VTS_03_2.VOB, VTS_03_3.VOB, VTS_03_4.VOB</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">chris collins</span> on 
+							<span class="date">April 16, 2021 at 15:53</span>
+						</div> 
+						<div class="body">use dvdbackup -i /dev/dvd -o ~ -t 1  to get all relavent VTS_xx_x.VOB files.<br />
+you get maybe 6 files<br />
+you then use cat *.VOB > final.vob<br />
+this gets you started at top of this page with a clean .vob file.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">mky</span> on 
+							<span class="date">May 28, 2021 at 19:40</span>
+						</div> 
+						<div class="body">Great tutorial. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">webor</span> on 
+							<span class="date">March 02, 2022 at 14:06</span>
+						</div> 
+						<div class="body">Clear, logic  and useful  article !  Thanks a lot<br />
+ </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Zero</span> on 
+							<span class="date">August 22, 2022 at 18:27</span>
+						</div> 
+						<div class="body">Thanks a lot for this great tutorial!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sergey</span> on 
+							<span class="date">July 13, 2023 at 13:29</span>
+						</div> 
+						<div class="body">Step 1 for windows<br />
+ffmpeg -i "concat:VTS_01_1.VOB|VTS_01_2.VOB" -c copy output.vob</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joan Arling</span> on 
+							<span class="date">February 10, 2024 at 19:18</span>
+						</div> 
+						<div class="body">Thank you very much! I wish all tutorials were that precise and clear. I am currently running my first conversion -- man, does this gobble up cpu!  I need more than 4 cores :-)</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

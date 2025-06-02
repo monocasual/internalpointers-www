@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>A journey across static and dynamic libraries  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS.">
+		<meta name="keywords" content="C++,CMake">
+		<meta name="copyright" content="2015-2020 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="A journey across static and dynamic libraries " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/library-linking-c-cpp" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/09/cmake/introduction-modern-cmake-beginners.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/library-linking-c-cpp" />
+<meta name="twitter:title" content="A journey across static and dynamic libraries " />
+<meta name="twitter:description" content="Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS." />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/09/cmake/introduction-modern-cmake-beginners.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.3.3.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.3.3.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on November 15, 2020 
+								• updated on November 15, 2020  
+								• ID 84 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>A journey across static and dynamic libraries </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Writing modern software often means to glue existing pieces together, rather than reinventing everything from scratch. The task can be trivial or full of intricacies, depending on the tools and the platforms you are working with. In this article I want to investigate such art of reuse in C and C++ languages, from a technical point of view.</p>
+<h2>Introducing libraries</h2>
+<p>A <strong>library</strong> is code designed to be reused by other programs. It is made of one or more human-readable header files that contain the <em>declaration</em> of variables, functions, classes and other programming elements that the library provides. The actual <em>implementation</em> lies in a precompiled binary, distributed along with the headers.</p>
+<p>The library header is included in the source code of any program that wants to make use of it: the inclusion informs the compiler about the library content. Then, during the linking stage, the library's precompiled binary gets somehow connected to the final executable.</p>
+<p>A library is just normal C or C++ code written by a human and then compiled with a compiler, except for the absence of <code>main()</code>, the <em>entry point</em> function called when a program is executed. Libraries are plugged into existing executables where the <code>main()</code> function is already present: adding it twice would screw up the whole program and prevent a correct execution.</p>
+<h2>Using libraries in C and C++ programs</h2>
+<p>Let's pretend you have a library called <em>GraphicLib</em> that contains a single function <code>drawPixel(int x, int y)</code>. The library is designed to paint black pixels on screen and is already installed somewhere in your system. A minimalistic C or C++ program that makes use of it would look like this:</p>
+<pre><code class="lang-c++">#include &lt;GraphicLib.h&gt;
+
+int main()
+{
+  drawPixel(0, 0);
+  return 0;
+}
+</code></pre>
+<p>In words: you first include the library header file, then you invoke the function <code>drawPixel(0, 0)</code> that comes with the imported library. The snippet above is ready to be compiled into an executable. In C and C++ the operation is split into two parts: the <strong>compilation</strong> stage performed by the compiler and the <strong>linking</strong> stage performed by the linker.</p>
+<p>During the compilation stage, the compiler transforms your source code into machine language. More specifically, it turns each source file into an <strong>object file</strong>: a file that contains machine code, not yet executable. When the <code>drawPixel()</code> function is processed, the compiler is unable to find a proper definition — that is the actual source code — and so it realizes it must be somewhere else. Indeed, the <code>drawPixel()</code> function implementation lies in the library's precompiled binary. The compiler doesn't mind this and it just marks the function as <strong>undefined</strong> in the object file.</p>
+<p>During the linking stage, the linker is responsible for gathering all the object files together in a single executable. The linker also has to find what has been marked as undefined by the compiler. Normally you need to instruct it where to search, by passing it the full path or the name of the library that contains the missing definition. If the linker is unable to find a missing piece, an error is thrown and the compilation stops, typically with a message like <code>undefined reference to 'drawPixel'</code>.</p>
+<h2>Static versus dynamic Libraries</h2>
+<p>The nature of the library determines how the linker connects it to the final executable. Compiled libraries come in two flavors: <strong>static</strong> or <strong>dynamic</strong>. Each format has advantages, drawbacks and differs in how it is handled during the linking stage. Let's dig deeper.</p>
+<h3>Static libraries</h3>
+<p>A static library is simply a collection of binary objects archived into a single file, usually with a <code>.a</code> extension on Unix-like systems and <code>.lib</code> on Windows. A static library gets <em>merged</em> by the linker into the final executable during the linking stage. More specifically, the linker copies all the elements marked as undefined by the compiler from the library into the executable file.</p>
+<p>Static libraries are good for portability: your program contains everything it needs in a single executable file, which is easier to distribute and install for the end user. On the other hand, the program grows bigger. Historically, libraries could only be static.</p>
+<h3>Dynamic libraries</h3>
+<p>A dynamic library (also known as <strong>shared library</strong>) is a slightly more complex creature. It contains binary data like a static library and has a <code>.so</code> extension on Linux, <code>.dylib</code> on macOS/iOS and  <code>.dll</code> on Windows. A dynamic library is designed to be <em>linked</em> to the main executable, rather than being merged into it. The linker creates a special connection between functions and variables used in the main executable and their actual implementations provided by the dynamic library. This way multiple programs can reference to the same library without the need for each to have its own copy.</p>
+<p>Using dynamic libraries results in a smaller final executable, as it doesn't contain the actual library code. Also, if the library is updated, all programs that link to it will instantly benefit. Conversely, a program that uses static libraries needs to be recompiled every time a new version of the library is published in order to merge the changes into the final executable.</p>
+<p>This is an important property when it comes to security: bugfixes in a dynamic library will automatically propagate to all programs that link to it, with no need to recompile. Unfortunately this mechanism makes the whole program more susceptible to <em>breaking</em>: what if the library changes in a way that is no longer usable by the executable? I'll investigate this problem in the final paragraphs of this article.</p>
+<h2>How the linker links</h2>
+<p>Let's pretend to stop the compilation of the <em>GraphicLib</em> example above, right before the linking stage. We would end up with the object file generated by the compiler, not yet ready to be executed. As said before, such file contains a missing function that the linker has to find somewhere. How does that information look like exactly?</p>
+<h3>Introducing symbols</h3>
+<p>A compiled program is essentially a long list of machine code instructions. The processor doesn't care about human-readable names for functions and data such as <code>drawPixel</code>: it just needs their address (that is, the offset within the file) and their size, in order to process and execute them. Unfortunately this is not enough for the linker to do its job of gathering the pieces together. The linker can't locate a function called <code>drawPixel</code> if everything it has is just a bunch of hexadecimal addresses.</p>
+<p>For this reason, compilers include <strong>symbols</strong> in their object files. A symbol is a human-readable name given to functions and data that come with a program. For example, <code>drawPixel</code> could be a symbol for the <code>drawPixel(int x, int y)</code> function. Symbols are used by the linker to search for undefined stuff marked by the compiler: if a symbol is found somewhere — for example in an external library, the linker can continue its collage job.</p>
+<h2>Inspecting symbols</h2>
+<p>Operating systems provide tools to list symbols in object files, for example <code>nm</code> on Linux and macOS or <code>dumpbin.exe</code> on Windows. I'm on Linux right now, so running <code>nm</code> on our hypothetical object file would spit out something like this (output truncated to the interesting part):</p>
+<pre><code class="lang-lang=none">...
+000000000000001c T main
+                 U drawPixel
+...
+</code></pre>
+<p>The <code>nm</code> output is tabular data formatted as follows:</p>
+<pre><code>[address] [flag] [symbol]
+</code></pre>
+<p>In words, the object file contains two symbols: <code>main</code> and <code>drawPixel</code>. The first one has been found by the compiler — the <code>T</code> flag means the symbol exists — and has a specific address. This is pretty obvious, as we have defined the <code>main()</code> function right in the source code. Conversely, the <code>drawPixel</code> symbol has been marked as undefined (<code>U</code> flag) because the compiler couldn't find the implementation. As you can see there's no address for it yet.</p>
+<h2>Resolving symbols</h2>
+<p>The linker's job is to parse the object file for any undefined symbol and find a suitable definition in the library you have passed it as a command line parameter. This process is called <strong>symbol resolution</strong> and depends on the type of library in use. Another step called <strong>symbol relocation</strong> is needed to give each copied symbol definition a correct and unique address. This is necessary as symbol addresses start from <code>0</code> in static and dynamic libraries: symbol relocation is the act of adjusting them to fit properly into the final executable.</p>
+<h3>In static libraries</h3>
+<p>With static libraries, the linker searches inside the library's precompiled binary for the matching symbol: if found, the symbol definition (i.e. the source code) is copied into the final executable. Assuming <em>GraphicLib</em> is a static library, running <code>nm</code> on the final executable after symbol resolution + relocation would yield something like this:</p>
+<pre><code class="lang-lang=none">...
+000000000000001c T main
+0000000000001135 T drawPixel
+...
+</code></pre>
+<p>The <code>drawPixel</code> symbol is now defined (<code>T</code> flag) and has a proper, unique address.</p>
+<h3>In dynamic libraries</h3>
+<p>With dynamic libraries, the linker only performs symbol resolution: relocation is deferred when program is launched. When a symbol is found, the linker just records its name and the library it comes from inside the final executable. Running <code>nm</code> on it would yield the same initial results:</p>
+<pre><code class="lang-lang=none">...
+000000000000001c T main
+                 U drawPixel
+...
+</code></pre>
+<p>As you can see the <code>drawPixel</code> symbol is still undefined. The additional information stored by the linker can be extracted with tools like <code>readelf</code> on Linux, <code>gobjdump</code> on macOS or <code>dumpbin</code> on Windows: they are used to peep inside a binary executable and print, among other things, the dynamic libraries needed by the program.</p>
+<p>For example: assuming <em>GraphicLib</em> is a Linux dynamic library called <code>graphiclib.so</code>, this is what <code>readelf -d</code> run on the final executable would print out (truncated for clarity, and the <code>-d</code> flag means "show me the dynamic stuff"):</p>
+<pre><code class="lang-lang=none">...
+0x0000000000000001 (NEEDED) Shared library: [graphiclib.so]
+...
+</code></pre>
+<p>The <code>readelf -d</code> output is tabular data formatted as follows:</p>
+<pre><code>[address] [type] [name]
+</code></pre>
+<p>In words: the program needs (<code>(NEEDED)</code>) a dynamic library called <code>graphiclib.so</code>. The funny hexadecimal number is just a placeholder to signify the lack of a pre-defined load address: it will be decided at runtime.</p>
+<p>Dynamic libraries on Windows require an extra step during linkage. By default, all symbols in a DLL are invisible from the outside. Library's authors have to change the visibility of a symbol — or <strong>export</strong> it — if they want to make it available to the linker. There are <a href="https://docs.microsoft.com/en-us/cpp/build/exporting-from-a-dll">multiple ways</a> of doing this: the easiest one is to mark the function in the library's source code with the special attribute <code>__declspec(dllexport)</code>, a Microsoft-specific extension to C and C++.</p>
+<h2>Don't mess with symbols!</h2>
+<p>Symbols can be stripped off a binary file. This is useful especially for a sub-category of symbols called <strong>debug symbols</strong>, optionally generated by the compiler. They allow debuggers to print fancy function and variable names instead of raw memory addresses, making the debug process more pleasant to humans. On macOS and Linux debug symbols are part of the binary file and are often removed from the final executable with command-line tools like <code>strip</code> when it's time to distribute the software.</p>
+<p>Beware though: <code>strip</code> can also remove <em>all</em> symbols, including those needed by the linker during the final linkage. While it's safe to strip an executable, deleting all symbols from a library renders it useless for linking! Luckily there's no such risk on Windows, where debug symbols aren't part of the binaries: they are stored in separate files called "Program Database" files (<code>.pdb</code> files).</p>
+<h2>Time to run the program</h2>
+<p>A program linked against a static library has all dependencies self-contained in the binary file: this is called <strong>compile-time linking</strong>. The operating system reads instructions and data from the executable and copies them into memory with no modification, ready to be processed by the CPU.</p>
+<p>A program linked against a dynamic library still needs to resolve undefined symbols. When the program is run, an operating system component called <strong>dynamic linker</strong> parses the executable file for the missing pieces left by the <em>normal</em> linker, loads up in memory the required dynamic libraries — if not already present — and performs symbol resolution as needed. This is called <strong>load-time linking</strong>.</p>
+<p>Specifically, the dynamic linker makes use of the information we found when we called the <code>nm</code> and <code>readelf</code> commands above: the undefined symbol <code>drawPixel</code> lies in <code>graphiclib.so</code>. The difference here is that the linkage is not hardcoded in the binary file, but live performed in memory every time the program is started, right before the <code>main()</code> function invocation.</p>
+<p>Side note: <strong>run-time linking</strong> is a third form of linking that can take place while the program is running. Functions like <a href="https://www.man7.org/linux/man-pages/man3/dlopen.3.html"><code>dlopen</code></a> on Unix or <a href="https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya"><code>LoadLibrary</code></a> on Windows give you the ability to load dynamic libraries at runtime, according to your program's logic. This technique is also used to implement a certain kind of plug-in architecture, where pieces are conditionally loaded on demand.</p>
+<h3>Where to look for dynamic libraries?</h3>
+<p>The executable only contains the library name, as we saw in the <code>readelf</code> output, but the dynamic linker knows several default places to look for. Each operating system follows its own rules:</p>
+<ul>
+<li>Windows — dlls are searched next to the binary executable, then in the binary path (<code>%PATH%</code>);</li>
+<li>Linux — system directories such as <code>/lib</code> and <code>/usr/lib</code> are searched by default. The <code>LD_LIBRARY_PATH</code> environment variable holds additional directories for the dynamic linker to look into. The absolute dynamic library path also can be hardcoded into the executable by setting the <code>RUNPATH</code> tag during compilation (<code>RPATH</code> is the same thing, deprecated). Finally the dynamic linker can be configured directly by altering the <code>/etc/ld.so.conf</code> file. All these settings are processed on program startup according to <a href="https://en.wikipedia.org/wiki/Rpath#GNU_ld.so">a specific order</a>;</li>
+<li>macOS — I lied: dynamic library paths are hardcoded into mac executables. The paths can be absolute, or contain a mix of three special variables <a href="https://www.mikeash.com/pyblog/friday-qa-2009-11-06-linking-and-install-names.html"><code>@executable_path</code>, <code>@loader_path</code> and <code>@rpath</code></a> that get expanded by the dynamic linker on startup. Specifically, <code>@rpath</code> is set at compile time and contains a list of directories suitable for the search. Like Linux, macOS also provides <code>LD_LIBRARY_PATH</code> and a bunch of other environment variables, ignored if the <a href="https://en.wikipedia.org/wiki/System_Integrity_Protection"><strong>System Integrity Protection (SIP)</strong></a> is enabled.</li>
+</ul>
+<p>All this machinery is required to make an executable that depends on dynamic libraries work even when moved around the filesystem. The opposite is not true: change a dynamic library location and all the programs that depend on it will crash at startup with a dynamic linker error. The variables mentioned above are also often tweaked when distributing executables along with their dynamic libraries in a single package, for example with <a href="https://en.wikipedia.org/wiki/Bundle_%28macOS%29">macOS bundles</a> or <a href="https://en.wikipedia.org/wiki/AppImage">Linux Appimages</a>.</p>
+<h2>ABI compatibility</h2>
+<p>Programs and dynamic libraries talk to eachother in binary, and their dialog is governed by specific rules and conventions known as the <strong>Application Binary Interface (ABI)</strong>. The ABI defines <em>on a binary level</em> how the layout of structures should be, the expected number of parameters a function may take, the expected return types, pointer sizes and many other things — naming conventions for symbols included. A program and a shared library are ABI compatible if they both agree on such rules: ABI compatibility means a program and a dynamic library can interact together without errors.</p>
+<p><a href="https://community.kde.org/Policies/Binary_Compatibility_Issues_With_C%2B%2B#The_Do.27s_and_Don.27ts">Several things can be done</a> to avoid ABI problems when programming a new version of a dynamic library that is already linked by an existing executable. In case the ABI compatibility is broken, the only way to fix it is to recompile the program that depends on it. This way the primary advantage of using shared libraries is lost and additional effort is required by developers and maintainers of the program. Library authors always strive to keep ABI compatibility at all costs to avoid such headaches.</p>
+<h2>Libraries that depend on other libraries</h2>
+<p>This is a common scenario known as <strong>inter-library dependency</strong>. Let's assume library A depends on library B: if B is a static library, all required symbols are resolved and merged into A during A's compilation stage, before shipping it to the public. If B is a dynamic library, symbols will be left as undefined in A for a later resolution. This is the same thing that happens when linking libraries into final executables, after all.</p>
+<p>Let's now consider both A and B as shared libraries and a program that depends only on A. The linker, during the linking stage, will store references only to A, even if library A needs stuff that resides in B. Inspecting the final executable would yield something like this on Linux:</p>
+<pre><code class="lang-lang=none">...
+0x0000000000000001 (NEEDED) Shared library: [liba.so]
+...
+</code></pre>
+<p>There's no trace of B: when the program is run, the dynamic linker will <em>recursively</em> walk through all the required dynamic libraries, starting from those found in the final executable, until all dependencies are met. The libraries are then loaded in memory (if not already present). The same strategy is used on Windows and macOS too.</p>
+<p>Clearly you can't get the list of dynamic dependencies by looking inside the executable alone. Tools like <a href="https://man7.org/linux/man-pages/man1/ldd.1.html">ldd</a> on Linux, <a href="https://github.com/lucasg/Dependencies">Dependencies</a> on Windows and <a href="https://www.unix.com/man-page/osx/1/otool/">otool</a> on macOS are designed to do the dynamic linker's hard work and recursively detect all the dependencies needed. Some of them actually invoke the dynamic linker, which is the same thing as running the program, at least for the very first stage. Their usage is then discouraged if you suspect the executable contains malicious code!</p>
+<h2>Sources</h2>
+<p><a href="https://en.wikipedia.org/wiki/Symbol_%28programming%29">Wikipedia — Symbol (programming)</a><br>
+<a href="https://en.wikipedia.org/wiki/Static_library">Wikipedia — Static library</a><br>
+<a href="https://en.wikipedia.org/wiki/Dynamic_linker">Wikipedia — Dynamic linker</a><br>
+<a href="https://en.wikipedia.org/wiki/Linker_%28computing%29">Wikipedia — Linker (computing)</a><br>
+<a href="https://en.wikipedia.org/wiki/Dynamic-link_library">Wikipedia — Dynamic-link library</a><br>
+<a href="https://eli.thegreenplace.net/2011/11/03/position-independent-code-pic-in-shared-libraries/"> Eli Bendersky's website — Position Independent Code (PIC) in shared libraries</a><br>
+<a href="https://stackoverflow.com/a/1482734/3296421">StackOverflow — How to distribute a Mac OS X with dependent libraries?</a><br>
+<a href="https://cseweb.ucsd.edu/~gbournou/CSE131/the_inside_story_on_shared_libraries_and_dynamic_loading.pdf">The Inside Story on Shared Libraries and Dynamic Loading</a><br>
+<a href="https://tldp.org/HOWTO/Program-Library-HOWTO/index.html">David A. Wheeler — Program Library HOWTO</a><br>
+<a href="http://www.kaizou.org/2015/01/linux-libraries.html">Better understanding Linux secondary dependencies solving with examples</a><br>
+<a href="https://www.man7.org/linux/man-pages/man3/dlopen.3.html">dlopen(3) — Linux manual page</a><br>
+<a href="https://blogs.oracle.com/solaris/inside-elf-symbol-tables-v2">Oracle Solaris Blog — Inside ELF Symbol Tables</a><br>
+<a href="https://www.lurklurk.org/linkers/linkers.html">Beginner's Guide to Linkers</a><br>
+<a href="https://www.linuxjournal.com/article/6463">Linux Journal Linkers — and Loaders</a><br>
+<a href="http://csapp.cs.cmu.edu/2e/ch7-preview.pdf">Computer Systems: A Programmer's Perspective — Chapter 7: Linking</a><br>
+<a href="https://www.cs.swarthmore.edu/~newhall/unixhelp/debuggingtips_C++.html">Compiling, Linking and Debugging Tips for C++</a><br>
+<a href="https://flameeyes.blog/2010/06/20/the-why-and-how-of-rpath/">Flameeyes's Weblog — The why and how of RPATH</a><br>
+<a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling">CMake wiki — RPATH handling</a><br>
+<a href="https://libcxx.llvm.org/docs/UsingLibcxx.html#getting-started">libc++ 12.0 documentation</a><br>
+<a href="https://man7.org/linux/man-pages/man8/ld.so.8.html">ld.so(8) — Linux manual page</a><br>
+<a href="https://www.mikeash.com/pyblog/friday-qa-2009-11-06-linking-and-install-names.html">mikeash.com — Friday Q&amp;A 2009-11-06: Linking and Install Names</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/cmake">CMake</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+				
+
+				<div class="ip-post__comments__add">
+					<form data-id-post="84">
+						<input type="text" placeholder="Your name" maxlength="255" required>
+						<textarea placeholder="Your message" maxlength="2000" required></textarea>
+						<div class="captcha">
+							<div class="g-recaptcha" data-theme="dark" data-sitekey="6LdAYg4UAAAAAJCfgHOmxqOCywp8yGSg8S_B4TAS"></div>
+						</div>
+						<button>
+							<span class="text">Add your comment!</span>
+							<span class="spinner">Saving...</span>
+						</button>
+					</form>
+				</div>
+			</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2020 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

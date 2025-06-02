@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Linear regression with one variable - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Finding the best-fitting straight line through points of a data set.">
+		<meta name="keywords" content="machine learning,supervised learning,unsupervised learning,classification,linear regression,algorithm">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Linear regression with one variable" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/linear-regression-one-variable" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Finding the best-fitting straight line through points of a data set." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/linear-regression-one-variable" />
+<meta name="twitter:title" content="Linear regression with one variable" />
+<meta name="twitter:description" content="Finding the best-fitting straight line through points of a data set." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on April 01, 2016 
+								• updated on November 10, 2019  
+								• ID 33 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Linear regression with one variable</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Finding the best-fitting straight line through points of a data set.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-machine-learning">Introduction to machine learning</a>
+							</span> —
+							<span class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples.</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-function">The gradient descent function</a>
+							</span> —
+							<span class="intro">How to find the minimum of a function using an iterative algorithm.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/gradient-descent-action">The gradient descent in action</a>
+							</span> —
+							<span class="intro">It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/multivariate-linear-regression">Multivariate linear regression</a>
+							</span> —
+							<span class="intro">How to upgrade a linear regression algorithm from one to many input variables.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a>
+							</span> —
+							<span class="intro">A collection of practical tips and tricks to improve the gradient descent process and make it easier to understand.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a>
+							</span> —
+							<span class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a>
+							</span> —
+							<span class="intro">Preparing the logistic regression algorithm for the actual implementation.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/problem-overfitting-machine-learning-algorithms">The problem of overfitting in machine learning algorithms</a>
+							</span> —
+							<span class="intro">Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Linear regression is one of the most famous way to describe your data and make predictions on it. The picture 1. below, borrowed from <a href="http://www.internalpointers.com/post/introduction-machine-learning">the first chapter</a> of this stunning machine learning series, shows the housing prices from a fantasy country somewhere in the world. You are collecting real-estate information because you want to predict the house prices given, say, the size in square feet.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/03/house-feet-price.svg" alt="House prices given their size">
+<div class="caption">1. House prices given their size.</div>
+</div><p>Given your input data, how can you predict any house price outside your initial data set? For example, how much a 1100 square feet house is worth? Linear regression will help answering that question: you shrink your data into a line (the dotted one in the picture above), with a corresponding mathematical equation. If you know the equation of that line, you can find any output (y) given any input (x).</p>
+<h2>Terminology and notations</h2>
+<p>When you gathered your initial data, you actually created the so-called <strong>training set</strong>, which is the set of housing prices. The algorithm's job is to learn from those data to predict prices of new houses. You are using input data to <em>train</em> the program, that's where the name comes from.</p>
+<p>The training set can be summarized in a table, like the one you see below:</p>
+<table>
+<thead><tr>
+<th style="text-align:center">size (feet<sup>2</sup>) <span class="ip-inline">§(x)§</span></th>
+<th style="text-align:center">price ($) <span class="ip-inline">§(y)§</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">815</td>
+<td style="text-align:center">165,000</td>
+</tr>
+<tr>
+<td style="text-align:center">1510</td>
+<td style="text-align:center">310,000</td>
+</tr>
+<tr>
+<td style="text-align:center">2100</td>
+<td style="text-align:center">410,000</td>
+</tr>
+<tr>
+<td style="text-align:center">...</td>
+<td style="text-align:center">...</td>
+</tr>
+</tbody>
+</table>
+<p>The number of training examples, or the number of lines in the table above, are noted as <span class="ip-inline">§m§</span>; the input variable <span class="ip-inline">§x§</span> is the single house size on the left column and <span class="ip-inline">§y§</span> is the output variable, namely the price, on the right column.</p>
+<p>The list <span class="ip-inline">§(x, y)§</span> denotes a single, generic training example, while <span class="ip-inline">§(x^{(i)}, y^{(i)})§</span> represents a specific training example. So if I write <span class="ip-inline">§(x^{(2)}, y^{(2)})§</span> I'm referring to the second row in the table above, where <span class="ip-inline">§x^{(2)} = 1510§</span> and <span class="ip-inline">§y^{(2)} = 310,000§</span>.</p>
+<h3>Naming the algorithm parts</h3>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/04/linear-regression-scheme.png" alt="Linear regression algorithm.">
+<div class="caption">2. Overview of a linear regression algorithm.</div>
+</div><p>The <strong>training set</strong> of housing prices is fed into the <strong>learning algorithm</strong>. Its main job is to produce a <strong>function</strong>, which by convention is called <span class="ip-inline">§h§</span> (for <em>hypothesis</em>). You then use that hypothesis function to output the estimate house price <span class="ip-inline">§y§</span>, by giving it the size of a house in input <span class="ip-inline">§x§</span>.</p>
+<h3>The hypothesis function</h3>
+<p>The hypothesis function must have a formula, like any other function in the world. That is:</p>
+<p>§h_theta(x) = theta_0 + theta_1 (x)§</p>
+<p>Theta's (<span class="ip-inline">§theta_i§</span> in general) are the <strong>parameters</strong> of the function. Usually the theta subscript gets dropped and the hypothesis function is simply written as <span class="ip-inline">§h(x)§</span>.</p>
+<p>That formula might look scary, but if you think about it it's nothing fancier than the traditional equation of a line, except that we use <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span> instead of <span class="ip-inline">§m§</span> and <span class="ip-inline">§q§</span>. Do you remember?</p>
+<p>§ f(x) = q + mx §</p>
+<p>In fact the hypothesis function is just the equation of the dotted line you can see in the picture 1.</p>
+<p>In our humble hypothesis function there is only one variable, that is <span class="ip-inline">§x§</span>. For this reason our task is often called <strong>linear regression with one variable</strong>. Experts call it also <strong>univariate linear regression</strong>, where <em>univariate</em> means "one variable".</p>
+<h2>The cost function: a mathematical intuition</h2>
+<p>Well, at this point we know that there's a hypothesis function to be found. More precisely we have to find the parameters <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span> so that the hypothesis function best fits the training data. If you recall how the equation of a line works, those two parameters control the slope and the height of the line. By tweaking <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span> we want to find a line that represents at best our data. Picture 3. below shows what I mean:</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/03/values-of-theta-linear-regression.svg" alt="Different values of thetas for the hypothesis function">
+<div class="caption">3. Varying the values of <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span> provide different outcomes: from good (left) to bad (right).</div>
+</div><p>We definitely want something like the first example in the picture above. So how to find proper values for <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span>? You certainly recall that in our training set we have several examples where we know the size of the house <span class="ip-inline">§x§</span> and the actual price of the house <span class="ip-inline">§y§</span>. We know those prices and sizes because we previously took a survey for those data. So the idea in a nutshell: let's try to choose the hypothesis function parameters so that at least in the <em>existing</em> training set, given the <span class="ip-inline">§x§</span> as input parameter to the hypothesis function we make reasonably accurate predictions for the <span class="ip-inline">§y§</span> values. Once we are satisfied, we can use the hypothesis function with its pretty parameters to make predictions on <em>new</em> input data.</p>
+<p>From a mathematical point of view I want that, for each <span class="ip-inline">§i§</span>-th point in my data set, the difference <span class="ip-inline">§h_theta(x^{(i)}) - y^{(i)}§</span> is very small. Here <span class="ip-inline">§h_theta(x^{(i)})§</span> is the prediction of the hypothesis when it is input the size of house number <span class="ip-inline">§i§</span>, while <span class="ip-inline">§y^{(i)}§</span> is the actual price of the house number <span class="ip-inline">§i§</span>. If that difference is small, it means that the hypothesis has made an accurate prediction, because it's similar to the actual data.</p>
+<p>The operation I described so far is a part of the so-called <strong>mean squared error function (MSE)</strong>, a function that does exactly what we want: it measures how close a fitted line is to some data points. The smaller the MSE, the closer the fit is to the data. Actually there are many other functions that work well for such task, but the MSE is the most commonly used one for regression problems.</p>
+<p>If I plug our data into the MSE function, our final formula looks like that:</p>
+<p>§text{MSE} = 1/{2m} sum_{i=1}^{m} (h_theta(x^{(i)}) - y^{(i)})^2§</p>
+<p>Note the <span class="ip-inline">§1/{2m}§</span> and the summation part: we are properly computing a <a href="http://www.internalpointers.com/post/averages-mean-median-mode-range">mean</a>. That 2 at the denominator will ease some calculations in future steps. Also, the squaring is done so negative values do not cancel positive values.</p>
+<p>Let me now expand the above equation. Since</p>
+<p>§h_theta(x^{(i)}) = theta_0 + theta_1x^{(i)}§</p>
+<p>then</p>
+<p>§text{MSE} = 1/{2m} sum_{i=1}^{m} (theta_0 + theta_1x^{(i)} - y^{(i)})^2§</p>
+<p>By convention we would define a <strong>cost function</strong> (aka <strong>loss function</strong>) <span class="ip-inline">§J§</span> that is just the above equation written more compact:</p>
+<p><span>§J(theta_0, theta_1) = 1/{2m} sum_{i=1}^{m} (theta_0 + theta_1x^{(i)} - y^{(i)})^2§</span></p>
+<p>Now, we want to find good values of <span class="ip-inline">§theta_0§</span> and <span class="ip-inline">§theta_1§</span>, so good that the above cost function can produce the best possible values, namely the smallest ones (because small values mean less errors). This is an <strong>optimization problem</strong>: the problem of finding the <em>best</em> solution from all feasible solutions. It can be written as</p>
+<p><span>§stackrel"minimize"{theta_0, theta_1}\ J(theta_0, theta_1)§</span></p>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Applying the cost function</h2>
+<p>Let's now feed our theoretical function with some real data. To better understand how the cost function works I will temporaly set <span class="ip-inline">§theta_0 = 0§</span> so that our hypothesis function looks like</p>
+<p>§h_theta(x) = theta_1x§</p>
+<p>and the minimization task like</p>
+<p><span>§stackrel"minimize"{theta_1}\ J(theta_1)§</span></p>
+<p>This will help a lot with cost function visualization: keeping <span class="ip-inline">§theta_0 != 0§</span> would require a three-dimentional plot that initially would be a source of annoyance. Just remember: with <span class="ip-inline">§theta_0 = 0§</span> the hypothesis function becomes a line passing through the origin <span class="ip-inline">§(0, 0)§</span>, while <span class="ip-inline">§theta_1§</span> controls the slope.</p>
+<h3>Cost function with one variable</h3>
+<p>Picture 4. shows the relationship between the hypothesis function and the cost function. Let's suppose that our data is made of three points as you may see in the leftmost plot.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/03/cost-function-one-variable.svg" alt="Hypothesis function and cost function with one variable">
+<div class="caption">4. Hypothesis function (left) and cost function (right) with one variable.</div>
+</div><p>Changing the values of <span class="ip-inline">§theta_1§</span>, namely changing the slope of the hypothesis function produces points in the cost function.</p>
+<p>For example, with <span class="ip-inline">§theta_1 = 1§</span>:</p>
+<p><span>§J(theta_1 = 1) = 1/{2m} sum_{i=1}^{m} (h_theta(x^{i}) - y^{(i)})^2§</span></p>
+<p>since <span class="ip-inline">§theta_0 = 0§</span> I can write the hypothesis function like that:</p>
+<p><span>§J(theta_1 = 1) = 1/{2m} sum_{i=1}^{m} (theta_1(x^{i}) - y^{(i)})^2§</span></p>
+<p>Now let's plug some numbers in:</p>
+<p><span>§J(theta_1 = 1) = 1/6 [(1*1 - 1)^2 + (1*2 - 2)^2 + (1*3 - 3)^2]§</span></p>
+<p><span>§J(theta_1 = 1) = 1/6 [(0)^2 + (0)^2 + (0)^2]§</span></p>
+<p><span>§J(theta_1 = 1) = 0§</span></p>
+<p>In words: for <span class="ip-inline">§theta_1 = 1§</span>, the cost function has produced a value of 0. Let's try with the other two values:</p>
+<p><span>§J(theta_1=0.5) = 1/6 [(0.5*1 - 1)^2 + (0.5*2 - 2)^2 + (0.5*3 - 3)^2] ~= 0.6§</span>
+<span>§J(theta_1=0) = 1/6 [(0*1 - 1)^2 + (0*2 - 2)^2 + (0*3 - 3)^2] ~= 2.3§</span></p>
+<p>In picture 4. you may find the values 0, 0.6 and 2.3 plotted as full dots on the cost function. The empty ones are values from other theta's, not shown in the hypothesis function but computed separately: they reveal that the cost function is actually a parabola with its minimum at 0.</p>
+<p>You can read the whole picture in reverse: every point of the cost function corresponds to a specific slope of the hypothesis function. We decided to take the best value, namely the minimum of the cost function. Looking at the curve of the cost function, the value that minimizes <span class="ip-inline">§J(theta_1)§</span> is <span class="ip-inline">§theta_1 = 1§</span>: that value means the best slope of the hypothesis function for our particular training set.</p>
+<h3>Cost function with two (or more) variables</h3>
+<p>I previously simplified the problem by setting <span class="ip-inline">§theta_0§</span> to zero, a decision that led to a 2-dimensional cost function: great for learning purposes but not so realistic. In the real world 3-dimensional (and even more!) cost functions are quite common. Fortunately there are some neat ways to visualize them without losing too much information and mental sanity.</p>
+<p>The first approach is to just draw the actual function in three dimensions, as shown in picture 5. Just note that, not knowing the exact formula yet, axes values are more or less random.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/04/three-dimensional-cost-function.jpg" alt="3-dimensional cost function">
+<div class="caption">5. Three-dimensional cost function.</div>
+</div><p>It looks like a cup and the optimization problem consists in finding the lowest point on the bottom edge.</p>
+<p>Sometimes, when the picture becomes too messy, it's common to switch to another representation: the <strong>contour plot</strong>. A contour plot is a graphical technique for representing a 3-dimensional surface by plotting constant horizontal slices, called <em>contours</em>, on a 2-dimensional format. Figure 6. shows what I'm talking about.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2016/04/contour-plot-cost-function.jpg" alt="Contour plot of cost function">
+<div class="caption">6. Contour plot of cost function.</div>
+</div><p>It's now much more easy to read, don't you think? Our optimization task now requires to find the exact center of that figure, where <span class="ip-inline">§theta_0 = theta_1 = 0§</span>.</p>
+<p>However so far we have just guessed for the best values of theta's, simply by looking at the function's plot. What we actually want is our program to find those values that minimize the cost function. In the next chapters we will see some proper algorithms to do that.</p>
+<h2>Sources</h2>
+<p>Machine learning @ Coursera - <em>Model representation</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/db3jS/model-representation">link</a>)<br>
+Machine learning @ Coursera - <em>Cost function</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/rkTp3/cost-function">link</a>)<br>
+Machine learning @ Coursera - <em>Cost function intuition 1</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/N09c6/cost-function-intuition-i">link</a>)<br>
+Machine learning @ Coursera - <em>Cost function intuition 2</em> (<a href="https://www.coursera.org/learn/machine-learning/lecture/nwpe2/cost-function-intuition-ii">link</a>)<br>
+Wikipedia - <em>Mean squared error</em> (<a href="https://en.wikipedia.org/wiki/Mean_squared_error">link</a>)<br>
+Wikipedia - <em>Optimization problem</em> (<a href="https://en.wikipedia.org/wiki/Optimization_problem">link</a>)<br>
+Wikipedia - <em>Loss function</em> (<a href="https://en.wikipedia.org/wiki/Loss_function">link</a>)<br>
+NIST/SEMATECH e-Handbook of Statistical Methods - <em>Contour plot</em> (<a href="http://www.itl.nist.gov/div898/handbook/eda/section3/contour.htm">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/machine-learning">machine learning</a>
+				 • 								<a class="ip-tag" href="/tag/supervised-learning">supervised learning</a>
+				 • 								<a class="ip-tag" href="/tag/unsupervised-learning">unsupervised learning</a>
+				 • 								<a class="ip-tag" href="/tag/classification">classification</a>
+				 • 								<a class="ip-tag" href="/tag/linear-regression">linear regression</a>
+				 • 								<a class="ip-tag" href="/tag/algorithm">algorithm</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/introduction-machine-learning">Introduction to machine learning</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/gradient-descent-function">The gradient descent function</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Burak</span> on 
+							<span class="date">October 01, 2018 at 15:27</span>
+						</div> 
+						<div class="body">This cleared everything up for me. Thank you very much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anne Martinez</span> on 
+							<span class="date">January 02, 2019 at 20:14</span>
+						</div> 
+						<div class="body">You make this so easy to understand! I love the way you break it down :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">From India</span> on 
+							<span class="date">December 26, 2019 at 18:05</span>
+						</div> 
+						<div class="body">This is some great resource to read along with Andrew Ng's course. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Wesley</span> on 
+							<span class="date">March 21, 2020 at 20:15</span>
+						</div> 
+						<div class="body">Great introduction into the intuition behind cost function. I didn't realize that you just minimize MSE! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">vysakh</span> on 
+							<span class="date">April 14, 2020 at 20:31</span>
+						</div> 
+						<div class="body">great notes,cleared all my doubts..Thank u </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Socialbee</span> on 
+							<span class="date">April 27, 2020 at 01:11</span>
+						</div> 
+						<div class="body">Glad I found this page. This cleared all the doubts of Andrew's lecture on linear regression with one variable. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Vaibhav</span> on 
+							<span class="date">April 29, 2020 at 07:09</span>
+						</div> 
+						<div class="body">Great job</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Alekhya</span> on 
+							<span class="date">June 19, 2021 at 19:44</span>
+						</div> 
+						<div class="body">Explained it in easier way. Thank god i found this. </div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

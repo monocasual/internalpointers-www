@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>A beginner's look at smart pointers in modern C++ - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="New (!) ways of memory management.">
+		<meta name="keywords" content="C++,C++11,C++14,memory,smart pointers">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="A beginner's look at smart pointers in modern C++" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/beginner-s-look-smart-pointers-modern-c" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="New (!) ways of memory management." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/beginner-s-look-smart-pointers-modern-c" />
+<meta name="twitter:title" content="A beginner's look at smart pointers in modern C++" />
+<meta name="twitter:description" content="New (!) ways of memory management." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on October 23, 2018 
+								• updated on November 01, 2018  
+								• ID 67 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>A beginner's look at smart pointers in modern C++</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>New (!) ways of memory management.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<p>Pointers in C and C++ languages are wild beasts. They are extremely powerful, yet so dangerous: a little oversight may wreak havoc on your whole app. The problem: their management is completely left up to you. Every dynamically allocated object (i.e. <code>new T</code>) must be followed by a manual deallocation (i.e. <code>delete T</code>). Forget to do that and you will end up with a nice <strong>memory leak</strong>.</p>
+<p>Moreover, dynamically allocated arrays (i.e. <code>new T[N]</code>) require to be deleted with a different operator (i.e. <code>delete[]</code>). This forces you to mentally keep track of what you have allocated, and call the right operator accordingly. Using the wrong form results in <strong><a href="https://en.wikipedia.org/wiki/Undefined_behavior">undefined behavior</a></strong>, something you really want to avoid at all costs when working in C++.</p>
+<p>Another subtle problem lies in <strong>ownership</strong>. A third-party function returns a pointer: is it dynamically-allocated data? If so, who is responsible for the cleanup? There is no way to infer such information by simply looking at the return type.</p>
+<h2>The idea behind smart pointers</h2>
+<p><strong>Smart pointers</strong> were born to fix the annoyances mentioned above. They basically provide <strong>automatic memory management</strong>: when a smart pointer is no longer in use, that is when it goes out of scope, the memory it points to is deallocated automatically. Traditional pointers are now also known as <strong>raw pointers</strong>.</p>
+<p>I like to think of smart pointers as boxes that hold the dynamic data. In fact they are just classes that wrap the raw pointer in their bowels and overload the <code>-&gt;</code> and <code>*</code> operators. Thanks to this trick a smart pointer offers the same syntax of a raw one. When a smart pointer goes out of scope, its destructor gets triggered and the memory cleanup is performed. This technique is called <strong>Resource Acquisition Is Initialization (RAII)</strong>: a class wrapped around a dynamic resource (file, socket, database connection, allocated memory, ...) that gets properly deleted/closed in its destructor. This way you are sure to avoid resource leaks.</p>
+<p>Smart pointers can be seen as a rudimentary form of <strong><a href="https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29">garbage collection</a></strong>: a kind of automatic memory management where object are automatically deleted when are no longer in use by the program.</p>
+<p>Bonus point: in case a third-party function returns a smart pointer, you can quickly deduce its type, what you can do with it and how the data lifetime is managed.</p>
+<h2>Types of smart pointers in modern C++</h2>
+<p>C++11 has introduced three types of smart pointers, all of them defined in the <code>&lt;memory&gt;</code> header from the Standard Library:</p>
+<ul>
+<li><code>std::unique_ptr</code> — a smart pointer that owns a dynamically allocated resource;</li>
+<li><code>std::shared_ptr</code> — a smart pointer that owns a shared dynamically allocated resource. Several <code>std::shared_ptr</code>s may own the same resource and an internal counter keeps track of them;</li>
+<li><code>std::weak_ptr</code> — like a <code>std::shared_ptr</code>, but it doesn't increment the counter.</li>
+</ul>
+<p>You might have also heard of <code>std::auto_ptr</code>. This is a thing from the past, now deprecated: forget about it.</p>
+<p>Things look confusing right now, especially which type of smart pointer one should use. Don't worry, I'm going to cover them all in the following paragraphs and in the next episode. Let's dig deeper!</p>
+<h2>Understanding <code>std::unique_ptr</code>: the lone one</h2>
+<p>A <code>std::unique_ptr</code> owns of the object it points to and no other smart pointers can point to it. When the <code>std::unique_ptr</code> goes out of scope, the object is deleted. This is useful when you are working with a temporary, dynamically-allocated resource that can get destroyed once out of scope.</p>
+<h3>How to construct a <code>std::unique_ptr</code></h3>
+<p>A <code>std::unique_ptr</code> is created like this:</p>
+<pre><code class="lang-nolang">std::unique_ptr&lt;Type&gt; p(new Type);
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;int&gt;    p1(new int);
+std::unique_ptr&lt;int[]&gt;  p2(new int[50]);
+std::unique_ptr&lt;Object&gt; p3(new Object(&quot;Lamp&quot;));
+</code></pre>
+<p>It is also possible to construct <code>std::unique_ptr</code>s with the help of the special function <code>std::make_unique</code>, like this:</p>
+<pre><code class="lang-nolang">std::unique_ptr&lt;Type&gt; p = std::make_unique&lt;Type&gt;(...size or parameters...);
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">std::unique_ptr&lt;int&gt;    p1 = std::make_unique&lt;int&gt;();
+std::unique_ptr&lt;int[]&gt;  p2 = std::make_unique&lt;int[]&gt;(50);
+std::unique_ptr&lt;Object&gt; p3 = std::make_unique&lt;Object&gt;(&quot;Lamp&quot;);
+</code></pre>
+<p>If you can, always prefer to allocate objects using <code>std::make_unique</code>. I'll show you why in the last section of this article.</p>
+<h3><code>std::unique_ptr</code> in action</h3>
+<p>The main feature of this smart pointer is to vanish when no longer in use. Consider this:</p>
+<pre><code class="lang-c++">void compute()
+{
+    std::unique_ptr&lt;int[]&gt; data = std::make_unique&lt;int[]&gt;(1024);
+    /* do some meaningful computation on your data...*/
+} // `data` goes out of scope here: it is automatically destroyed
+
+int main()
+{
+    compute();
+}
+</code></pre>
+<p>The smart pointer goes out of scope when the <code>compute()</code> function reaches the end of its body. It's destructor is invoked and the memory cleaned up automatically. No need to take care of anything else.</p>
+<h3>One resource, one <code>std::unique_ptr</code></h3>
+<p>I could say that <code>std::unique_ptr</code> is very jealous of the dynamic object it holds: you can't have multiple references to its dynamic data. For example:</p>
+<pre><code class="lang-c++">void compute(std::unique_ptr&lt;int[]&gt; p) { ... } 
+
+int main()
+{
+    std::unique_ptr&lt;int[]&gt; ptr = std::make_unique&lt;int[]&gt;(1024);
+    std::unique_ptr&lt;int[]&gt; ptr_copy = ptr; // ERROR! Copy is not allowed
+    compute(ptr);  // ERROR! `ptr` is passed by copy, and copy is not allowed
+}
+</code></pre>
+<p>This is done on purpose and it's an important feature of <code>std::unique_ptr</code>: there can be at most one <code>std::unique_ptr</code> pointing at any one resource. This prevents the pointer from being incorrectly deleted multiple times.</p>
+<p>Technically this happens because a <code>std::unique_ptr</code> doesn't have a <strong>copy constructor</strong>: it might be obvious to you if you are familiar with <strong>move semantics</strong> (I've written <a href="https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners">an introductory article about it</a> if you aren't). In the second part of this article I will show you how to pass smart pointers around the right way.</p>
+<h2>Understanding <code>std::shared_ptr</code>: the convivial one</h2>
+<p>A <code>std::shared_ptr</code> owns the object it points to but, unlike <code>std::unique_ptr</code>, it allows for multiple references. A special internal counter is decreased each time a <code>std::shared_ptr</code> pointing to the same resource goes out of scope. This technique is called <strong>reference counting</strong>. When the very last one is destroyed the counter goes to zero and the data will be deallocated.</p>
+<p>This type of smart pointer is useful when you want to share your dynamically-allocated data around, the same way you would do with raw pointers or references.</p>
+<h3>How to construct a <code>std::shared_ptr</code></h3>
+<p>A <code>std::shared_ptr</code> is constructed like this:</p>
+<pre><code class="lang-nolang">std::shared_ptr&lt;Type&gt; p(new Type);
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">std::shared_ptr&lt;int&gt;    p1(new int);
+std::shared_ptr&lt;Object&gt; p2(new Object(&quot;Lamp&quot;));
+</code></pre>
+<p>There is an alternate way to build a <code>std::shared_ptr</code>, powered by the special function <code>std::make_shared</code>:</p>
+<pre><code class="lang-nolang">std::shared_ptr&lt;Type&gt; p = std::make_shared&lt;Type&gt;(...parameters...);
+</code></pre>
+<p>For example:</p>
+<pre><code class="lang-c++">std::shared_ptr&lt;int&gt;    p1 = std::make_shared&lt;int&gt;();
+std::shared_ptr&lt;Object&gt; p2 = std::make_shared&lt;Object&gt;(&quot;Lamp&quot;);
+</code></pre>
+<p>This should be the preferred way to construct this kind of smart pointer. I'll show you why in the last section of this article.</p>
+<h3>Issues with arrays</h3>
+<p>Until C++17 there is no easy way to build a <code>std::shared_ptr</code> holding an array. Prior to C++17 this smart pointer always calls <code>delete</code> by default (and not <code>delete[]</code>) on its resource: you can create a workaround by using a <strong>custom deleter</strong>. One of the many <code>std::shared_ptr</code> constructors takes a lambda as second parameter, where you manually delete the object it owns. For example:</p>
+<pre><code class="lang-c++">std::shared_ptr&lt;int[]&gt; p2(new int[16], [] (int* i) { 
+  delete[] i; // Custom delete
+});
+</code></pre>
+<p>Unfortunately there's no way to do this when using <code>std::make_shared</code>.</p>
+<h3><code>std::shared_ptr</code> in action</h3>
+<p>One of the main features of <code>std::shared_ptr</code> is the ability to track how many pointers refer to the same resource. You can get information on the number or references with the method <code>use_count()</code>. Consider this:</p>
+<pre><code class="lang-c++">void compute()
+{
+  std::shared_ptr&lt;int&gt; ptr = std::make_shared&lt;int&gt;(100);
+  // ptr.use_count() == 1
+  std::shared_ptr&lt;int&gt; ptr_copy = ptr;   // Make a copy: with shared_ptr we can!
+  // ptr.use_count() == 2
+  // ptr_copy.use_count() == 2, it&#39;s the same underlying data after all
+} // `ptr` and `ptr_copy` go out of scope here. No more references to the 
+  // original data (i.e. use_count() == 0), so it is automatically cleaned up.
+
+int main()
+{
+  compute();
+}
+</code></pre>
+<p>Notice how both <code>ptr</code> and <code>ptr_copy</code> go out of scope at the end of the function, bringing the reference count down to zero. At that point, the destructor of the last object detects that there aren't any more references around and triggers the memory cleanup.</p>
+<h3>One resource, many <code>std::shared_ptr</code>. Mind the circular references!</h3>
+<p>The power of multiple references may lead to nasty surprises. Say I'm writing a game where a player has another player as companion, like this:</p>
+<pre><code class="lang-c++">struct Player
+{
+  std::shared_ptr&lt;Player&gt; companion;
+  ~Player() { std::cout &lt;&lt; &quot;~Player\n&quot;; }
+};
+
+int main()
+{
+  std::shared_ptr&lt;Player&gt; jasmine = std::make_shared&lt;Player&gt;();
+  std::shared_ptr&lt;Player&gt; albert  = std::make_shared&lt;Player&gt;();
+
+  jasmine-&gt;companion = albert; // (1)
+  albert-&gt;companion  = jasmine; // (2)
+}
+</code></pre>
+<p>Makes sense, doesn't it? Unfortunately, I have just created the so-called <strong>circular reference</strong>. At the beginning of my program I create two smart pointers <code>jasmine</code> and <code>albert</code> that store dynamically-created objects: let's call this dynamic data <em>jasmine-data</em> and <em>albert-data</em> to make things clearer.</p>
+<p>Then, in (1) I give <code>jasmine</code> a pointer to <em>albert-data</em>, while in (2) <code>albert</code> holds a pointer to <em>jasmine-data</em>. This is like giving each player a companion.</p>
+<p>When <code>jasmine</code> goes out of scope at the end of the program, its destructor can't cleanup the memory: there is still one smart pointer pointing at <em>jasmine-data</em>, that is <code>albert-&gt;companion</code>. Likewise, when <code>albert</code> goes out of scope at the end of the program, its destructor can't cleanup the memory: a reference to <em>albert-data</em> still lives through <code>jasmine-&gt;companion</code>. At this point the program just quits without freeing memory: a memory leak in all its splendor. If you run the snippet above you will notice how the <code>~Player()</code> will never get called.</p>
+<p>This is not a huge problem here, as the operating system will take care of cleaning up the memory for you. However you don't really want to have such circular dependencies (i.e. memory leaks) in the middle of your program. Fortunately the last type of smart pointer will come to the rescue.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Understanding <code>std::weak_ptr</code>: the shallow one</h2>
+<p>A <code>std::weak_ptr</code> is basically a <code>std::shared_ptr</code> that doesn't increase the reference count. It is defined as a smart pointer that holds a <strong>non-owning reference</strong>, or a <strong>weak reference</strong>, to an object that is managed by another <code>std::shared_ptr</code>.</p>
+<p>This smart pointer is useful to solve some annoying problems that you can't fix with raw pointers. We will see how shortly.</p>
+<h3>How to construct a <code>std::weak_ptr</code></h3>
+<p>You can only create a <code>std::weak_ptr</code> out of a <code>std::shared_ptr</code> or another <code>std::weak_ptr</code>. For example:</p>
+<pre><code class="lang-c++">std::shared_ptr&lt;int&gt; p_shared = std::make_shared&lt;int&gt;(100);
+std::weak_ptr&lt;int&gt;   p_weak1(p_shared);
+std::weak_ptr&lt;int&gt;   p_weak2(p_weak1);
+</code></pre>
+<p>In the example above <code>p_weak1</code> and <code>p_weak2</code> point to the same dynamic data owned by <code>p_shared</code>, but the reference counter doesn't grow.</p>
+<h3><code>std::weak_ptr</code> in action</h3>
+<p>A <code>std::weak_ptr</code> is a sort of <em>inspector</em> on the <code>std::shared_ptr</code> it depends on. You have to convert it to a <code>std::shared_ptr</code> first with the <code>lock()</code> method if you really want to work with the actual object:</p>
+<pre><code class="lang-c++">std::shared_ptr&lt;int&gt; p_shared = std::make_shared&lt;int&gt;(100);
+std::weak_ptr&lt;int&gt;   p_weak(p_shared);
+// ...
+std::shared_ptr&lt;int&gt; p_shared_orig = p_weak.lock();
+//
+</code></pre>
+<p>Of course <code>p_shared_orig</code> might be null in case <code>p_shared</code> got deleted somewhere else.</p>
+<h3><code>std::weak_ptr</code> is a problem solver</h3>
+<p>A <code>std::weak_ptr</code> makes the problem of <strong>dangling pointers</strong>, pointers that point to already deleted data, super easy to solve. It provides the <code>expired()</code> method which checks whether the referenced object was already deleted. If <code>expired() == true</code>, the original object has been deleted somewhere and you can act accordingly. This is something you can't do with raw pointers.</p>
+<p>As I said before, a <code>std::weak_ptr</code> is also used to break a circular reference. Let's go back to the <code>Player</code> example above and change the member variable from <code>std::shared_ptr&lt;Player&gt; companion</code> to <code>std::weak_ptr&lt;Player&gt; companion</code>. In this case we used a <code>std::weak_ptr</code> to dissolve the entangled ownership. The actual dynamically-allocated data stays in the main body, while each <code>Player</code> has now a weak reference to it. Run the code with the change and you will see how the destructor gets called twice, correctly.</p>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Final notes and thoughts on smart pointers</h2>
+<p>In this article I wanted to sum up the different types of smart pointers in C++ and their properties. In the next one I will show you how to make use of these tools in a real application. Let's finish this overview with some additional thoughts.</p>
+<h3>I like smart pointers. Should I get rid of <code>new</code>/<code>delete</code> forever?</h3>
+<p>Sometimes you do want to rely on the <code>new</code>/<code>delete</code> twins, for example:</p>
+<ul>
+<li>when you need a custom deleter, as we saw earlier when we added support for arrays in <code>std::shared_ptr</code>;</li>
+<li>when writing your own containers and you want to manually manage the memory;</li>
+<li>with the so-called <strong>in-place construction</strong>, better known as <strong>placement new</strong>: a new way to construct an object on memory that's already allocated. More information <a href="https://stackoverflow.com/a/222578/3296421">here</a>.</li>
+</ul>
+<h3>Are smart pointers slower than raw ones?</h3>
+<p>According to various sources (<a href="https://stackoverflow.com/questions/22295665/how-much-is-the-overhead-of-smart-pointers-compared-to-normal-pointers-in-c">here</a> and <a href="http://blog.davidecoppola.com/2016/10/performance-of-raw-pointers-vs-smart-pointers-in-cpp/">here</a>), performance of smart pointers should be close to raw ones. A little speed penalty might be present in <code>std::shared_ptr</code> due to the internal reference counting. All in all, there is some overhead, but it shouldn't make the code slow unless you continuously create and destroy smart pointers.</p>
+<h3>The rationale behind <code>std::make_unique</code> and <code>std::make_shared</code></h3>
+<p>This alternate way of building smart pointers provides two advantages. First of all, it lets us forget about the <code>new</code> keyword. When working with smart pointers we want to get rid of the <code>new</code>/<code>delete</code> evil combo, right? Secondly, it makes your code safe against exceptions. Consider calling a function that takes two smart pointers in input, like this:</p>
+<pre><code class="lang-c++">void function(std::unique_ptr&lt;A&gt;(new A()), std::unique_ptr&lt;B&gt;(new B())) { ... }
+</code></pre>
+<p>Suppose that <code>new A()</code> succeeds, but <code>new B()</code> throws an exception: you catch it to resume the normal execution of your program. Unfortunately, the C++ standard does not require that object <code>A</code> gets destroyed and its memory deallocated: memory silently leaks and there's no way to clean it up. By wrapping <code>A</code> and <code>B</code> into <code>std::make_unique</code>s you are sure the leak will not occur:</p>
+<pre><code class="lang-c++">void function(std::make_unique&lt;A&gt;(), std::make_unique&lt;B&gt;()) { ... }
+</code></pre>
+<p>The point here is that <code>std::make_unique&lt;A&gt;</code> and <code>std::make_unique&lt;B&gt;</code> are now <em>temporary objects</em>, and cleanup of temporary objects is correctly specified in the C++ standard: their destructors will be triggered and the memory freed. So if you can, always prefer to allocate objects using <code>std::make_unique</code> and <code>std::make_shared</code>.</p>
+<h2>Sources</h2>
+<p>cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/unique_ptr">std::unique_ptr</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared">std::make_shared</a><br>
+cppreference.com - <a href="https://en.cppreference.com/w/cpp/memory/weak_ptr">std::weak_ptr</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Smart_pointer">Smart pointer</a><br>
+Rufflewind - <a href="https://rufflewind.com/2016-03-05/unique-ptr">A basic introduction to unique_ptr</a><br>
+IBM - <a href="https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/cplr155.htm">Stack unwinding</a><br>
+Herb Sutter - <a href="https://herbsutter.com/gotw/_102/">GotW #102: Exception-Safe Function Calls</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/37514509/advantages-of-using-stdmake-unique-over-new-operator">Advantages of using std::make_unique over new operator</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/13061979/shared-ptr-to-an-array-should-it-be-used">shared_ptr to an array: should it be used?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/12030650/when-is-stdweak-ptr-useful">When is std::weak_ptr useful?</a><br>
+StackOverflow - <a href="https://stackoverflow.com/questions/27085782/how-to-break-shared-ptr-cyclic-reference-using-weak-ptr">How to break shared_ptr cyclic reference using weak_ptr</a></p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/c">C++</a>
+				 • 								<a class="ip-tag" href="/tag/c-11">C++11</a>
+				 • 								<a class="ip-tag" href="/tag/c-14">C++14</a>
+				 • 								<a class="ip-tag" href="/tag/memory">memory</a>
+				 • 								<a class="ip-tag" href="/tag/smart-pointers">smart pointers</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Marc Panther</span> on 
+							<span class="date">October 29, 2018 at 11:27</span>
+						</div> 
+						<div class="body">weak_ptr feels just like regular pointers.  Those working in pre-c++11 will know how to set a raw pointer to NULL as a habit, and using "if (ptr)" to check if the ptr is valid.  Why not just use raw pointers for these cases, and no introduce another syntatic sugar like weak_ptr?</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">barteroff</span> on 
+							<span class="date">October 30, 2018 at 19:37</span>
+						</div> 
+						<div class="body">Hi there! Thanks for the nice introduction to the smart pointers! One thing though, make_shared was introduced since C++11.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">▲</span> on 
+							<span class="date">November 01, 2018 at 18:31</span>
+						</div> 
+						<div class="body">Thank you @barteroff, fixed!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">▲</span> on 
+							<span class="date">November 01, 2018 at 18:35</span>
+						</div> 
+						<div class="body">@Marc Panther I guess that weak_ptr's feel like a natural companion of shared_ptr's given the purpose they serve... In addition to this, with raw pointers you are missing the useful weak_ptr::expired() method that checks whether the referenced object has been already deleted.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Robert Andrzejuk</span> on 
+							<span class="date">November 26, 2018 at 18:04</span>
+						</div> 
+						<div class="body">@MarcPanther weak_ptr is a companion to shared_ptr, to be used to eliminate dependancy cycles.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Khaled Waleed</span> on 
+							<span class="date">April 18, 2019 at 18:56</span>
+						</div> 
+						<div class="body">Amazing article, Thank you very much.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">zipzap</span> on 
+							<span class="date">April 19, 2019 at 03:34</span>
+						</div> 
+						<div class="body">good</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Parminder Dhesi</span> on 
+							<span class="date">June 13, 2019 at 20:28</span>
+						</div> 
+						<div class="body">Nice and subtle explainaton. Please keep up the good work !</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">chainer</span> on 
+							<span class="date">July 04, 2019 at 20:59</span>
+						</div> 
+						<div class="body">Many thanks for your articles. Your explanations are very helpful and good to follow.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Brian</span> on 
+							<span class="date">July 06, 2019 at 01:58</span>
+						</div> 
+						<div class="body">Calling your function with two unique pointers is undefined behavior until C++17.  Prior to that, the order of initialization was undefined such that the compiler could new the first pointer, new the second, throw, without ever wrapping the first in a unique_ptr, resulting in a leak.  The C++17 standard guarantees the entire expression in the first argument is evaluated before moving to the second.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">July 10, 2019 at 15:07</span>
+						</div> 
+						<div class="body">@Brian thanks for pointing that out!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Grace</span> on 
+							<span class="date">August 14, 2019 at 19:56</span>
+						</div> 
+						<div class="body">THANK YOU!!!!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Milind</span> on 
+							<span class="date">August 16, 2019 at 06:09</span>
+						</div> 
+						<div class="body">Let me admit , one of the cleanest , to the point and no non sense blog I have ever came across . I have saved it in my bookmark :) (its worth)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Paulus Of Tall</span> on 
+							<span class="date">September 06, 2019 at 11:24</span>
+						</div> 
+						<div class="body">Thank you, this is clean, concise and to the point. You explain this perfectly and have removed my fear of smart pointers. Off to read more of your site now :D</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">taiBsu</span> on 
+							<span class="date">November 14, 2019 at 13:24</span>
+						</div> 
+						<div class="body">Thanks a lot for that blog! Perfect descriptions.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Nail</span> on 
+							<span class="date">November 24, 2019 at 21:22</span>
+						</div> 
+						<div class="body">Great and well explained tutorial!<br />
+Thanks a lot!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Sandhya</span> on 
+							<span class="date">February 26, 2020 at 11:55</span>
+						</div> 
+						<div class="body">Good Content. very userful.<br />
+Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ross</span> on 
+							<span class="date">May 26, 2020 at 20:46</span>
+						</div> 
+						<div class="body">Pretty good tutorial!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Max</span> on 
+							<span class="date">May 27, 2020 at 11:42</span>
+						</div> 
+						<div class="body">Thanks for the great post. Your walk through was nicely structured and understandable. </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gonzalo</span> on 
+							<span class="date">June 05, 2020 at 17:15</span>
+						</div> 
+						<div class="body">Nice one! Really useful and nice to read<br />
+</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">embewee</span> on 
+							<span class="date">June 11, 2020 at 11:37</span>
+						</div> 
+						<div class="body">Very good introduction to smart pointers. Thanks!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Cool guy</span> on 
+							<span class="date">July 03, 2020 at 16:46</span>
+						</div> 
+						<div class="body">Nice tutorial, especially keeping in mind, that raw pointers are depricated in c++ 20</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">swapnil</span> on 
+							<span class="date">September 06, 2020 at 09:04</span>
+						</div> 
+						<div class="body">Nice explaination!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">The hell is this GEM</span> on 
+							<span class="date">September 18, 2020 at 20:10</span>
+						</div> 
+						<div class="body">I have watched videos and tuts but man this content is made of gold! Best tut I have seen!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Guy </span> on 
+							<span class="date">March 22, 2021 at 09:31</span>
+						</div> 
+						<div class="body">Clear explanations! Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">swag</span> on 
+							<span class="date">June 16, 2021 at 17:12</span>
+						</div> 
+						<div class="body">nice article</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rahul</span> on 
+							<span class="date">July 31, 2021 at 06:36</span>
+						</div> 
+						<div class="body">Thank You for such simple & easy to understand explanation.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Greg</span> on 
+							<span class="date">April 03, 2023 at 02:23</span>
+						</div> 
+						<div class="body">Thank you!  I love these articles - you explain things at exactly the right level :) </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rajnish</span> on 
+							<span class="date">November 26, 2023 at 02:13</span>
+						</div> 
+						<div class="body">super , very nice explaination</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

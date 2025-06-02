@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>How to split a commit into smaller ones in Git  - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A quick and easy way powered by git rebase. ">
+		<meta name="keywords" content="git">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="How to split a commit into smaller ones in Git " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/split-commit-into-smaller-ones-git" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/08/splitcommit/internalpointers-splitcommit.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A quick and easy way powered by git rebase. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/split-commit-into-smaller-ones-git" />
+<meta name="twitter:title" content="How to split a commit into smaller ones in Git " />
+<meta name="twitter:description" content="A quick and easy way powered by git rebase. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2021/08/splitcommit/internalpointers-splitcommit.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on August 09, 2021 
+								• updated on September 06, 2021  
+								• ID 92 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>How to split a commit into smaller ones in Git </h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A quick and easy way powered by git rebase. </p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>Imagine you are working with multiple files in a Git-managed project. At some point you create a commit that include, say, changes to files <code>a.txt</code>, <code>b.txt</code> and <code>c.txt</code>. Then, hours and many commits later, you realize that changes done to <code>b.txt</code> should not be part of that commit. Maybe you want to move the changes done to <code>b.txt</code> to another commit, in order to make your history clearer. In this quick tutorial I want to show you how to <em>split</em> a commit into multiple parts the easy way.</p>
+<h2>Step 1: choose a starting point</h2>
+<p>The first thing to do is to look at your commits history and pick a commit older than the one you want to split. Say for example that this is your history (as shown with <code>git log --oneline</code>):</p>
+<pre><code>527247a (HEAD -&gt; master) Add support for videos
+06be701 Optimize memory allocation
+85a90cf New rendering engine        &lt;--- the commit you want to split
+ddb5c99 Update graphics            
+af1bcb2 Update documentation
+...
+</code></pre>
+<p>and commit <code>85a90cf New rendering engine</code> is the one you want to split. Since commit <code>af1bcb2 Update documentation</code> is older, copy its hash.</p>
+<h2>Step 2: run the interactive rebase</h2>
+<p>I'm going to use the <a href="https://git-scm.com/docs/git-rebase#Documentation/git-rebase.txt---interactive">interactive rebase</a> for this step. Invoke it with</p>
+<pre><code>git rebase -i &lt;your-previously-copied-hash&gt;
+</code></pre>
+<p>for example</p>
+<pre><code>git rebase -i af1bcb2
+</code></pre>
+<p>This command will open up your text editor of choice with a list of all the commits starting from (but excluding) the one you passed in. Note that it might be confusing at first, since they are displayed in a <em>reverse order</em>, where the older commit is on top. I've added <code>--- older commit</code> and <code>--- newer commit</code> in the snippet below to make it clear, you won't find those notes in the editor:</p>
+<pre><code>pick ddb5c99 Update graphics               --- older commit
+pick 85a90cf New rendering engine        
+pick 06be701 Optimize memory allocation
+pick 527247a Add support for videos        --- newer commit
+
+[... notes here ...]
+</code></pre>
+<p>In the <code>[... notes here ...]</code> part you will find instructions on what you can do in this page: we need the <code>edit</code> command to manipulate our commit. Find the commit you want to split in the list and change the <code>pick</code> word into <code>edit</code> (or <code>e</code> in short). Your commit list in the editor should now look like this:</p>
+<pre><code>pick ddb5c99 Update graphics  
+edit 85a90cf New rendering engine        
+pick 06be701 Optimize memory allocation
+pick 527247a Add support for videos
+
+[... notes here ...]
+</code></pre>
+<p>Save the file and exit the editor. The rebase procedure has begun.</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1778432007040046"
+     crossorigin="anonymous"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>Step 3: reset the current state</h2>
+<p>You are now editing commit <code>85a90cf New rendering engine</code>. Let's <em>undo</em> it:</p>
+<pre><code>git reset HEAD~1
+</code></pre>
+<p>Now all the changes done in that commit are unstaged and need to be committed again. This is the step where you create new smaller commits, or in other words where you split the original one. Commit the pieces individually in the usual way (<code>git commit ...</code>), producing as many commits as you need.</p>
+<h2>Step 4: finish the rebase operation</h2>
+<p>When you are done with your surgery, invoke</p>
+<pre><code>git rebase --continue
+</code></pre>
+<p>to conclude the rebase. Now your history contains new, more granular commits. You can start over again instead with <code>git rebase --abort</code> in case something goes wrong.</p>
+<p>Keep in mind that now you have changed your local commit history, so it might require a force push to remote. Be careful when doing that on branches other people are working on.</p>
+<h2>Sources</h2>
+<p><a href="https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History">Git documentation — 7.6 Git Tools - Rewriting History</a><br>
+<a href="https://git-scm.com/docs/git-reset">Git documentation — git-reset</a><br>
+<a href="https://stackoverflow.com/questions/6217156/break-a-previous-commit-into-multiple-commits">Scornful — Break a previous commit into multiple commits</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/git">git</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">franck</span> on 
+							<span class="date">November 21, 2022 at 00:18</span>
+						</div> 
+						<div class="body">You can select the parent commit with git rebase -i 85a90cf^</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Joel</span> on 
+							<span class="date">April 08, 2023 at 19:39</span>
+						</div> 
+						<div class="body">Excellent tutorial. Might I add that it's a good first step to make a backup branch before doing the rebase. That way if you mess up during the rebase, you can just switch to that branch, delete the main branch, then rename the backup branch "main".</div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

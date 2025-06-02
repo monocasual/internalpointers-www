@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>Find buggy commits with git bisect - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A quick and managed way to understand which commit in your project’s history introduced a bug. ">
+		<meta name="keywords" content="git">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="Find buggy commits with git bisect" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/find-buggy-commits-git-bisect" />
+<meta property="og:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/07/bisect/find-buggy-commits-git-bisect.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A quick and managed way to understand which commit in your project’s history introduced a bug. " />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/find-buggy-commits-git-bisect" />
+<meta name="twitter:title" content="Find buggy commits with git bisect" />
+<meta name="twitter:description" content="A quick and managed way to understand which commit in your project’s history introduced a bug. " />
+<meta name="twitter:image" content="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2020/07/bisect/find-buggy-commits-git-bisect.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on July 17, 2020 
+								• ID 82 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>Find buggy commits with git bisect</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A quick and managed way to understand which commit in your project’s history introduced a bug. </p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>Imagine you've just found a weird behavior in your git-managed project, definitely a bug introduced somewhere during the development. The first reasonable thing to do is going back in the git history until you find the exact commit that caused the error, so that you can understand what went wrong exactly. You have two options:</p>
+<ol>
+<li>check out every commit manually, starting from the current one going backwards, until you find the culprit;</li>
+<li>ask <em>git bisect</em> for help.</li>
+</ol>
+<p>The <em>git bisect</em> command is probably a better way to solve the issue. Like option 1), <em>git bisect</em> will search for the commit that introduced a bug. However, it will do it automatically for you without the need of calling <code>git checkout ...</code> multiple times, manually. On top of that, <em>git bisect</em> performs the so-called <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm"><strong>binary search</strong></a>, much faster than the linear one. Let's see how the whole thing works!</p>
+<h2>1. Find a bug-free commit</h2>
+<p>The first thing to do is to find a relatively old commit that works. Take a look at your <code>git log</code> command and pick a commit that is bug-free. It will take some trial and error at first. Eventually, you would end up with the following <code>git log</code> scenario (comments on the right have been added by me):</p>
+<pre><code>31dfab2c Add new HTML template              &lt;---- this is buggy
+055958a8 Include script.js
+c6c3c555 Fix macOS build
+
+[... lots of other commits here ...]
+
+250e8add Fix master volume not parsed
+8c563c01 Optimize UI rendering
+a545d17b Improve event handling             &lt;--- this is bug-free
+</code></pre>
+<p>In words, commit <code>31dfab2c</code> is the most recent commit that contains the bug, while <code>a545d17b</code> is one of the older commits that doesn't show the buggy behavior. You still don't now exactly which commit introduced the bug, but it definitely lies between the two above.</p>
+<h2>2. Enable the <em>git bisect</em> mode</h2>
+<p>Enter the <em>git bisect</em> mode with the following command:</p>
+<pre><code>git bisect start
+</code></pre>
+<p>Nothing happens here, <em>git bisect</em> just started. Then tell git which commit is buggy and which one is bug-free with the following commands:</p>
+<pre><code>git bisect good [commit]
+git bisect bad [commit]
+</code></pre>
+<p>In our example that would be:</p>
+<pre><code>git bisect good a545d17b
+git bisect bad 31dfab2c
+</code></pre>
+<p>At this point git will automatically checkout to a certain commit: the <em>git bisect</em> operation has started.</p>
+<h2>3. Test the commit and mark it</h2>
+<p>Since you have changed the current commit, it's time to build and run your project. If the bug is still there, tell git this commit is bad with the following command:</p>
+<pre><code>git bisect bad
+</code></pre>
+<p>otherwise tell git this commit is bug-free with:</p>
+<pre><code>git bisect good
+</code></pre>
+<p>Once done, git will checkout to another commit until there are no more left to inspect. Repeat this point 3. until git will tell you to stop.</p>
+<h2>4. Buggy commit found: inspect it</h2>
+<p>Eventually git will run out of commits to checkout: it will print out a description of the first bad one, for example:</p>
+<pre><code>Author: author &lt;author@yourmail.com&gt;
+Date:   Sun May 3 16:34:21 2020 +0200
+
+    Add new Import module
+
+:040000 040000 3bb45a00c6ad23c3a6205cfd19c6a4d6788fe219 91072ae36bf1faab4c465a2136e5c9b5c8169219 M  src
+</code></pre>
+<p>This commit is the one that introduced the regression. You can study it to find the issue.</p>
+<h2>5. Terminate the <em>git bisect</em> mode</h2>
+<p>Once understood what's wrong, use <code>git bisect reset</code> to put everything back on the original state before the <em>git bisect</em> operation. This will end the bisect session and bring you back to your original commit. You can also invoke this command anytime during a bisect operation in case you want to abort it.</p>
+<h2>Sources</h2>
+<p><a href="https://git-scm.com/docs/git-bisect">https://git-scm.com/docs/git-bisect</a><br>
+<a href="https://stackoverflow.com/questions/4713088/how-to-use-git-bisect">https://stackoverflow.com/questions/4713088/how-to-use-git-bisect</a><br>
+<a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">https://en.wikipedia.org/wiki/Binary_search_algorithm</a></p>
+			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/git">git</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

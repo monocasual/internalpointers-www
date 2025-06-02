@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>What should I know about index funds - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="A type of mutual fund with a portfolio that approximates an index.">
+		<meta name="keywords" content="index fund,mutual fund,benchmark,dividend">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="What should I know about index funds" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/should-i-know-index-funds" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="A type of mutual fund with a portfolio that approximates an index." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/should-i-know-index-funds" />
+<meta name="twitter:title" content="What should I know about index funds" />
+<meta name="twitter:description" content="A type of mutual fund with a portfolio that approximates an index." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on April 08, 2016 
+								• updated on April 08, 2016  
+								• ID 34 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>What should I know about index funds</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>A type of mutual fund with a portfolio that approximates an index.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+														<li>
+						<p>
+							<span class="title">
+								<a href="/post/depth-look-mutual-funds-part-1">An in-depth look at mutual funds, part 1</a>
+							</span> —
+							<span class="intro">First introductory chapter: internal workings, the concept of NAV, growth vs. income funds, fees and taxes.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/depth-look-mutual-funds-part-2">An in-depth look at mutual funds, part 2</a>
+							</span> —
+							<span class="intro">How to read a mutual fund's online prospectus like a pro (even without suit and tie).</span>
+						</p>
+					</li>
+																												<li>
+						<p>
+							<span class="title">
+								<a href="/post/real-estate-investing-reits-mlps-and-mutual-funds">Real estate investing with REITs, MLPs and mutual funds</a>
+							</span> —
+							<span class="intro">A way of investing in lands and buildings without getting your hands too dirty.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<p>In my long journey into investment funds I finally landed on the shore of index funds. I've already touched on the topic <a href="http://www.internalpointers.com/post/introduction-investment-funds">in my previous article</a>: now is time for me to study it deeper.</p>
+<h2>Index funds in a nutshell</h2>
+<p>An index fund is just a type of <a href="http://www.internalpointers.com/post/depth-look-mutual-funds-part-1">mutual fund</a> that tries to replicate the composition and the performance of famous indexes, say for example the S&amp;P 500. The core idea of an index fund is to own every security in the original index, which is often called the <strong>benchmark index</strong>.</p>
+<p>Because index funds track market indexes, they don't have managers actively trading securities like regular mutual funds do. And less activity means much lower expense fees and potentially less risk than normal mutual funds, with managers who try beating the market.</p>
+<p>Plain and simple, isn't it? Before going further, let me answer one basic question.</p>
+<h3>What is an index?</h3>
+<p>There are thousands of thousands of securities (stocks, bonds, commodities, ...) trading in each country and track them all would be too difficult. To get around this, investors use indexes to track the performance of the market. Indexes are a smaller sample of the market that is representative of the whole.</p>
+<p>Instead of monitoring them all, an index defines a subset of <em>N</em> securities. A change in the price of an index should represent an exactly proportional change in the stocks included in the index.</p>
+<p>Some famous indexes are the <strong>Standard &amp; Poor's 500</strong>, often abbreviated as the S&amp;P 500, a stock market index that tracks 500 hand-picked american companies. Or the <strong>EURO STOXX 50</strong>, top 50 large companies in the Eurozone. Or yet the <strong>Dow Jones Industrial Average</strong>, also called DJIA: 30 large publicly owned companies based in the United States.</p>
+<p>Usually you may find five major asset classes, represented by indexes: U.S. stocks, foreign stocks, real estate, bonds and commodities. For each of the asset classes you want to invest in, you'll want an index fund that tracks it. If there's an index, there's likely an index fund that follows it!</p>
+<h2>Pros and cons of index funds</h2>
+<p>So, why one should or should not invest in index funds? The following one is a neat list of pros and cons I've collected so far in my research. In the end it's all up to your investment style and what you expect from it. Let's go!</p>
+<h3>Pros of index funds</h3>
+<ul>
+<li><p><strong>Low expense ratio</strong> — The expense ratio is an annual fee that the fund managers charge the investor. If the fund is actively managed, it will cost you more. Since an index fund is just a replica of a famous index, the fund management's activity is lower, so it will cost you less. The expense ratio of an index fund is typically around 0.25% and gets as low as 0.18% (for the famous <a href="https://personal.vanguard.com/us/funds/snapshot?FundId=0040&FundIntExt=INT">Vanguard 500 Index</a>). Some say that there's no need to invest in an index fund with an expense ratio greater than 0.40%;</p>
+</li>
+<li><p><strong>It's hard to outperform an index</strong> — According to my sources (see below), less than 20% of actively managed mutual funds were able to outperform the S&amp;P 500 in the last 10 years. So instead of trying to beat it, just replicate it;</p>
+</li>
+<li><p><strong>Set and forget formula</strong> — Index funds are great if you don't want to care too much about managing you finances, or you don't like to spend any time learning about investing. Just buy an index fund and accumulate a certain amount of value in the future.</p>
+</li>
+</ul>
+<h3>Cons of index funds</h3>
+<ul>
+<li><p><strong>Index follows market fluctuations</strong> — That's right, and partially hinders the last point above. If the market, represented by the index goes down, the NAV of your index fund will follow;</p>
+</li>
+<li><p><strong>Not so great for dividends</strong> — unfortunately the yields on index funds are quite low, because they include a lot of companies which do not pay any dividends. Therefore they might not be for you if your goal is to generate a positive stream of income, unrelated from market fluctuations. Remember that dividends are more stable than capital gains, and are always positive;</p>
+</li>
+<li><p><strong>Who includes stocks in the index and how</strong> — the index fund replicates an index' composition and that should prevent the fund manager to try to beat it. But what criteria the index uses to include stocks? Sometimes, they just follow the crowd into irrational exuberance, doing bad moves.</p>
+</li>
+</ul>
+<h3>The tracking error</h3>
+<p>Actually, no index funds really match their benchmark indexes with scientific precision. That little flaw, called <strong>tracking error</strong> is the difference between the fund portfolio’s returns and the benchmark index it was designed to match. For example, if you buy units of the fictional Internal Pointers Index Fund, which is tracking the S&amp;P 500, and it returns 4.0% while the latter returns 4.5%, Internal Pointers Index Fund has a tracking error of 0.5%. That misalignment occurs quite often in the real world. Why?</p>
+<p>There are three possible explanations here:</p>
+<ul>
+<li><p><strong>fund's expenses</strong> — this is the biggest drag on performance. If Internal Pointers Mutual Fund charges 0.3% in expenses and the S&amp;P 500 returns 10.0%, the fund will only return 9.7% (10.0% - 0.3% = 9.7%). If you add other expenses (front-end loads and so on), the performance deviates even more;</p>
+</li>
+<li><p><strong>part of the assets in cash</strong> — all mutual funds hold some cash on their books, mainly used to pay out investor redemptions (i.e. when they want to sell off and quit). That small part of cash makes the fund not fully invested in the indexes’ underlying securities;</p>
+</li>
+<li><p><strong>alternative composition methods</strong> — some funds don't buy all of the stocks within the benchmark index, they use a sampling strategy instead. In such case if the manager picks the wrong securities, the fund could have a big tracking error.</p>
+</li>
+</ul>
+<h2>Search for index funds</h2>
+<p>This is the part I found to be the most tough. According to Investopedia, the best sources for finding index funds are the websites of <a href="https://www.fidelity.com/fund-screener/evaluator.shtml">Fidelity Investments</a> and <a href="https://investor.vanguard.com/mutual-funds/list#/mutual-funds/asset-class/month-end-returns">Vanguard</a>. They are at the top for what concerns index funds, so searching in their databases seemed a good idea.</p>
+<p>Unfortunately, their search tools weren't able to answer my basic question: could you please just give me a list of your index funds? They usually filter the records by class/category, risk or asset name. The only way I found so far is just scraping the result page and search for the word "index". Quite lame, don't you think? Anyway I will update this article if new tools or index funds list will pop up in the future.</p>
+<h2>Sources</h2>
+<p>Investopedia - <em>An Introduction To Stock Market Indexes</em> (<a href="http://www.investopedia.com/articles/analyst/102501.asp">link</a>)<br>
+Kiplinger - <em>These 5 Vanguard Index Funds Are All You Need</em> (<a href="http://www.kiplinger.com/article/investing/T030-C007-S001-5-vanguard-index-funds-you-need-to-own.html">link</a>)<br>
+The Motley Fool - <em>Index Investing</em> (<a href="http://www.fool.com/60second/indexfund.htm">link</a>)<br>
+The Motley Fool - <em>The S&amp;P 500 Index Fund</em> (<a href="http://www.fool.com/mutualfunds/indexfunds/indexfunds01.htm">link</a>)<br>
+Yahoo Finance - <em>Ask The Expert: How Do I Pick The Best Index Funds?</em> (<a href="http://finance.yahoo.com/news/ask-expert-pick-best-index-161507726.html">link</a>)<br>
+Investorplace - <em>4 Flaws Dividend Investors Should Know About Index Funds</em> (<a href="http://investorplace.com/2014/03/dividend-investors-index-funds-wmt-yhoo-brk-a-brk-b">link</a>)<br>
+Wikipedia - <em>S&amp;P 500 Index</em> (<a href="https://en.wikipedia.org/wiki/S%26P_500_Index">link</a>)<br>
+Wikipedia - <em>List of stock market indices</em> (<a href="https://en.wikipedia.org/wiki/List_of_stock_market_indices">link</a>)<br>
+MutualFunds.com - <em>Tracking Error Explained for Mutual Fund Investors</em> (<a href="http://mutualfunds.com/index-funds/tracking-error-explained-for-mutual-fund-investors/">link</a>)<br>
+Investopedia - <em>How do I find mutual funds that track indexes?</em> (<a href="http://www.investopedia.com/ask/answers/07/track_index.asp">link</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/index-fund">index fund</a>
+				 • 								<a class="ip-tag" href="/tag/mutual-fund">mutual fund</a>
+				 • 								<a class="ip-tag" href="/tag/benchmark">benchmark</a>
+				 • 								<a class="ip-tag" href="/tag/dividend">dividend</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								<div class="ip-post__neighbor-posts__prev">
+					<div class="ip-post__neighbor-posts__prev__label">
+						previous article
+					</div>
+					<div class="ip-post__neighbor-posts__prev__title">          
+						<a href="/post/depth-look-mutual-funds-part-2">An in-depth look at mutual funds, part 2</a>
+					</div>
+				</div>
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/real-estate-investing-reits-mlps-and-mutual-funds">Real estate investing with REITs, MLPs and mutual funds</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

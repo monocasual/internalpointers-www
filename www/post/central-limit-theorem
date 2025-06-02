@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>The Central Limit theorem - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution.">
+		<meta name="keywords" content="central limit theorem,distribution,histogram,probability,Python,mean,sample,population">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="The Central Limit theorem" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/central-limit-theorem" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/central-limit-theorem" />
+<meta name="twitter:title" content="The Central Limit theorem" />
+<meta name="twitter:description" content="Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/monokai-sublime.min.css">
+		
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+<script defer src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+	hljs.initHighlighting();
+});
+</script>
+
+<script defer type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+		displayAlign: 'center',
+		asciimath2jax: {
+			delimiters: [['§','§']]
+		},
+		tex2jax: {
+			inlineMath: [['[texi]','[texi]']],
+			displayMath: [['[tex]','[tex]']]
+		}
+	});
+</script>
+<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on November 28, 2015 
+								• ID 22 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>The Central Limit theorem</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution.</p>
+			</div>
+
+			
+			<div class="ip-post__body">
+				<p>The Central Limit theorem, often abbreviated to CLT explains why the bell-shaped curve appears so often in probability.</p>
+<p>In words, suppose that you sample from a <a href="http://internalpointers.com/post/differences-between-sample-and-population">population</a> using a sufficiently large sample size, noted as <span class="ip-inline">§N§</span>. According to the Central Limit theorem, while the sample size <span class="ip-inline">§N§</span> grows to infinity, the mean <span class="ip-inline">§mu§</span> of all those samples will be normally distributed, regardless of the original distribution of the population you sampled from.</p>
+<h2>How the Central Limit theorem can be useful</h2>
+<p>While working with real-world data you might face two main limitations. First, there are many important things one would like to measure and test that do not follow a "pure" normal distribution. Second, working with the full population can be absolutely impractical: just think of a blood sample! How can you make predictions and calculations on that data? Even when full set of raw data does not fit it, there is often a normal distribution underneath. This makes it possible to still use the normal distribution to test ideas about non-normal, incomplete data.</p>
+<p>You just have to collect samples of multiple observations, and calculate the average for each sample. As the number of observations in each sample increases, the distribution of these averages becomes more and more similar to the normal distribution. You can apply statistical techniques that assume normality even when you are sampling non-normal populations.</p>
+<h2>The central Limit theorem in practice</h2>
+<p>Let's see if the Central Limit theorem really works. Below is a Python script that generates a fake pupulation and from that pupulation takes <code>num_samples</code> random samples of size <code>sample_size</code>. Then it computes the mean of those samples and prepares a somewhat primitive histogram made with a Python dictionary. I then took that raw histogram and plotted it into a nicer graph, to visually see what is going on.</p>
+<p>You need Python 3 or greater to run that code, give the presence of <code>statistics</code> module.</p>
+<pre><code class="lang-python">import statistics
+import collections
+import math
+import random
+
+
+def take_sample(population, sample_size):
+  return [random.choice(population) for i in range(sample_size)]
+
+
+def histogram(data, pop_size):
+  out = collections.defaultdict(int)
+  for i in range(pop_size):
+    out[i] = 0
+  for x in data: out[x] += 1
+  return out
+
+
+pop_size   = 64
+population = [i for i in range(pop_size)]
+num_samples = 50000
+sample_size = 32
+means = []      
+
+# sample &#39;num_samples&#39; times from the population: take a random sample of size
+# &#39;sample_size&#39; from it and compute the mean
+for i in range(num_samples):
+  sample = take_sample(population, sample_size)
+  means.append(math.ceil(statistics.mean(sample)))
+
+hist = histogram(means, pop_size)
+
+# you can now plot &#39;hist&#39;
+</code></pre>
+<h3>Plotting the results</h3>
+<p>Each figure below shows the histograms of several samples mean as I run the script with various sample sizes and the number of samples fixed to 50,000. The x axis contains the mean value, while the y axis tells you how many samples there are with that mean value.</p>
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-1.svg" alt="Frequency distribution, sample size = 1">
+<div class="caption">1. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 1§</span>.</div>
+</div>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-2.svg" alt="Frequency distribution, sample size = 2">
+<div class="caption">2. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 2§</span>.</div>
+</div>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-4.svg" alt="Frequency distribution, sample size = 4">
+<div class="caption">4. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 4§</span>.</div>
+</div>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-8.svg" alt="Frequency distribution, sample size = 8">
+<div class="caption">5. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 8§</span>.</div>
+</div>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-16.svg" alt="Frequency distribution, sample size = 16">
+<div class="caption">6. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 16§</span>.</div>
+</div>
+
+<div class="ip-img">
+<img src="https://s3.amazonaws.com/images.internalpointers.com/2015/10/frequency-distribution-sample-mean-s-32.svg" alt="Frequency distribution, sample size = 32">
+<div class="caption">7. Frequency distribution of the samples mean, with <span class="ip-inline">§N = 32§</span>.</div>
+</div>
+
+<p>Several interesting facts emerge from these pictures. First of all as the sample size grows, the frequency distribution of the sample mean becomes more similar to a bell-shaped curve: that's exactly what the Central Limit theorem states! The curve is also narrower as the sample size gets bigger: we can say that its standard deviation <span class="ip-inline">§sigma§</span> becomes smaller. The standard deviation as a matter of fact drives the fatness of a bell-shaped curve.</p>
+<p>Moreover when the sample size <span class="ip-inline">§N = 1§</span> (figure 1) the frequency distribution looks like a <strong>uniform distribution</strong>, also known as <strong>rectangular distribution</strong>. It means that every sample mean occurs with the same frequency. It happens because you are basically picking single numbers instead of samples mean, since the mean of a sample with size <span class="ip-inline">§N = 1§</span> is just equal to itself.</p>
+<p>I also pushed the sample size quite further. Generally in a real-world scenario you rarely need to go further than <span class="ip-inline">§N = 16§</span>, but it also depends on how skewed and messed up is the population distribution. The more the population distribution is non-normal, the more the sample size must be large in order to obtain a normal distribution of the samples mean.</p>
+<h2>Sources</h2>
+<p>Atomic Object - <em>An Introduction to the Central Limit Theorem</em> (<a href="http://spin.atomicobject.com/2015/02/12/central-limit-theorem-intro/">link</a>)<br>
+Khan Academy - <em>Central limit theorem</em> (<a href="https://www.youtube.com/watch?v=JNm3M9cqWyc">video</a>)<br>
+Harvard University - <em>Law of Large Numbers and Central Limit Theorem</em> (<a href="https://www.youtube.com/watch?v=OprNqnHsVIA">video</a>)</p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/central-limit-theorem">central limit theorem</a>
+				 • 								<a class="ip-tag" href="/tag/distribution">distribution</a>
+				 • 								<a class="ip-tag" href="/tag/histogram">histogram</a>
+				 • 								<a class="ip-tag" href="/tag/probability">probability</a>
+				 • 								<a class="ip-tag" href="/tag/python">Python</a>
+				 • 								<a class="ip-tag" href="/tag/mean">mean</a>
+				 • 								<a class="ip-tag" href="/tag/sample">sample</a>
+				 • 								<a class="ip-tag" href="/tag/population">population</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+

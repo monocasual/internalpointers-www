@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		 
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23296419-22"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23296419-22');
+		</script>
+		 
+
+		<title>A gentle introduction to multithreading - Internal Pointers</title>
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Monocasual Laboratories">
+		<meta name="description" content="Approaching the world of concurrency, one step at a time.">
+		<meta name="keywords" content="process,thread,multithreading,concurrency">
+		<meta name="copyright" content="2015-2024 Monocasual Laboratories">
+		<meta name="application-name" content="Internal Pointers">
+		<meta name="google-site-verification" content="d6wzhBnnEXNHg7kty5SNXVBKd4e29wUFP69SROd-3eI" />
+
+		<meta property="og:title" content="A gentle introduction to multithreading" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.internalpointers.com/post/gentle-introduction-multithreading" />
+<meta property="og:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="900" />
+<meta property="og:site_name" content="Internal Pointers" />
+<meta property="og:description" content="Approaching the world of concurrency, one step at a time." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://www.internalpointers.com/post/gentle-introduction-multithreading" />
+<meta name="twitter:title" content="A gentle introduction to multithreading" />
+<meta name="twitter:description" content="Approaching the world of concurrency, one step at a time." />
+<meta name="twitter:image" content="https://www.internalpointers.com/img/internalpointers-card.png" />
+
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="/img/favicon-152.png">
+		<link rel="stylesheet" href="/main-1.4.0.css">
+
+				
+		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script defer src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+		<script defer src="/main-1.4.0.js"></script>
+
+		
+
+	</head>
+	<body>
+		<div class="ip-follow-us-popup">
+
+    <div class="ip-follow-us-popup__side">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+    </div>
+
+    <div class="ip-follow-us-popup__header">
+        <p>Join us on Facebook!</p>
+    </div>
+
+    <div class="ip-follow-us-popup__body">
+        <div class="ip-follow-us-popup__body__ok">
+        <img src="/img/facebook-like-thumb.svg" alt="Like it!">
+        </div>
+    </div>
+
+    <div class="ip-follow-us-popup__footer">
+        <div><a href="#" class="ip-follow-us-popup__footer__nope">Nope, thanks anyway.</a></div>
+    </div>
+
+</div>		<div class="ip-cookie-banner">
+    <div class="ip-container">
+        <p>We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. By using our site, you acknowledge that you have read and understand our <a href="{{ url('/privacy/') }}">Privacy Policy</a>, and our <a href="{{ url('/tos/') }}">Terms of Service</a>. Your use of this site is subject to these policies and terms. | <a href="#" class="ip-cookie-banner__close">ok, got it</a></p>
+    </div>
+</div>		<div class="ip-header">
+	<div class="ip-container">
+		<div class="ip-header__logo">
+			<a href="/">**internal / pointers</a>
+		</div>
+		<div class="ip-header__links">
+			<ul>
+				<li><a href="/rss">rss</a></li>
+				<li><a href="/about">about</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="ip-sub-header">
+</div>
+		<div class="ip-body">
+
+	<div class="ip-container">
+
+		<div class="ip-post">
+
+			<div class="ip-post__info">
+				<p>— Written by Triangles on March 06, 2019 
+								• updated on May 29, 2019  
+								• ID 71 —</p>
+			</div>
+
+			<div class="ip-post__title">
+				<h1>A gentle introduction to multithreading</h1>
+			</div>
+
+			<div class="ip-post__intro">
+				<p>Approaching the world of concurrency, one step at a time.</p>
+			</div>
+
+						<div class="ip-post__other-box">
+				<div class="ip-post__other-box__section-title">Other articles from this series</div>
+
+				<ul class="ip-post__other-box__post-list">
+																							<li>
+						<p>
+							<span class="title">
+								<a href="/post/introduction-thread-synchronization">Introduction to thread synchronization</a>
+							</span> —
+							<span class="intro">A look at one of the most popular ways of concurrency control in a multithreaded application.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a>
+							</span> —
+							<span class="intro">Synchronizing threads at a lower level.</span>
+						</p>
+					</li>
+																			<li>
+						<p>
+							<span class="title">
+								<a href="/post/understanding-memory-ordering">Understanding memory reordering </a>
+							</span> —
+							<span class="intro">...and why it matters when writing lock-free multithreading code.</span>
+						</p>
+					</li>
+													</ul>
+			</div>
+			
+			<div class="ip-post__body">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><p>Modern computers have the ability to perform multiple operations at the same time. Supported by hardware advancements and smarter operating systems, this feature makes your programs run faster, both in terms of speed of execution and responsiveness.</p>
+<p>Writing software that takes advantage of such power is fascinating, yet tricky: it requires you to understand what happens under your computer's hood. In this first episode I'll try to scratch the surface of <strong>threads</strong>, one of the tools provided by operating systems to perform this kind of magic. Let's go!</p>
+<h2>Processes and threads: naming things the right way</h2>
+<p>Modern operating systems can run multiple programs at the same time. That's why you can read this article in your browser (a program) while listening to music on your media player (another program). Each program is known as a <strong>process</strong> that is being executed. The operating system knows many software tricks to make a process run along with others, as well as taking advantage from the underlying hardware. Either way, the final outcome is that you <em>sense</em> all your programs to be running simultaneously.</p>
+<p>Running processes in an operating system is not the only way to perform several operations at the same time. Each process is able to run simultaneous sub-tasks within itself, called <strong>threads</strong>. You can think of a thread as a slice of the process itself. Every process triggers at least one thread on startup, which is called the <strong>main thread</strong>. Then, according to the program/programmer's needs, additional threads may be started or terminated. <strong>Multithreading</strong> is about running multiple threads within a single process.</p>
+<p>For example, it is likely that your media player runs multiple threads: one for rendering the interface — this is usually the main thread, another one for playing the music and so on.</p>
+<p>You can think of the operating system as a container that holds multiple processes, where each process is a container that holds multiple threads. In this article I will focus on threads only, but the whole topic is fascinating and deserves more in-depth analysis in the future.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/processes-threads.png" alt="Processes vs Threads">
+<div class="caption">1. Operating systems can be seen as a box that contains processes, which in turn contain one or more threads.</div>
+</div><h3>The differences between processes and threads</h3>
+<p>Each process has its own chunk of memory assigned by the operating system. By default that memory cannot be shared with other processes: your browser has no access to the memory assigned to your media player and vice versa. The same thing happens if you run two <strong>instances</strong> of the same process, that is if you launch your browser twice. The operating system treats each instance as a new process with its own separate portion of memory assigned. So, by default, two or more processes have no way to share data, unless they perform advanced tricks — the so-called <strong><a href="https://en.wikipedia.org/wiki/Inter-process_communication">inter-process communication (IPC)</a></strong>.</p>
+<p>Unlike processes, threads share the same chunk of memory assigned to their parent process by the operating system: data in the media player main interface can be easily accessed by the audio engine and vice versa. Therefore is easier for two threads to talk to eachother. On top of that, threads are usually lighter than a process: they take less resources and are faster to create, that's why they are also called <strong>lightweight processes</strong>.</p>
+<p>Threads are a handy way to make your program perform multiple operations at the same time. Without threads you would have to write one program per task, run them as processes and synchronize them through the operating system. This would be more difficult (IPC is tricky) and slower (processes are heavier than threads).</p>
+<h3>Green threads, of fibers</h3>
+<p>Threads mentioned so far are an operating system thing: a process that wants to fire a new thread has to talk to the operating system. Not every platform natively support threads, though. <strong>Green threads</strong>, also known as <strong>fibers</strong> are a kind of emulation that makes multithreaded programs work in environments that don't provide that capability. For example a virtual machine might implement green threads in case the underlying operating system doesn't have native thread support.</p>
+<p>Green threads are faster to create and to manage because they completely bypass the operating system, but also have disadvantages. I will write about such topic in one of the next episodes.</p>
+<p>The name "green threads" refers to the Green Team at Sun Microsystem that designed the original Java thread library in the 90s. Today Java no longer makes use of green threads: they switched to native ones back in 2000. Some other programming languages — Go, Haskell or Rust to name a few — implement equivalents of green threads instead of native ones.</p>
+<h2>What threads are used for</h2>
+<p>Why should a process employ multiple threads? As I mentioned before, doing things in parallel greatly speeds up things. Say you are about to render a movie in your movie editor. The editor could be smart enough to spread the rendering operation across multiple threads, where each thread processes a chunk of the final movie. So if with one thread the task would take, say, one hour, with two threads it would take 30 minutes; with four threads 15 minutes, and so on.</p>
+<p>Is it really that simple? There are three important points to consider:</p>
+<ol>
+<li>not every program needs to be multithreaded. If your app performs sequential operations or often waits on the user to do something, multithreading might not be that beneficial;</li>
+<li>you just don't throw more threads to an application to make it run faster: each sub-task has to be thought and designed carefully to perform parallel operations;</li>
+<li>it is not 100% guaranteed that threads will perform their operations truly in parallel, that is <em>at the same time</em>: it really depends on the underlying hardware.</li>
+</ol>
+<p>The last one is crucial: if your computer doesn't support multiple operations at the same time, the operating system has to fake them. We will see how in a minute. For now let's think of <strong>concurrency</strong> as the <em>perception</em> of having tasks that run at the same time, while <strong>true parallelism</strong> as tasks that literally run at the same time.</p>
+<div class="ip-img">
+<img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/concurrency-parallelism.png" alt="Concurrency vs Parallelism">
+<div class="caption">2. Parallelism is a subset of concurrency.</div>
+</div><h2>What makes concurrency and parallelism possible</h2>
+<p>The <strong>central processing unit (CPU)</strong> in your computer does the hard work of running programs. It is made of several parts, the main one being the so-called <strong>core</strong>: that's where computations are actually performed. A core is capable of running only one operation at a time.</p>
+<p>This is of course a major drawback. For this reason operating systems have developed advanced techniques to give the user the ability to running multiple processes (or threads) at once, especially on graphical environments, even on a single core machine. The most important one is called <strong>preemptive multitasking</strong>, where <strong>preemption</strong> is the ability of interrupting a task, switching to another one and then resuming the first task at a later time.</p>
+<p>So if your CPU has only one core, part of a operating system's job is to spread that single core computing power across multiple processes or threads, which are executed one after the other in a loop. This operation gives you the illusion of having more than one program running in parallel, or a single program doing multiple things at the same time (if multithreaded). Concurrency is met, but true parallelism — the ability to run processes <em>simultaneously</em> — is still missing.</p>
+<p>Today modern CPUs have more than one core under the hood, where each one performs an independent operation at a time. This means that with two or more cores true parallelism is possible. For example, my Intel Core i7 has four cores: it can run four different processes or threads at the same time, simultaneously.</p>
+<p>Operating systems are able to detect the number of CPU cores and assign processes or threads to each one of them. A thread may be allocated to whatever core the operating system likes, and this kind of scheduling is completely transparent for the program being run. Additionally, preemptive multitasking might kick in in case all cores are busy. This gives you the ability to run more processes and threads than the actual number or cores available in your machine.</p>
+<h3>Multi-threading application on a single core: does it make sense?</h3>
+<p>True parallelism on a single-core machine is impossible to achieve. Nevertheless it still makes sense to write a multithreaded program, if your application can benefit from it. When a process employs multiple threads, preemptive multitasking can keep the app running even if one of those threads performs a slow or blocking task.</p>
+<p>Say for example you are working on a desktop app that reads some data from a very slow disk. If you write the program with just one thread, the whole app would freeze until the disk operation is finished: the CPU power assigned to the only thread is wasted while waiting for the disk to wake up. Of course the operating system is running many other processes besides this one, but your specific application will not be making any progress.</p>
+<p>Let's rethink your app in a multithreaded way. Thread A is responsible for the disk access, while thread B takes care of the main interface. If thread A gets stuck waiting because the device is slow, thread B can still run the main interface, keeping your program responsive. This is possible because, having two threads, the operating system can switch the CPU resources between them without getting stuck on the slower one.</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- internalpointers responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1778432007040046"
+     data-ad-slot="1269254897"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><h2>More threads, more problems</h2>
+<p>As we know, threads share the same chunk of memory of their parent process. This makes extremely easy for two or more of them to exchange data within the same application. For example: a movie editor might hold a big portion of shared memory containing the video timeline. Such shared memory is being read by several worker threads designated for rendering the movie to a file. They all just need a handle (e.g. a pointer) to that memory area in order to read from it and output rendered frames to disk.</p>
+<p>Things run smoothly as long as two or more threads <em>read</em> from the same memory location. The troubles kick in when at least one of them <em>writes</em> to the shared memory, while others are reading from it. Two problems can occur at this point:</p>
+<ul>
+<li><p><strong>data race</strong> — while a writer thread modifies the memory, a reader thread might be reading from it. If the writer has not finished its work yet, the reader will get corrupted data;</p>
+</li>
+<li><p><strong>race condition</strong> — a reader thread is supposed to read only after a writer has written. What if the opposite happens? More subtle than a data race, a race condition is about two or more threads doing their job in an unpredictable order, when in fact the operations should be performed in the proper sequence to be done correctly. Your program can trigger a race condition even if it has been protected against data races.</p>
+</li>
+</ul>
+<h3>The concept of thread safety</h3>
+<p>A piece of code is said to be <strong>thread-safe</strong> if it works correctly, that is without data races or race conditions, even if many threads are executing it simultaneously. You might have noticed that some programming libraries declare themselves as being thread-safe: if you are writing a multithreaded program you want to make sure that any other third-party function can be used across different threads without triggering concurrency problems.</p>
+
+<h2 id="data-races">The root cause of data races</h2>
+
+<p>We know that a CPU core can perform only one machine instruction at a time. Such instruction is said to be <strong>atomic</strong> because it's indivisible: it can't be broken into smaller operations. The Greek word "atom" (ἄτομος; atomos) means <em>uncuttable</em>.</p>
+<p>The property of being indivisible makes atomic operations thread-safe by nature. When a thread performs an atomic write on shared data, no other thread can read the modification half-complete. Conversely, when a thread performs an atomic read on shared data, it reads the entire value as it appeared at a single moment in time. There is no way for a thread to <em>slip through</em> an atomic operation, thus no data race can happen.</p>
+<p>The bad news is that the vast majority of operations out there are non-atomic. Even a trivial assignment like <code>x = 1</code> on some hardware might be composed of multiple atomic machine instructions, making the assignment itself non-atomic as a whole. So a data race is triggered if a thread reads <code>x</code> while another one performs the assignment.</p>
+
+<h2 id="race-conditions">The root cause of race conditions</h2>
+
+<p>Preemptive multitasking gives the operating system full control over thread management: it can start, stop and pause threads according to advanced scheduling algorithms. You as a programmer cannot control the time or order of execution. In fact, there is no guarantee that a simple code like this:</p>
+<pre><code class="lang-nocode">writer_thread.start()
+reader_thread.start()
+</code></pre>
+<p>would start the two threads in that specific order. Run this program several times and you will notice how it behaves differently on each run: sometimes the writer thread starts first, sometimes the reader does instead. You will surely hit a race condition if your program needs the writer to always run before the reader.</p>
+<p>This behavior is called <strong>non-deterministic</strong>: the outcome changes each time and you can't predict it. Debugging programs affected by a race condition is very annoying because you can't always reproduce the problem in a controlled way.</p>
+<h2>Teach threads to get along: concurrency control</h2>
+<p>Both data races and race conditions are real-world problems: some people even <a href="https://en.wikipedia.org/wiki/Therac-25">died because of them</a>. The art of accommodating two or more concurrent threads is called <strong>concurrency control</strong>: operating systems and programming languages offer several solutions to take care of it. The most important ones:</p>
+<ul>
+<li><p><strong>synchronization</strong> — a way to ensure that resources will be used by only one thread at a time. Synchronization is about marking specific parts of your code as "protected" so that two or more concurrent threads do not simultaneously execute it, screwing up your shared data;</p>
+</li>
+<li><p><strong>atomic operations</strong> — a bunch of non-atomic operations (like the assignment mentioned before) can be turned into atomic ones thanks to special instructions provided by the operating system. This way the shared data is always kept in a valid state, no matter how other threads access it;</p>
+</li>
+<li><p><strong>immutable data</strong> — shared data is marked as immutable, nothing can change it: threads are only allowed to read from it, eliminating the root cause. As we know threads can safely read from the same memory location as long as they don't modify it. This is the main philosophy behind <a href="https://en.wikipedia.org/wiki/Functional_programming">functional programming</a>.</p>
+</li>
+</ul>
+<p>I will cover all this fascinating topics in the next episodes of this mini-series about concurrency. Stay tuned!</p>
+<h2>Sources</h2>
+<p>8 bit avenue - <a href="https://www.8bitavenue.com/difference-between-multiprogramming-multitasking-multithreading-and-multiprocessing/">Difference between Multiprogramming, Multitasking, Multithreading and Multiprocessing</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Inter-process_communication">Inter-process communication</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Process_%28computing%29">Process (computing)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Concurrency_%28computer_science%29">Concurrency (computer science)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Parallel_computing">Parallel computing</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Multithreading_%28computer_architecture%29">Multithreading (computer architecture)</a><br>
+Stackoverflow - <a href="https://stackoverflow.com/questions/1713554/threads-processes-vs-multithreading-multicore-multiprocessor-how-they-are">Threads &amp; Processes Vs MultiThreading &amp; Multi-Core/MultiProcessor: How they are mapped?</a><br>
+Stackoverflow - <a href="https://stackoverflow.com/questions/19225859/difference-between-core-and-processor">Difference between core and processor?</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_%28computing%29">Thread (computing)</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Computer_multitasking">Computer multitasking</a><br>
+Ibm.com - <a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.genprogc/benefits_threads.htm">Benefits of threads</a><br>
+Haskell.org - <a href="https://wiki.haskell.org/Parallelism_vs._Concurrency">Parallelism vs. Concurrency</a><br>
+Stackoverflow - <a href="https://stackoverflow.com/questions/16116952/can-multithreading-be-implemented-on-a-single-processor-system">Can multithreading be implemented on a single processor system?</a><br>
+HowToGeek - <a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/">CPU Basics: Multiple CPUs, Cores, and Hyper-Threading Explained</a><br>
+Oracle.com - <a href="https://docs.oracle.com/cd/E19205-01/820-0619/geojs/index.html">1.2 What is a Data Race?</a><br>
+Jaka's corner - <a href="http://jakascorner.com/blog/2016/01/data-races.html">Data race and mutex</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Thread_safety">Thread safety</a><br>
+Preshing on Programming - <a href="https://preshing.com/20130618/atomic-vs-non-atomic-operations/">Atomic vs. Non-Atomic Operations</a><br>
+Wikipedia - <a href="https://en.wikipedia.org/wiki/Green_threads">Green threads</a><br>
+Stackoverflow - <a href="https://stackoverflow.com/questions/617787/why-should-i-use-a-thread-vs-using-a-process">Why should I use a thread vs. using a process?</a></p>			</div>
+
+
+			<div class="ip-post__tags">
+								<a class="ip-tag" href="/tag/process">process</a>
+				 • 								<a class="ip-tag" href="/tag/thread">thread</a>
+				 • 								<a class="ip-tag" href="/tag/multithreading">multithreading</a>
+				 • 								<a class="ip-tag" href="/tag/concurrency">concurrency</a>
+											</div>
+
+			<div class="ip-post__neighbor-posts">
+								
+								<div class="ip-post__neighbor-posts__next">
+					<div class="ip-post__neighbor-posts__next__label">
+						next article
+					</div>
+					<div class="ip-post__neighbor-posts__next__title">          
+						<a href="/post/introduction-thread-synchronization">Introduction to thread synchronization</a>
+					</div>
+				</div>
+							</div>
+			
+						<div class="ip-post__comments">
+				<div class="ip-post__comments__title">
+					comments
+				</div>
+				
+								<div class="ip-post__comments__list">
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Firoz Ansari</span> on 
+							<span class="date">March 12, 2019 at 02:51</span>
+						</div> 
+						<div class="body">Great post! This is a good overview of multithreading basics.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Pramodh</span> on 
+							<span class="date">March 12, 2019 at 03:07</span>
+						</div> 
+						<div class="body">Great post. looking forward to more!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mr Person</span> on 
+							<span class="date">March 12, 2019 at 03:19</span>
+						</div> 
+						<div class="body">Fantastic, and concise explanation!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">awe</span> on 
+							<span class="date">March 13, 2019 at 05:11</span>
+						</div> 
+						<div class="body">nice article</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">codeman00</span> on 
+							<span class="date">March 13, 2019 at 09:37</span>
+						</div> 
+						<div class="body">Really enjoyed this article, sent it to friends just getting comfortable with concurrency. Looking forward to the next one!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gabriel</span> on 
+							<span class="date">March 13, 2019 at 20:00</span>
+						</div> 
+						<div class="body">Moooore, give me moooore ;)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Youmoo</span> on 
+							<span class="date">March 14, 2019 at 05:37</span>
+						</div> 
+						<div class="body">Hi, can I translate this article into Chinese? Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 14, 2019 at 10:26</span>
+						</div> 
+						<div class="body">@Youmoo sure, go ahead, as long as you link back to this original article. Thank you, have fun ;)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Youmoo</span> on 
+							<span class="date">March 15, 2019 at 02:00</span>
+						</div> 
+						<div class="body">Thank you. FYI, the Chinese translation is here: https://mp.weixin.qq.com/s/2d-xgWbhSgyFJ3zKPOIscg.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">east</span> on 
+							<span class="date">March 15, 2019 at 15:15</span>
+						</div> 
+						<div class="body">it is good brah, really. looking forward to see following writings very soon. once again, thanks for your effort and clear explainations.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tynk Huynk</span> on 
+							<span class="date">March 16, 2019 at 02:21</span>
+						</div> 
+						<div class="body">What a great article! Today I learned about the green thread from it. <br />
+May I translate the article into Vietnamese? I will put the original link in the top of my post :D</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Triangles</span> on 
+							<span class="date">March 16, 2019 at 10:50</span>
+						</div> 
+						<div class="body">@Tynk Huynk sure, thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Anonymous Thread</span> on 
+							<span class="date">March 16, 2019 at 11:59</span>
+						</div> 
+						<div class="body">Interesting, thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tiago</span> on 
+							<span class="date">March 16, 2019 at 12:41</span>
+						</div> 
+						<div class="body">Great explanation. Simple and concise. Thanks for your time.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">jflorez00</span> on 
+							<span class="date">March 16, 2019 at 21:03</span>
+						</div> 
+						<div class="body">Excellent!! thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Juwon</span> on 
+							<span class="date">March 16, 2019 at 21:12</span>
+						</div> 
+						<div class="body">I like this. It's well broken down. Could you please write like this on d-bus library sometime when you're less busy?  Thanks</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Rustalicious</span> on 
+							<span class="date">March 19, 2019 at 06:03</span>
+						</div> 
+						<div class="body">Green threads were removed from Rust.  Threads in Rust only use native threads.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Tynk Huynk</span> on 
+							<span class="date">March 24, 2019 at 01:59</span>
+						</div> 
+						<div class="body">Hi, it's me again. Thank you for your permission. Here is Vietnamese translation: https://tynkblogs.wordpress.com/2019/03/23/gioi-thieu-nhe-nhang-ve-multithreading/ Please comment on the article if there is something wrong. :)</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">keith29</span> on 
+							<span class="date">March 24, 2019 at 05:32</span>
+						</div> 
+						<div class="body">This was a a simple, elegant introduction to  a complicated and subtle field. Thank you. I look forward to more.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Ahmad</span> on 
+							<span class="date">April 03, 2019 at 10:00</span>
+						</div> 
+						<div class="body">Thank you, very well explained.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Subbu</span> on 
+							<span class="date">April 08, 2019 at 20:59</span>
+						</div> 
+						<div class="body">Comprehensive yet simple introduction post.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Grims</span> on 
+							<span class="date">April 10, 2019 at 16:15</span>
+						</div> 
+						<div class="body">Very interesting ! Thanks for the information.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">yanfei</span> on 
+							<span class="date">April 12, 2019 at 09:56</span>
+						</div> 
+						<div class="body">good</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Xuefeng</span> on 
+							<span class="date">April 13, 2019 at 00:49</span>
+						</div> 
+						<div class="body">Great post, I am wondering how immutable data can prevent race conditions. I heard about it but never truly grasped the idea. Hope you could go into more detail on this topic. Cheers</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Surya</span> on 
+							<span class="date">April 25, 2019 at 17:05</span>
+						</div> 
+						<div class="body">Thank you, Good insight on mutli threaded concepts</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Soham</span> on 
+							<span class="date">May 03, 2019 at 17:35</span>
+						</div> 
+						<div class="body">Excellent article. I'll be following this series for sure. Thanks a ton!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">BhanuKiran</span> on 
+							<span class="date">July 18, 2019 at 09:21</span>
+						</div> 
+						<div class="body">Thank you. Great article.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Mohammad Daud Ibrahim</span> on 
+							<span class="date">August 28, 2019 at 14:40</span>
+						</div> 
+						<div class="body">Extraordinary Article!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Amir</span> on 
+							<span class="date">March 01, 2020 at 20:04</span>
+						</div> 
+						<div class="body">Great writing. Thanks! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">George Cao</span> on 
+							<span class="date">March 23, 2020 at 10:02</span>
+						</div> 
+						<div class="body">A Chinese version of the blog post, see https://reploop.org/blog/2020/02/a-gentle-introduction-to-multithreading.html</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">eren</span> on 
+							<span class="date">April 28, 2020 at 08:14</span>
+						</div> 
+						<div class="body">Excellent article! Thank you so much for taking the time to write this. Definitely cleared a lot of things up for me.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">satya kunchey</span> on 
+							<span class="date">May 14, 2020 at 00:01</span>
+						</div> 
+						<div class="body">nicely explained</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">GG</span> on 
+							<span class="date">August 26, 2020 at 07:48</span>
+						</div> 
+						<div class="body">Excellent article. Superb explanation. Thank you.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Katerina</span> on 
+							<span class="date">January 16, 2021 at 00:45</span>
+						</div> 
+						<div class="body">Excellent explanation! It helped me a lot - thank you for putting in the time to write it!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Gavin</span> on 
+							<span class="date">April 25, 2021 at 11:18</span>
+						</div> 
+						<div class="body">Great post! Clear and lucid.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">NoB</span> on 
+							<span class="date">May 15, 2021 at 16:21</span>
+						</div> 
+						<div class="body">Beautiful explanation !!!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">AD1</span> on 
+							<span class="date">July 09, 2021 at 20:45</span>
+						</div> 
+						<div class="body">ty for writing this. love what you do, keep going!! </div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Assassin</span> on 
+							<span class="date">August 11, 2021 at 19:15</span>
+						</div> 
+						<div class="body">Just Amazing and simple explanation</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">ipstone</span> on 
+							<span class="date">November 11, 2021 at 18:16</span>
+						</div> 
+						<div class="body">it's a great post/piece of writing, with clarity and rich information.</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">random guy</span> on 
+							<span class="date">January 01, 2022 at 13:15</span>
+						</div> 
+						<div class="body">Really good post!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Akbarjon</span> on 
+							<span class="date">June 06, 2022 at 15:08</span>
+						</div> 
+						<div class="body">Such a great post. Thank you!</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Maghawry </span> on 
+							<span class="date">December 10, 2022 at 18:48</span>
+						</div> 
+						<div class="body">What a wonderful narrating.Thank you</div> 
+					</div>
+										<div class="ip-post__comments__list__comment">
+						<div class="info">
+							<span class="author">Fermi</span> on 
+							<span class="date">December 13, 2022 at 12:26</span>
+						</div> 
+						<div class="body">This is such a good post! Thanks for taking the time to write this :3 </div> 
+					</div>
+									</div>
+							</div>
+			
+			<div class="ip-post__social-tools">
+				<div class="ip-post__social-tools__title">
+					share!
+				</div>
+				<div class="ip-post__social-tools__twitter item"></div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+		<div class="ip-footer">
+	<div class="ip-container">
+		© 2015-2024 — Monocasual Laboratories — 
+		<a href="/tos" rel="nofollow">terms of service</a> — 
+		<a href="/privacy" rel="nofollow">privacy policy</a> — 
+		<a href="/about">about</a> — 
+		<a href="/rss">RSS feed</a>
+	</div>
+</div>
+	</body>
+</html>
+
