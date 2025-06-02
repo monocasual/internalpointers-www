@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/gradient-descent-action">The gradient descent in action</a></h2>
+				<h2><a href="/post/gradient-descent-action.html">The gradient descent in action</a></h2>
 				<p class="intro">It's time to put together the gradient descent with the cost function, in order to churn out the final algorithm for linear regression. <span class="info">written on February 18, 2017</span></p>
 			</div>
 					</div>

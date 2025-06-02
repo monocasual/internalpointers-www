@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/c-c-standard-library">What are the C and C++ Standard Libraries?</a></h2>
+				<h2><a href="/post/c-c-standard-library.html">What are the C and C++ Standard Libraries?</a></h2>
 				<p class="intro">A brief tour into the realm of writing C/C++ applications, the role of the Standard Library and how it is implemented in various operating systems. <span class="info">written on February 26, 2018</span></p>
 			</div>
 					</div>

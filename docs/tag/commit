@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/git-add-file-commit">Git: how to add a file to a commit</a></h2>
+				<h2><a href="/post/git-add-file-commit.html">Git: how to add a file to a commit</a></h2>
 				<p class="intro">What to do when you forget to add one of the files the first time around? <span class="info">written on February 18, 2016</span></p>
 			</div>
 					</div>

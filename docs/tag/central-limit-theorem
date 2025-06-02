@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/central-limit-theorem">The Central Limit theorem</a></h2>
+				<h2><a href="/post/central-limit-theorem.html">The Central Limit theorem</a></h2>
 				<p class="intro">Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution. <span class="info">written on November 28, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/normal-distribution">The Normal distribution</a></h2>
+				<h2><a href="/post/normal-distribution.html">The Normal distribution</a></h2>
 				<p class="intro">The most famous kind of distribution and its relationship with the real world. <span class="info">written on November 06, 2015</span></p>
 			</div>
 					</div>

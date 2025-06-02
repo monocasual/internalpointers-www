@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/resize-virtualbox-disk">How to resize a VirtualBox disk</a></h2>
+				<h2><a href="/post/resize-virtualbox-disk.html">How to resize a VirtualBox disk</a></h2>
 				<p class="intro">My VirtualBox guest OSes always run out of space. <span class="info">written on January 06, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/fix-kernel-driver-not-installed-virtualbox">Fix kernel driver not installed in VirtualBox</a></h2>
+				<h2><a href="/post/fix-kernel-driver-not-installed-virtualbox.html">Fix kernel driver not installed in VirtualBox</a></h2>
 				<p class="intro">How do I install kernel header files? <span class="info">written on May 03, 2016</span></p>
 			</div>
 					</div>

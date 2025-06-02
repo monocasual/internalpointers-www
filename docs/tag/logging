@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/logging-python-sub-modules-and-configuration-files">Logging in Python with sub-modules and configuration files</a></h2>
+				<h2><a href="/post/logging-python-sub-modules-and-configuration-files.html">Logging in Python with sub-modules and configuration files</a></h2>
 				<p class="intro">Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good. <span class="info">written on June 27, 2015</span></p>
 			</div>
 					</div>

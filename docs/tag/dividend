@@ -84,15 +84,15 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/most-important-metrics-stock-investments">The most important metrics for stock investments</a></h2>
+				<h2><a href="/post/most-important-metrics-stock-investments.html">The most important metrics for stock investments</a></h2>
 				<p class="intro">What are the most famous stock metrics and how to translate them into something useful to humans. <span class="info">written on September 17, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/stock">What is a stock?</a></h2>
+				<h2><a href="/post/stock.html">What is a stock?</a></h2>
 				<p class="intro">Understanding how stocks work both from companies' and investors' point of view. <span class="info">written on July 11, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/should-i-know-index-funds">What should I know about index funds</a></h2>
+				<h2><a href="/post/should-i-know-index-funds.html">What should I know about index funds</a></h2>
 				<p class="intro">A type of mutual fund with a portfolio that approximates an index. <span class="info">written on April 08, 2016</span></p>
 			</div>
 					</div>

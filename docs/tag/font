@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/fixing-ugly-fonts-chrome-chromium-debian-xfce">Fixing ugly fonts in Chrome/Chromium with Debian Xfce</a></h2>
+				<h2><a href="/post/fixing-ugly-fonts-chrome-chromium-debian-xfce.html">Fixing ugly fonts in Chrome/Chromium with Debian Xfce</a></h2>
 				<p class="intro">No more jagged garbage and horrible kerning thanks to a small configuration file. <span class="info">written on July 10, 2015</span></p>
 			</div>
 					</div>

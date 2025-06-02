@@ -84,19 +84,19 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/fix-missing-dual-boot-menu-windows-10-and-debian-acer-laptops">Fix missing dual boot menu with Windows 10 and Debian on Acer laptops</a></h2>
+				<h2><a href="/post/fix-missing-dual-boot-menu-windows-10-and-debian-acer-laptops.html">Fix missing dual boot menu with Windows 10 and Debian on Acer laptops</a></h2>
 				<p class="intro">Having multiple OSes on a single machine is convenient. It is also great to choose what OS to boot on startup. <span class="info">written on September 12, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/enable-remote-mysql-access-debian">How to enable remote MySQL access on Debian</a></h2>
+				<h2><a href="/post/enable-remote-mysql-access-debian.html">How to enable remote MySQL access on Debian</a></h2>
 				<p class="intro">How to allow remote connections from any host to your MySQL server. <span class="info">written on December 24, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/android-debian-linux-file-transfer-via-mtp">Android to Debian/Linux file transfer via MTP</a></h2>
+				<h2><a href="/post/android-debian-linux-file-transfer-via-mtp.html">Android to Debian/Linux file transfer via MTP</a></h2>
 				<p class="intro">A painless tutorial on how to share files from and to your Android device. <span class="info">written on October 01, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/fixing-ugly-fonts-chrome-chromium-debian-xfce">Fixing ugly fonts in Chrome/Chromium with Debian Xfce</a></h2>
+				<h2><a href="/post/fixing-ugly-fonts-chrome-chromium-debian-xfce.html">Fixing ugly fonts in Chrome/Chromium with Debian Xfce</a></h2>
 				<p class="intro">No more jagged garbage and horrible kerning thanks to a small configuration file. <span class="info">written on July 10, 2015</span></p>
 			</div>
 					</div>

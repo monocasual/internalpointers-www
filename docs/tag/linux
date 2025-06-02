@@ -84,31 +84,31 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/journey-across-static-dynamic-libraries">A journey across static and dynamic libraries </a></h2>
+				<h2><a href="/post/journey-across-static-dynamic-libraries.html">A journey across static and dynamic libraries </a></h2>
 				<p class="intro">Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS. <span class="info">written on November 15, 2020</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/linux-find-and-replace-text-multiple-files">Linux: how to find and replace text in multiple files</a></h2>
+				<h2><a href="/post/linux-find-and-replace-text-multiple-files.html">Linux: how to find and replace text in multiple files</a></h2>
 				<p class="intro">Harness the power of grep and sed. <span class="info">written on August 17, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/install-new-fonts-linux-command-line">How to install new fonts on Linux</a></h2>
+				<h2><a href="/post/install-new-fonts-linux-command-line.html">How to install new fonts on Linux</a></h2>
 				<p class="intro">The old and trusty command-line way. <span class="info">written on July 07, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/android-debian-linux-file-transfer-via-mtp">Android to Debian/Linux file transfer via MTP</a></h2>
+				<h2><a href="/post/android-debian-linux-file-transfer-via-mtp.html">Android to Debian/Linux file transfer via MTP</a></h2>
 				<p class="intro">A painless tutorial on how to share files from and to your Android device. <span class="info">written on October 01, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/add-new-menu-items-xfce-menu">How to add new menu items to XFCE menu</a></h2>
+				<h2><a href="/post/add-new-menu-items-xfce-menu.html">How to add new menu items to XFCE menu</a></h2>
 				<p class="intro">Just create a simple text file and you're done. <span class="info">written on July 27, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/run-chrome-chromium-proxy-settings-linux">Run Chrome/Chromium with proxy settings on Linux</a></h2>
+				<h2><a href="/post/run-chrome-chromium-proxy-settings-linux.html">Run Chrome/Chromium with proxy settings on Linux</a></h2>
 				<p class="intro">And dealing with the dull fact that "your system is not supported". <span class="info">written on July 24, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/configure-proxy-settings-linux">How to configure proxy settings on Linux</a></h2>
+				<h2><a href="/post/configure-proxy-settings-linux.html">How to configure proxy settings on Linux</a></h2>
 				<p class="intro">And store them forever in your configuration file. <span class="info">written on June 19, 2015</span></p>
 			</div>
 					</div>

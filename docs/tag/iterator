@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/writing-custom-iterators-modern-cpp">Writing a custom iterator in modern C++</a></h2>
+				<h2><a href="/post/writing-custom-iterators-modern-cpp.html">Writing a custom iterator in modern C++</a></h2>
 				<p class="intro">An experimental Forward Iterator written from scratch to boost up hand-made containers. <span class="info">written on December 13, 2020</span></p>
 			</div>
 					</div>

@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/problem-overfitting-machine-learning-algorithms">The problem of overfitting in machine learning algorithms</a></h2>
+				<h2><a href="/post/problem-overfitting-machine-learning-algorithms.html">The problem of overfitting in machine learning algorithms</a></h2>
 				<p class="intro">Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good. <span class="info">written on September 02, 2018</span></p>
 			</div>
 					</div>

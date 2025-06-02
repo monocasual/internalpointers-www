@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/gentle-introduction-multithreading">A gentle introduction to multithreading</a></h2>
+				<h2><a href="/post/gentle-introduction-multithreading.html">A gentle introduction to multithreading</a></h2>
 				<p class="intro">Approaching the world of concurrency, one step at a time. <span class="info">written on March 06, 2019</span></p>
 			</div>
 					</div>

@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/gradient-descent-function">The gradient descent function</a></h2>
+				<h2><a href="/post/gradient-descent-function.html">The gradient descent function</a></h2>
 				<p class="intro">How to find the minimum of a function using an iterative algorithm. <span class="info">written on February 05, 2017</span></p>
 			</div>
 					</div>

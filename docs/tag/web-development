@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/right-folder-permission-website">The right folder permissions for a website on a Linux server</a></h2>
+				<h2><a href="/post/right-folder-permission-website.html">The right folder permissions for a website on a Linux server</a></h2>
 				<p class="intro">Say you have a website running on Linux. What are the correct permissions for the folder that contains the HTML, CSS, images, JavaScript files and so on? <span class="info">written on November 09, 2019</span></p>
 			</div>
 					</div>

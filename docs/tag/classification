@@ -84,19 +84,19 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a></h2>
+				<h2><a href="/post/cost-function-logistic-regression.html">The cost function in logistic regression</a></h2>
 				<p class="intro">Preparing the logistic regression algorithm for the actual implementation. <span class="info">written on October 29, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a></h2>
+				<h2><a href="/post/introduction-classification-and-logistic-regression.html">Introduction to classification and logistic regression</a></h2>
 				<p class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification. <span class="info">written on July 17, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/linear-regression-one-variable">Linear regression with one variable</a></h2>
+				<h2><a href="/post/linear-regression-one-variable.html">Linear regression with one variable</a></h2>
 				<p class="intro">Finding the best-fitting straight line through points of a data set. <span class="info">written on April 01, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-machine-learning">Introduction to machine learning</a></h2>
+				<h2><a href="/post/introduction-machine-learning.html">Introduction to machine learning</a></h2>
 				<p class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples. <span class="info">written on March 12, 2016</span></p>
 			</div>
 					</div>

@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/optimize-gradient-descent-algorithm">How to optimize the gradient descent algorithm</a></h2>
+				<h2><a href="/post/optimize-gradient-descent-algorithm.html">How to optimize the gradient descent algorithm</a></h2>
 				<p class="intro">A collection of practical tips and tricks to improve the gradient descent process and make it easier to understand. <span class="info">written on April 01, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/gradient-descent-function">The gradient descent function</a></h2>
+				<h2><a href="/post/gradient-descent-function.html">The gradient descent function</a></h2>
 				<p class="intro">How to find the minimum of a function using an iterative algorithm. <span class="info">written on February 05, 2017</span></p>
 			</div>
 					</div>

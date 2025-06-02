@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/install-python-modules-pip-behind-proxy">Install Python modules with Pip behind a proxy</a></h2>
+				<h2><a href="/post/install-python-modules-pip-behind-proxy.html">Install Python modules with Pip behind a proxy</a></h2>
 				<p class="intro">What to do when a proxy server steps on your toes? <span class="info">written on January 29, 2016</span></p>
 			</div>
 					</div>

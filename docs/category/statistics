@@ -84,71 +84,71 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles in this category</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/problem-overfitting-machine-learning-algorithms">The problem of overfitting in machine learning algorithms</a></h2>
+				<h2><a href="/post/problem-overfitting-machine-learning-algorithms.html">The problem of overfitting in machine learning algorithms</a></h2>
 				<p class="intro">Overfitting makes linear regression and logistic regression perform poorly. A technique called "regularization" aims to fix the problem for good. <span class="info">written on September 02, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/cost-function-logistic-regression">The cost function in logistic regression</a></h2>
+				<h2><a href="/post/cost-function-logistic-regression.html">The cost function in logistic regression</a></h2>
 				<p class="intro">Preparing the logistic regression algorithm for the actual implementation. <span class="info">written on October 29, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-classification-and-logistic-regression">Introduction to classification and logistic regression</a></h2>
+				<h2><a href="/post/introduction-classification-and-logistic-regression.html">Introduction to classification and logistic regression</a></h2>
 				<p class="intro">Get your feet wet with another fundamental machine learning algorithm for binary classification. <span class="info">written on July 17, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/experimenting-naive-eur-usd-algo-trading">Experimenting naive EUR/USD algo-trading</a></h2>
+				<h2><a href="/post/experimenting-naive-eur-usd-algo-trading.html">Experimenting naive EUR/USD algo-trading</a></h2>
 				<p class="intro">What happens when you blindly trade with a very dumb script in the year range 2000-2015. <span class="info">written on June 08, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/linear-regression-one-variable">Linear regression with one variable</a></h2>
+				<h2><a href="/post/linear-regression-one-variable.html">Linear regression with one variable</a></h2>
 				<p class="intro">Finding the best-fitting straight line through points of a data set. <span class="info">written on April 01, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-machine-learning">Introduction to machine learning</a></h2>
+				<h2><a href="/post/introduction-machine-learning.html">Introduction to machine learning</a></h2>
 				<p class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples. <span class="info">written on March 12, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/cumulative-distribution-function-cdf">Cumulative distribution function (CDF)</a></h2>
+				<h2><a href="/post/cumulative-distribution-function-cdf.html">Cumulative distribution function (CDF)</a></h2>
 				<p class="intro">The probability that a random variable X will be found to have a value less than or equal to x. <span class="info">written on December 19, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/volatility-analysis-eur-usd-currency-pair-2000-2015">A volatility analysis on EUR/USD currency pair from 2000 to 2015</a></h2>
+				<h2><a href="/post/volatility-analysis-eur-usd-currency-pair-2000-2015.html">A volatility analysis on EUR/USD currency pair from 2000 to 2015</a></h2>
 				<p class="intro">When the price of the EUR/USD cross is more volatile? <span class="info">written on December 11, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/central-limit-theorem">The Central Limit theorem</a></h2>
+				<h2><a href="/post/central-limit-theorem.html">The Central Limit theorem</a></h2>
 				<p class="intro">Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution. <span class="info">written on November 28, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/normal-distribution">The Normal distribution</a></h2>
+				<h2><a href="/post/normal-distribution.html">The Normal distribution</a></h2>
 				<p class="intro">The most famous kind of distribution and its relationship with the real world. <span class="info">written on November 06, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/probability-distributions">Probability distributions</a></h2>
+				<h2><a href="/post/probability-distributions.html">Probability distributions</a></h2>
 				<p class="intro">An overview of basic probability concepts, histograms, discrete/continuous variables. <span class="info">written on October 16, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/random-variables">Random variables</a></h2>
+				<h2><a href="/post/random-variables.html">Random variables</a></h2>
 				<p class="intro">How do they work, the differences between discrete and continuous ones, how to use them in probability. <span class="info">written on September 26, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/standard-deviation">The Standard Deviation</a></h2>
+				<h2><a href="/post/standard-deviation.html">The Standard Deviation</a></h2>
 				<p class="intro">Measuring the variability! <span class="info">written on August 30, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/variance">Variance</a></h2>
+				<h2><a href="/post/variance.html">Variance</a></h2>
 				<p class="intro">Or the variability from an average value. <span class="info">written on August 21, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/differences-between-sample-and-population">Differences between a sample and a population</a></h2>
+				<h2><a href="/post/differences-between-sample-and-population.html">Differences between a sample and a population</a></h2>
 				<p class="intro">How do those relate to each other? <span class="info">written on August 21, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/percentiles-and-quantiles">Percentiles and quantiles</a></h2>
+				<h2><a href="/post/percentiles-and-quantiles.html">Percentiles and quantiles</a></h2>
 				<p class="intro">Basic tools to split and analyze data sets. <span class="info">written on August 06, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/averages-mean-median-mode-range">Averages: mean, median, mode, range</a></h2>
+				<h2><a href="/post/averages-mean-median-mode-range.html">Averages: mean, median, mode, range</a></h2>
 				<p class="intro">Basic statistical concepts. <span class="info">written on July 31, 2015</span></p>
 			</div>
 					</div>

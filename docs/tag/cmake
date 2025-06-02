@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/modern-cmake-beginner-introduction">Introduction to modern CMake for beginners </a></h2>
+				<h2><a href="/post/modern-cmake-beginner-introduction.html">Introduction to modern CMake for beginners </a></h2>
 				<p class="intro">A look at one of the most popular build systems for C and C++.  <span class="info">written on September 04, 2020</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/build-binary-deb-package-practical-guide">Building binary deb packages: a practical guide </a></h2>
+				<h2><a href="/post/build-binary-deb-package-practical-guide.html">Building binary deb packages: a practical guide </a></h2>
 				<p class="intro">How to ship your apps on Debian and derivatives.  <span class="info">written on May 30, 2020</span></p>
 			</div>
 					</div>

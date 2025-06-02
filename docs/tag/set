@@ -84,15 +84,15 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/variance">Variance</a></h2>
+				<h2><a href="/post/variance.html">Variance</a></h2>
 				<p class="intro">Or the variability from an average value. <span class="info">written on August 21, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/percentiles-and-quantiles">Percentiles and quantiles</a></h2>
+				<h2><a href="/post/percentiles-and-quantiles.html">Percentiles and quantiles</a></h2>
 				<p class="intro">Basic tools to split and analyze data sets. <span class="info">written on August 06, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/averages-mean-median-mode-range">Averages: mean, median, mode, range</a></h2>
+				<h2><a href="/post/averages-mean-median-mode-range.html">Averages: mean, median, mode, range</a></h2>
 				<p class="intro">Basic statistical concepts. <span class="info">written on July 31, 2015</span></p>
 			</div>
 					</div>

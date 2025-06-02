@@ -84,15 +84,15 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a></h2>
+				<h2><a href="/post/introduction-tcp-ip-protocol.html">Introduction to the TCP/IP protocol</a></h2>
 				<p class="intro">The official rules that allow computers to communicate over the Internet. <span class="info">written on April 27, 2021</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/understanding-internet">Understanding the Internet </a></h2>
+				<h2><a href="/post/understanding-internet.html">Understanding the Internet </a></h2>
 				<p class="intro">“Is that thing still around?” — Homer Simpson <span class="info">written on March 04, 2021</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-computer-networks">Introduction to computer networks  </a></h2>
+				<h2><a href="/post/introduction-computer-networks.html">Introduction to computer networks  </a></h2>
 				<p class="intro">A bird's-eye view on the art of resource sharing from one computer to another.  <span class="info">written on January 24, 2021</span></p>
 			</div>
 					</div>

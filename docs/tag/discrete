@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/random-variables">Random variables</a></h2>
+				<h2><a href="/post/random-variables.html">Random variables</a></h2>
 				<p class="intro">How do they work, the differences between discrete and continuous ones, how to use them in probability. <span class="info">written on September 26, 2015</span></p>
 			</div>
 					</div>

@@ -84,27 +84,27 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/split-commit-into-smaller-ones-git">How to split a commit into smaller ones in Git </a></h2>
+				<h2><a href="/post/split-commit-into-smaller-ones-git.html">How to split a commit into smaller ones in Git </a></h2>
 				<p class="intro">A quick and easy way powered by git rebase.  <span class="info">written on August 09, 2021</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/find-buggy-commits-git-bisect">Find buggy commits with git bisect</a></h2>
+				<h2><a href="/post/find-buggy-commits-git-bisect.html">Find buggy commits with git bisect</a></h2>
 				<p class="intro">A quick and managed way to understand which commit in your project’s history introduced a bug.  <span class="info">written on July 17, 2020</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/squash-commits-into-one-git">Squash commits into one with Git</a></h2>
+				<h2><a href="/post/squash-commits-into-one-git.html">Squash commits into one with Git</a></h2>
 				<p class="intro">A nice way to group some changes together, especially before sharing them with others. <span class="info">written on November 17, 2017</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/git-add-file-commit">Git: how to add a file to a commit</a></h2>
+				<h2><a href="/post/git-add-file-commit.html">Git: how to add a file to a commit</a></h2>
 				<p class="intro">What to do when you forget to add one of the files the first time around? <span class="info">written on February 18, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/resolve-git-conflicts-good">How to resolve git conflicts for good</a></h2>
+				<h2><a href="/post/resolve-git-conflicts-good.html">How to resolve git conflicts for good</a></h2>
 				<p class="intro">Merge changes from multiple developers across the same code <span class="info">written on January 13, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/list-useful-git-commands">A list of useful git commands</a></h2>
+				<h2><a href="/post/list-useful-git-commands.html">A list of useful git commands</a></h2>
 				<p class="intro">Carefully crafted for the absent-minded. <span class="info">written on June 01, 2015</span></p>
 			</div>
 					</div>

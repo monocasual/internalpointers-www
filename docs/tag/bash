@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/get-basename-file-path-bash">How to get basename from file path in Bash</a></h2>
+				<h2><a href="/post/get-basename-file-path-bash.html">How to get basename from file path in Bash</a></h2>
 				<p class="intro">A one-line solution thanks to the Parameter Expansion. <span class="info">written on October 19, 2015</span></p>
 			</div>
 					</div>

@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/linux-find-and-replace-text-multiple-files">Linux: how to find and replace text in multiple files</a></h2>
+				<h2><a href="/post/linux-find-and-replace-text-multiple-files.html">Linux: how to find and replace text in multiple files</a></h2>
 				<p class="intro">Harness the power of grep and sed. <span class="info">written on August 17, 2019</span></p>
 			</div>
 					</div>

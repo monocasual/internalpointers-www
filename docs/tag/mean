@@ -84,19 +84,19 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/central-limit-theorem">The Central Limit theorem</a></h2>
+				<h2><a href="/post/central-limit-theorem.html">The Central Limit theorem</a></h2>
 				<p class="intro">Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution. <span class="info">written on November 28, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/standard-deviation">The Standard Deviation</a></h2>
+				<h2><a href="/post/standard-deviation.html">The Standard Deviation</a></h2>
 				<p class="intro">Measuring the variability! <span class="info">written on August 30, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/variance">Variance</a></h2>
+				<h2><a href="/post/variance.html">Variance</a></h2>
 				<p class="intro">Or the variability from an average value. <span class="info">written on August 21, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/averages-mean-median-mode-range">Averages: mean, median, mode, range</a></h2>
+				<h2><a href="/post/averages-mean-median-mode-range.html">Averages: mean, median, mode, range</a></h2>
 				<p class="intro">Basic statistical concepts. <span class="info">written on July 31, 2015</span></p>
 			</div>
 					</div>

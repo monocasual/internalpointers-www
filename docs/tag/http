@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a></h2>
+				<h2><a href="/post/making-http-requests-sockets-python.html">Making HTTP requests with sockets in Python </a></h2>
 				<p class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes.  <span class="info">written on January 01, 2022</span></p>
 			</div>
 					</div>

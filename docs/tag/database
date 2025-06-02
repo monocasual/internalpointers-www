@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/enable-remote-mysql-access-debian">How to enable remote MySQL access on Debian</a></h2>
+				<h2><a href="/post/enable-remote-mysql-access-debian.html">How to enable remote MySQL access on Debian</a></h2>
 				<p class="intro">How to allow remote connections from any host to your MySQL server. <span class="info">written on December 24, 2016</span></p>
 			</div>
 					</div>

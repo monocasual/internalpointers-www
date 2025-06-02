@@ -84,19 +84,19 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/understanding-memory-ordering">Understanding memory reordering </a></h2>
+				<h2><a href="/post/understanding-memory-ordering.html">Understanding memory reordering </a></h2>
 				<p class="intro">...and why it matters when writing lock-free multithreading code. <span class="info">written on December 29, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a></h2>
+				<h2><a href="/post/lock-free-multithreading-atomic-operations.html">Lock-free multithreading with atomic operations</a></h2>
 				<p class="intro">Synchronizing threads at a lower level. <span class="info">written on July 21, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/linear-regression-one-variable">Linear regression with one variable</a></h2>
+				<h2><a href="/post/linear-regression-one-variable.html">Linear regression with one variable</a></h2>
 				<p class="intro">Finding the best-fitting straight line through points of a data set. <span class="info">written on April 01, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-machine-learning">Introduction to machine learning</a></h2>
+				<h2><a href="/post/introduction-machine-learning.html">Introduction to machine learning</a></h2>
 				<p class="intro">What machine learning is about, types of learning and classification algorithms, introductory examples. <span class="info">written on March 12, 2016</span></p>
 			</div>
 					</div>

@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-ip-internet-protocol">Introduction to IP: the Internet Protocol</a></h2>
+				<h2><a href="/post/introduction-ip-internet-protocol.html">Introduction to IP: the Internet Protocol</a></h2>
 				<p class="intro">From routing to IP addressing, a look at the protocol that gives life to the Internet. <span class="info">written on June 07, 2021</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-tcp-ip-protocol">Introduction to the TCP/IP protocol</a></h2>
+				<h2><a href="/post/introduction-tcp-ip-protocol.html">Introduction to the TCP/IP protocol</a></h2>
 				<p class="intro">The official rules that allow computers to communicate over the Internet. <span class="info">written on April 27, 2021</span></p>
 			</div>
 					</div>

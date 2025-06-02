@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/programming-unicode-gentle-introduction">Programming with Unicode: a gentle introduction</a></h2>
+				<h2><a href="/post/programming-unicode-gentle-introduction.html">Programming with Unicode: a gentle introduction</a></h2>
 				<p class="intro">How not to get lost in a multilingual world.  <span class="info">written on June 18, 2022</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/object-literals-vs-constructors-javascript">Object literals vs constructors in JavaScript</a></h2>
+				<h2><a href="/post/object-literals-vs-constructors-javascript.html">Object literals vs constructors in JavaScript</a></h2>
 				<p class="intro">I want to use JavaScript in a more object-oriented way. <span class="info">written on June 20, 2016</span></p>
 			</div>
 					</div>

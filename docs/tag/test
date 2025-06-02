@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/let-automake-build-and-run-your-test-cases">Let Automake build and run your test cases</a></h2>
+				<h2><a href="/post/let-automake-build-and-run-your-test-cases.html">Let Automake build and run your test cases</a></h2>
 				<p class="intro">Add easy support for testing your program. <span class="info">written on September 08, 2015</span></p>
 			</div>
 					</div>

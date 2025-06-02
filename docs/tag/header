@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/fix-kernel-driver-not-installed-virtualbox">Fix kernel driver not installed in VirtualBox</a></h2>
+				<h2><a href="/post/fix-kernel-driver-not-installed-virtualbox.html">Fix kernel driver not installed in VirtualBox</a></h2>
 				<p class="intro">How do I install kernel header files? <span class="info">written on May 03, 2016</span></p>
 			</div>
 					</div>

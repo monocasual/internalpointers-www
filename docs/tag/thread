@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-thread-synchronization">Introduction to thread synchronization</a></h2>
+				<h2><a href="/post/introduction-thread-synchronization.html">Introduction to thread synchronization</a></h2>
 				<p class="intro">A look at one of the most popular ways of concurrency control in a multithreaded application. <span class="info">written on May 10, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/gentle-introduction-multithreading">A gentle introduction to multithreading</a></h2>
+				<h2><a href="/post/gentle-introduction-multithreading.html">A gentle introduction to multithreading</a></h2>
 				<p class="intro">Approaching the world of concurrency, one step at a time. <span class="info">written on March 06, 2019</span></p>
 			</div>
 					</div>

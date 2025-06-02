@@ -84,19 +84,19 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/move-smart-pointers-and-out-functions-modern-c">Move smart pointers in and out functions in modern C++</a></h2>
+				<h2><a href="/post/move-smart-pointers-and-out-functions-modern-c.html">Move smart pointers in and out functions in modern C++</a></h2>
 				<p class="intro">Different options with different meanings. <span class="info">written on December 24, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/beginner-s-look-smart-pointers-modern-c">A beginner's look at smart pointers in modern C++</a></h2>
+				<h2><a href="/post/beginner-s-look-smart-pointers-modern-c.html">A beginner's look at smart pointers in modern C++</a></h2>
 				<p class="intro">New (!) ways of memory management. <span class="info">written on October 23, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/differences-between-using-and-typedef-modern-c">The differences between "using" and "typedef" in modern C++</a></h2>
+				<h2><a href="/post/differences-between-using-and-typedef-modern-c.html">The differences between "using" and "typedef" in modern C++</a></h2>
 				<p class="intro">Two ways of defining type aliases for a smarter code. <span class="info">written on August 22, 2018</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/c-rvalue-references-and-move-semantics-beginners">C++ rvalue references and move semantics for beginners</a></h2>
+				<h2><a href="/post/c-rvalue-references-and-move-semantics-beginners.html">C++ rvalue references and move semantics for beginners</a></h2>
 				<p class="intro">A collection of personal notes and thoughts on rvalue references, their role in move semantics and how they can significantly increase the performance of your applications. <span class="info">written on June 02, 2018</span></p>
 			</div>
 					</div>

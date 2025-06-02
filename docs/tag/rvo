@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/c-rvalue-references-and-move-semantics-beginners">C++ rvalue references and move semantics for beginners</a></h2>
+				<h2><a href="/post/c-rvalue-references-and-move-semantics-beginners.html">C++ rvalue references and move semantics for beginners</a></h2>
 				<p class="intro">A collection of personal notes and thoughts on rvalue references, their role in move semantics and how they can significantly increase the performance of your applications. <span class="info">written on June 02, 2018</span></p>
 			</div>
 					</div>

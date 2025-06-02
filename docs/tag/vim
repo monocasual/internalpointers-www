@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/humble-vim-cheat-sheet">The humble Vim cheat sheet</a></h2>
+				<h2><a href="/post/humble-vim-cheat-sheet.html">The humble Vim cheat sheet</a></h2>
 				<p class="intro">Basic Vim commands I keep forgetting. <span class="info">written on June 15, 2019</span></p>
 			</div>
 					</div>

@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/journey-across-static-dynamic-libraries">A journey across static and dynamic libraries </a></h2>
+				<h2><a href="/post/journey-across-static-dynamic-libraries.html">A journey across static and dynamic libraries </a></h2>
 				<p class="intro">Understanding the complexity behind 3rd-party code. On Windows, Linux and macOS. <span class="info">written on November 15, 2020</span></p>
 			</div>
 					</div>

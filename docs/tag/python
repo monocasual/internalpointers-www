@@ -84,31 +84,31 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/programming-unicode-gentle-introduction">Programming with Unicode: a gentle introduction</a></h2>
+				<h2><a href="/post/programming-unicode-gentle-introduction.html">Programming with Unicode: a gentle introduction</a></h2>
 				<p class="intro">How not to get lost in a multilingual world.  <span class="info">written on June 18, 2022</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/making-http-requests-sockets-python">Making HTTP requests with sockets in Python </a></h2>
+				<h2><a href="/post/making-http-requests-sockets-python.html">Making HTTP requests with sockets in Python </a></h2>
 				<p class="intro">A practical introduction to network programming, from socket configuration to network buffers and HTTP connection modes.  <span class="info">written on January 01, 2022</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/modules-and-packages-create-python-project">Modules and packages: how to create a Python project</a></h2>
+				<h2><a href="/post/modules-and-packages-create-python-project.html">Modules and packages: how to create a Python project</a></h2>
 				<p class="intro">A quick and dirty tutorial on how to get things done. <span class="info">written on January 16, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/run-painless-test-suites-python-unittest">Run painless test suites in Python with Unittest</a></h2>
+				<h2><a href="/post/run-painless-test-suites-python-unittest.html">Run painless test suites in Python with Unittest</a></h2>
 				<p class="intro">A gentle introduction to aggregate tests that will be executed together. <span class="info">written on March 02, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/install-python-modules-pip-behind-proxy">Install Python modules with Pip behind a proxy</a></h2>
+				<h2><a href="/post/install-python-modules-pip-behind-proxy.html">Install Python modules with Pip behind a proxy</a></h2>
 				<p class="intro">What to do when a proxy server steps on your toes? <span class="info">written on January 29, 2016</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/central-limit-theorem">The Central Limit theorem</a></h2>
+				<h2><a href="/post/central-limit-theorem.html">The Central Limit theorem</a></h2>
 				<p class="intro">Experiments on the fundamental theorem that explains why many distributions tend to be close to the normal distribution. <span class="info">written on November 28, 2015</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/logging-python-sub-modules-and-configuration-files">Logging in Python with sub-modules and configuration files</a></h2>
+				<h2><a href="/post/logging-python-sub-modules-and-configuration-files.html">Logging in Python with sub-modules and configuration files</a></h2>
 				<p class="intro">Python logging introduces lots of concepts and configuration options. I'm going to smooth them out for good. <span class="info">written on June 27, 2015</span></p>
 			</div>
 					</div>

@@ -97,15 +97,15 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles in this series</div>
 							<div class="ip-post-list__post">
-					<h2><a href="/post/stock">1. What is a stock?</a></h2>
+					<h2><a href="/post/stock.html">1. What is a stock?</a></h2>
 					<p class="intro">Understanding how stocks work both from companies' and investors' point of view. <span class="info">written on July 11, 2016</span></p>
 				</div>
 							<div class="ip-post-list__post">
-					<h2><a href="/post/most-important-metrics-stock-investments">2. The most important metrics for stock investments</a></h2>
+					<h2><a href="/post/most-important-metrics-stock-investments.html">2. The most important metrics for stock investments</a></h2>
 					<p class="intro">What are the most famous stock metrics and how to translate them into something useful to humans. <span class="info">written on September 17, 2016</span></p>
 				</div>
 							<div class="ip-post-list__post">
-					<h2><a href="/post/buying-and-selling-stocks">3. Buying and selling stocks: how-to</a></h2>
+					<h2><a href="/post/buying-and-selling-stocks.html">3. Buying and selling stocks: how-to</a></h2>
 					<p class="intro">Let's disclose what happens behind that click on the "buy" button. <span class="info">written on November 20, 2016</span></p>
 				</div>
 					</div>

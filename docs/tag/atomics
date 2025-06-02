@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/understanding-memory-ordering">Understanding memory reordering </a></h2>
+				<h2><a href="/post/understanding-memory-ordering.html">Understanding memory reordering </a></h2>
 				<p class="intro">...and why it matters when writing lock-free multithreading code. <span class="info">written on December 29, 2019</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/lock-free-multithreading-atomic-operations">Lock-free multithreading with atomic operations</a></h2>
+				<h2><a href="/post/lock-free-multithreading-atomic-operations.html">Lock-free multithreading with atomic operations</a></h2>
 				<p class="intro">Synchronizing threads at a lower level. <span class="info">written on July 21, 2019</span></p>
 			</div>
 					</div>

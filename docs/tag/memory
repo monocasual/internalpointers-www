@@ -84,11 +84,11 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/introduction-virtual-memory">An introduction to virtual memory</a></h2>
+				<h2><a href="/post/introduction-virtual-memory.html">An introduction to virtual memory</a></h2>
 				<p class="intro">...and the crucial role it plays in modern operating systems. <span class="info">written on April 27, 2020</span></p>
 			</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/beginner-s-look-smart-pointers-modern-c">A beginner's look at smart pointers in modern C++</a></h2>
+				<h2><a href="/post/beginner-s-look-smart-pointers-modern-c.html">A beginner's look at smart pointers in modern C++</a></h2>
 				<p class="intro">New (!) ways of memory management. <span class="info">written on October 23, 2018</span></p>
 			</div>
 					</div>

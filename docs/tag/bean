@@ -84,7 +84,7 @@
 		<div class="ip-post-list">
 			<div class="ip-post-list__title">Articles with this tag</div>
 						<div class="ip-post-list__post">
-				<h2><a href="/post/expose-java-beans-jsp-page-spring-mvc">How to expose Java beans to a JSP page in Spring MVC</a></h2>
+				<h2><a href="/post/expose-java-beans-jsp-page-spring-mvc.html">How to expose Java beans to a JSP page in Spring MVC</a></h2>
 				<p class="intro">ServletContextAttributeExporter definitely saved my life. <span class="info">written on June 09, 2015</span></p>
 			</div>
 					</div>
